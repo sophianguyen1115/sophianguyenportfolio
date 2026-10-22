@@ -147,8 +147,8 @@ const projects = [
 
 function makeCard(p) {
   const el = document.createElement("button");
-  el.className = "card"; el.type = "button";
-  // Unfinished projects ("soon") look the same but don't open
+  el.className = p.soon ? "card soon" : "card"; el.type = "button";
+  // Unfinished projects ("soon") look the same but don't open or react to hover
   if (!p.soon) el.addEventListener("click", () => openProject(p));
   el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<img src="${p.image}" alt=""${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false">` : `<span class="letter">${esc(p.name[0])}</span>`}<span class="glint" aria-hidden="true"></span><span class="view">View project <i>&#8599;</i></span></div>
     <div class="body"><div class="head"><h3><span class="t"></span><span class="arr" aria-hidden="true">&rarr;</span></h3><div class="pills"></div></div><p class="desc"></p></div>`;

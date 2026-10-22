@@ -24,6 +24,7 @@ footer{display:flex;gap:1.5rem;flex-wrap:wrap;padding:2rem 1.5rem 3rem;max-width
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 button.card{font-family:var(--font);font:inherit;color:inherit;text-align:left;border:0;padding:0;cursor:pointer}
+button.card.soon{cursor:default}
 
 /* case study */
 
@@ -157,11 +158,11 @@ button.card:focus-visible .view,button.card:focus-visible .arr{opacity:1;transfo
 button.card:focus-visible .arr{transform:none}
 button.card:focus-visible .thumb .letter,button.card:focus-visible .thumb img{transform:scale(1.1)}
 @media (hover:hover){
-  button.card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.09)}
-  button.card:hover .thumb::before{background:rgba(20,20,20,.3)}
-  button.card:hover .view{opacity:1;transform:translate(-50%,-50%)}
-  button.card:hover .arr{opacity:1;transform:none}
-  button.card:hover .thumb .letter,button.card:hover .thumb img{transform:scale(1.1)}
+  button.card:not(.soon):hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.09)}
+  button.card:not(.soon):hover .thumb::before{background:rgba(20,20,20,.3)}
+  button.card:not(.soon):hover .view{opacity:1;transform:translate(-50%,-50%)}
+  button.card:not(.soon):hover .arr{opacity:1;transform:none}
+  button.card:not(.soon):hover .thumb .letter,button.card:not(.soon):hover .thumb img{transform:scale(1.1)}
 }
 @media (prefers-reduced-motion:reduce){button.card,button.card *{transition:none!important}}
 /* translucent white cards + pill descriptors */
@@ -370,7 +371,7 @@ footer .li:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-
 .card .thumb img,#graphicView .card .thumb img{position:relative;border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.14),0 8px 22px rgba(30,25,20,.14)}
 .card .thumb .letter{position:relative}
 button.card .thumb::before{z-index:2;border-radius:inherit}
-button.card:hover .thumb img,button.card:focus-visible .thumb img,button.card:hover .thumb .letter{transform:scale(1.04)}
+button.card:not(.soon):hover .thumb img,button.card:focus-visible .thumb img,button.card:not(.soon):hover .thumb .letter{transform:scale(1.04)}
 .card .body,#graphicView .card .body{padding:1.1rem .5rem 1.4rem}
 
 /* glass shine: diagonal sheen, bright rim, and a highlight that sweeps across on hover */
@@ -378,7 +379,7 @@ button.card:hover .thumb img,button.card:focus-visible .thumb img,button.card:ho
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),inset 0 2px 3px rgba(255,255,255,.9),inset 0 -2px 6px rgba(255,255,255,.45),inset 0 0 36px rgba(255,255,255,.35);z-index:0}
 .card .thumb img{z-index:1}
 .card .thumb .glint{position:absolute;inset:-20% auto -20% -60%;width:45%;z-index:3;pointer-events:none;transform:skewX(-20deg);background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));opacity:0;transition:transform 1s cubic-bezier(.2,.7,.2,1),opacity .4s}
-@media(hover:hover){button.card:hover .thumb .glint{opacity:1;transform:translateX(420%) skewX(-20deg)}}
+@media(hover:hover){button.card:not(.soon):hover .thumb .glint{opacity:1;transform:translateX(420%) skewX(-20deg)}}
 @media(prefers-reduced-motion:reduce){.card .thumb .glint{display:none}}
 .card .thumb::after{z-index:2;background:linear-gradient(115deg,rgba(255,255,255,.42) 0%,rgba(255,255,255,.12) 20%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 72%,rgba(255,255,255,.14) 100%)}
 
@@ -559,7 +560,7 @@ canvas.cvid{height:auto;aspect-ratio:auto;cursor:pointer}
 .card .thumb::after{background:linear-gradient(115deg,rgba(255,255,255,.24) 0%,rgba(255,255,255,.07) 22%,rgba(255,255,255,0) 40%,rgba(255,255,255,0) 68%,rgba(255,255,255,.09) 100%);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.32),inset 0 1px 2px rgba(255,255,255,.5),inset 0 -2px 5px rgba(255,255,255,.22),inset 0 0 28px rgba(255,255,255,.16)}
 .card .thumb .glint{width:26%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.2),rgba(255,255,255,0));transition:transform 1.3s cubic-bezier(.2,.7,.2,1),opacity .5s}
-@media(hover:hover){button.card:hover .thumb .glint{opacity:.8}}
+@media(hover:hover){button.card:not(.soon):hover .thumb .glint{opacity:.8}}
 
 
 /* more readable role line and hint over the koi pond */
