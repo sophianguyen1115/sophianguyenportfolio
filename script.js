@@ -142,15 +142,16 @@ const projects = [
      {label:"Result", title:"Redefining how fans experience music", paras:["The interface uses blue and dark tones, clear navigation, readable type and immersive imagery.","VibeBook combines discovery, verified ticketing, messaging and community, kept to music-related topics only, to create an ecosystem for fans and musicians."]},
      {label:"Next steps", title:"Reflection", paras:["After the course, I kept refining the interface and adding screens. Next steps are more user research, reviewing music ticketing apps, interviewing music enthusiasts, and exploring more interactive, seamless journeys."]}
     ]}},
-  {name:"NEST", image:"assets/f42ad47c5b77.webp", tags:["UI/UX Design","App Design"], desc:"More to come!", caseStudy:placeholderCase("NEST","nest","Roost. Rest. Roam. Temporary living made easy.")}
+  {name:"NEST", image:"assets/f42ad47c5b77.webp", tags:["UI/UX Design","App Design"], desc:"More to come!", soon:true, caseStudy:placeholderCase("NEST","nest","Roost. Rest. Roam. Temporary living made easy.")}
 ];
 
 function makeCard(p) {
-  const el = document.createElement("button");
-  el.className = "card"; el.type = "button";
-  el.addEventListener("click", () => openProject(p));
-  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<img src="${p.image}" alt=""${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false">` : `<span class="letter">${esc(p.name[0])}</span>`}<span class="glint" aria-hidden="true"></span><span class="view">View project <i>&#8599;</i></span></div>
-    <div class="body"><div class="head"><h3><span class="t"></span><span class="arr" aria-hidden="true">&rarr;</span></h3><div class="pills"></div></div><p class="desc"></p></div>`;
+  // Unfinished projects ("soon") get a plain, non-clickable card
+  const el = document.createElement(p.soon ? "div" : "button");
+  el.className = "card";
+  if (!p.soon) { el.type = "button"; el.addEventListener("click", () => openProject(p)); }
+  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<img src="${p.image}" alt=""${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false">` : `<span class="letter">${esc(p.name[0])}</span>`}<span class="glint" aria-hidden="true"></span>${p.soon ? "" : '<span class="view">View project <i>&#8599;</i></span>'}</div>
+    <div class="body"><div class="head"><h3><span class="t"></span>${p.soon ? "" : '<span class="arr" aria-hidden="true">&rarr;</span>'}</h3><div class="pills"></div></div><p class="desc"></p></div>`;
   el.querySelector("h3 .t").textContent = p.name;
   for (const t of p.tags) { const s = document.createElement("span"); s.className = "pill"; s.textContent = t; el.querySelector(".pills").appendChild(s); }
   el.querySelector(".desc").textContent = p.desc;
