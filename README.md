@@ -6,7 +6,8 @@ Static portfolio site (HTML/CSS/JS, no build step).
     python3 -m http.server 8000   # then open http://localhost:8000
 
 ## Edit
-- Projects: the `projects` array at the top of `script.js`
+- Projects: the `projects` arrays in `script.js`
+- Images, videos, audio and the font live in `assets/`
 - Colors/type: CSS variables in `style.css`
 
 ## Deploy
