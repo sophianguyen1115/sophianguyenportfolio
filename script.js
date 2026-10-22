@@ -142,7 +142,7 @@ const projects = [
      {label:"Result", title:"Redefining how fans experience music", paras:["The interface uses blue and dark tones, clear navigation, readable type and immersive imagery.","VibeBook combines discovery, verified ticketing, messaging and community, kept to music-related topics only, to create an ecosystem for fans and musicians."]},
      {label:"Next steps", title:"Reflection", paras:["After the course, I kept refining the interface and adding screens. Next steps are more user research, reviewing music ticketing apps, interviewing music enthusiasts, and exploring more interactive, seamless journeys."]}
     ]}},
-  {name:"NEST", image:"assets/f42ad47c5b77.webp", tags:["UI/UX Design","App Design"], desc:"More to come!", soon:true, caseStudy:placeholderCase("NEST","nest","Roost. Rest. Roam. Temporary living made easy.")}
+  {name:"NEST", image:"assets/f42ad47c5b77.webp", imageFit:true, tags:["UI/UX Design","App Design"], desc:"More to come!", soon:true, caseStudy:placeholderCase("NEST","nest","Roost. Rest. Roam. Temporary living made easy.")}
 ];
 
 function makeCard(p) {
