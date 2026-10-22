@@ -378,6 +378,8 @@ button.card:not(.soon):hover .thumb img,button.card:focus-visible .thumb img,but
 .card .thumb::after{background:linear-gradient(115deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.18) 22%,rgba(255,255,255,0) 40%,rgba(255,255,255,0) 68%,rgba(255,255,255,.22) 100%);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),inset 0 2px 3px rgba(255,255,255,.9),inset 0 -2px 6px rgba(255,255,255,.45),inset 0 0 36px rgba(255,255,255,.35);z-index:0}
 .card .thumb img{z-index:1}
+/* tall-shaped images: match the frame's inner area (86% wide x 61% tall of the 4:3 thumb after 7% padding) */
+.card .thumb img.fit{height:auto;aspect-ratio:86/61}
 .card .thumb .glint{position:absolute;inset:-20% auto -20% -60%;width:45%;z-index:3;pointer-events:none;transform:skewX(-20deg);background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));opacity:0;transition:transform 1s cubic-bezier(.2,.7,.2,1),opacity .4s}
 @media(hover:hover){button.card:not(.soon):hover .thumb .glint{opacity:1;transform:translateX(420%) skewX(-20deg)}}
 @media(prefers-reduced-motion:reduce){.card .thumb .glint{display:none}}

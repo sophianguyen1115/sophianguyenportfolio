@@ -94,7 +94,7 @@ const projects = [
      {label:"Next steps", title:"Reflection", paras:["After the course, work continued with contextual design, an interactive prototype and a front-end tech spec. Next time I would integrate AI, show more clearly how social and e-commerce work together, improve contrast for people who find light color schemes hard to read, and build in firmer accessibility practices from the start."]}
     ]}},
   
-  {name:"VibeBook", image:"assets/5c988b2cde0a.webp", tags:["UI/UX Design","App Design"], desc:"A ticketing and social platform for live music fans.",
+  {name:"VibeBook", image:"assets/5c988b2cde0a.webp", imageFit:true, tags:["UI/UX Design","App Design"], desc:"A ticketing and social platform for live music fans.",
    caseStudy:{
     heroVideo:{webm:"assets/6ef962574d8a.webm",mp4:"",poster:"assets/eefb03f9cfd8.webp",anim:"assets/b5cebc216b8c.webp",ratio:"836/1702",alt:"VibeBook app walkthrough on a phone: finalizing a concert ticket."},
     lede:"One platform for discovering concerts, buying tickets, and connecting through live music.", source: SRC + "vibebook",
@@ -150,7 +150,7 @@ function makeCard(p) {
   el.className = p.soon ? "card soon" : "card"; el.type = "button";
   // Unfinished projects ("soon") look the same but don't open or react to hover
   if (!p.soon) el.addEventListener("click", () => openProject(p));
-  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<img src="${p.image}" alt=""${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false">` : `<span class="letter">${esc(p.name[0])}</span>`}<span class="glint" aria-hidden="true"></span><span class="view">View project <i>&#8599;</i></span></div>
+  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<img src="${p.image}" alt=""${p.imageFit ? ` class="fit"` : ""}${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false">` : `<span class="letter">${esc(p.name[0])}</span>`}<span class="glint" aria-hidden="true"></span><span class="view">View project <i>&#8599;</i></span></div>
     <div class="body"><div class="head"><h3><span class="t"></span><span class="arr" aria-hidden="true">&rarr;</span></h3><div class="pills"></div></div><p class="desc"></p></div>`;
   el.querySelector("h3 .t").textContent = p.name;
   for (const t of p.tags) { const s = document.createElement("span"); s.className = "pill"; s.textContent = t; el.querySelector(".pills").appendChild(s); }
