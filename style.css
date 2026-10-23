@@ -379,7 +379,7 @@ button.card:not(.soon):hover .thumb img,button.card:focus-visible .thumb img,but
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),inset 0 2px 3px rgba(255,255,255,.9),inset 0 -2px 6px rgba(255,255,255,.45),inset 0 0 36px rgba(255,255,255,.35);z-index:0}
 .card .thumb img{z-index:1}
 /* tall-shaped images: match the frame's inner area (86% wide x 61% tall of the 4:3 thumb after 7% padding) */
-.card .thumb img.fit{height:auto;aspect-ratio:86/61}
+.card .thumb img,.card .thumb img.fit{height:auto;aspect-ratio:86/61}
 .card .thumb .glint{position:absolute;inset:-20% auto -20% -60%;width:45%;z-index:3;pointer-events:none;transform:skewX(-20deg);background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));opacity:0;transition:transform 1s cubic-bezier(.2,.7,.2,1),opacity .4s}
 @media(hover:hover){button.card:not(.soon):hover .thumb .glint{opacity:1;transform:translateX(420%) skewX(-20deg)}}
 @media(prefers-reduced-motion:reduce){.card .thumb .glint{display:none}}
@@ -593,7 +593,7 @@ canvas.cvid{height:auto;aspect-ratio:auto;cursor:pointer}
 .skel-line{height:14px;width:55%;margin:1.15rem 0 0 .45rem;border-radius:7px;background:#ece7df;animation:shimmer 1.6s ease-in-out infinite;background:linear-gradient(100deg,#ece7df 30%,#f6f2ec 50%,#ece7df 70%) 0 0/250% 100%}
 .skel-line.s{width:35%;height:22px;border-radius:999px;margin-top:.7rem}
 @keyframes shimmer{from{background-position:100% 0}to{background-position:-100% 0}}
-.card.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.card.rise{display:flex;animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(26px) scale(.985)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.ld-bar i,.ld-txt,.card.skel .thumb,.skel-line{animation:none}.card.rise{animation:none}.card.skel,.loader{transition:none}}
 

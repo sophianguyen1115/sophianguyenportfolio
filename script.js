@@ -1408,7 +1408,7 @@ function renderCase(p) {
   caseView.innerHTML = `<div class="layout">
     <aside class="side" aria-label="Case study navigation">
       <a class="back" href="#" data-home="${p.back || "work"}">&#8249; Back to ${p.back ? "other work" : "projects"}</a>
-      <p class="kicker">Case study</p><p class="ptitle">${n}</p><ol class="toc" id="toc"></ol>
+      <p class="kicker">${p.back === "graphic" ? "In-House Design" : "Case study"}</p><p class="ptitle">${n}</p><ol class="toc" id="toc"></ol>
     </aside>
     <main><section class="chero"><h1>${n}</h1><p class="lede">${esc(c.lede)}</p>
       <dl class="facts">${c.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>${hero}</section>${sections}</main>
