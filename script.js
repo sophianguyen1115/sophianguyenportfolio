@@ -187,7 +187,7 @@ const otherProjects = [
     ]}},
   {name:"DFW HQ Socks", image:"assets/d5e172021e34.webp", tags:["Visual Design","Apparel"], desc:"", back:"graphic", caseStudy:{
     lede:"Custom socks for DFW HQ, with a colorful palette and iconography made for travelers with cold feet.", source: IH + "socks-for-dfw-hq",
-    heroImage:"assets/d5e172021e34.webp",
+    heroImage:"assets/cb4b536cd579.webp", heroAlt:"A folded pair of white DFW socks with orange stripes and a delivery truck, wrapped in an orange DFW band, on a light grey surface.",
     facts:[["Category","Visual design / Branding"],["Type","Contract work"],["Year","2019 - 2021"]],
     sections:[
      {label:"Overview", title:"Socks for the cargo division", paras:["These socks were a design exercise in imagining what the cargo division would look like with its own customized socks.","After multiple mockups of different designs, Asiana Airlines also wanted trendy sock designs.","The colorful palette and iconography are meant to appeal to any traveler with cold feet."]},
@@ -197,7 +197,7 @@ const otherProjects = [
     ]}},
   {name:"DPS and CDO", image:"assets/dd60b0dc78f1.webp", tags:["Visual Design","Promotional Material"], desc:"", back:"graphic", caseStudy:{
     lede:"Recruitment material for two police departments, with square trifolds and a gritty look drawn from their uniforms.", source: IH + "dps-and-cdo",
-    heroImage:"assets/916e551916f1.webp", heroAlt:"The DPS square trifold opened flat on a grey surface: specialized divisions and units, minimum requirements, and lateral transfers with a pay scale, over photos of police vehicles outside the DFW Public Safety building.",
+    heroImage:"assets/866f46ff31d5.webp", heroAlt:"The DPS recruitment trifold opening at an angle: the Are You Ready? cover with a police SUV and departing plane, beside About Us, the Police Services mission, and police incentives and benefits.",
     facts:[["Category","Visual design / Promotional material"],["Type","Contract work"],["Year","2019 - 2021"]],
     sections:[
      {label:"Overview", title:"Recruitment material for DPS and CDO", paras:["Both projects were done within a week of one another, as the police departments needed media to promote their divisions.","The clients wanted something more distinctive than a standard A5 brochure, so I designed square trifolds along with other materials.","Harnessing the uniform grittiness of these departments brought a fresh new perspective to their designs."]},
@@ -249,7 +249,7 @@ const otherProjects = [
     ]}},
   {name:"Western Wear", image:"assets/17d2292ff9c5.webp", imagePos:"50% 35%", tags:["Promotional Material","Apparel"], desc:"", back:"graphic", caseStudy:{
     lede:"Marketing materials that speak to two western-wear customer groups.", source: IH + "western-wear",
-    heroImage:"assets/17d2292ff9c5.webp", heroPos:"50% 0%", heroAlt:"A rider in a denim western shirt and straw hat on a chestnut horse, with green hills behind.",
+    heroImage:"assets/213f401b7614.webp", heroPos:"50% 4%", heroAlt:"A rider in a denim western shirt, straw cowboy hat and leather chaps on a chestnut horse, with green hills behind.",
     facts:[["Category","Promotional material / Apparel"],["Type","In-house work"],["Year","2025"]],
     sections:[
      {label:"Overview", title:"Western Wear marketing materials", paras:["A collection created to highlight western clothing across two key customer groups. One direction uses fresh, modern layouts and energetic visuals for younger, trend-conscious shoppers. The other uses rustic textures and timeless motifs for an older audience drawn to classic western style."]},
