@@ -659,6 +659,11 @@ canvas.cvid{height:auto;aspect-ratio:auto;cursor:pointer}
 .pw-frame:hover .pw-case,.pw-frame:focus-visible .pw-case{box-shadow:0 2px 3px rgba(30,24,18,.2),0 28px 40px -14px rgba(30,24,18,.5)}
 .pw-case img{display:block;height:var(--ph);width:100%;object-fit:cover}
 .pw-plaque{display:block;margin:12px auto 0;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.pw-flip{width:calc(var(--ph) * var(--ar))}
+.pw-flip .mb-persp{position:relative}
+.pw-flip .mb-card{height:var(--ph);border-radius:6px;box-shadow:0 1px 2px rgba(30,24,18,.18),0 18px 30px -12px rgba(30,24,18,.38)}
+.pw-flip .mb-side{border-radius:6px}
+.pw-flip:hover .mb-zoom,.pw-flip:focus-visible .mb-zoom{opacity:1}
 @media(max-width:700px){.pw-frame{--ph:min(210px,calc(var(--k,1) * 50cqw))}}
 @media(prefers-reduced-motion:reduce){.pw-frame{transition:none}}
 
