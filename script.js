@@ -201,7 +201,7 @@ const otherProjects = [
     facts:[["Category","Visual design / Promotional material"],["Type","Contract work"],["Year","2019 - 2021"]],
     sections:[
      {label:"Overview", title:"Recruitment material for DPS and CDO", paras:["Both projects were done within a week of one another, as the police departments needed media to promote their divisions.","The clients wanted something more distinctive than a standard A5 brochure, so I designed square trifolds along with other materials.","Harnessing the uniform grittiness of these departments brought a fresh new perspective to their designs."]},
-     {label:"Brochures", title:"Open the trifold", paras:["The DPS brochure is a square trifold. Click it to open the cover, then the flap, and fold it back up again."], folds:[{id:"dps", name:"DPS - Police", alt:"DPS police recruitment trifold", cover:"assets/733b85ad4063.webp", coverIn:"assets/372b57022bcc.webp", mid:"assets/53693625a909.webp", flapIn:"assets/d6c2d2fb6e4c.webp", flapOut:"assets/da318f1fd42f.webp", back:"assets/3420d3dbbb74.webp", names:{cover:"Cover: Are you ready?", coverIn:"Specialized divisions and units", mid:"Minimum requirements", flapIn:"Lateral transfers and pay scale", flapOut:"About us, incentives and benefits", back:"Application process"}}]},
+     {label:"Brochures", title:"Open the trifold", paras:["Both brochures are trifolds: both are square trifolds as the police wanted more unique formats than the regular A4 or letter size. Pick one, click to interact with the layout, and fold it back up again."], folds:[{id:"dps", name:"DPS - Police", alt:"DPS police recruitment trifold", cover:"assets/733b85ad4063.webp", coverIn:"assets/372b57022bcc.webp", mid:"assets/53693625a909.webp", flapIn:"assets/d6c2d2fb6e4c.webp", flapOut:"assets/da318f1fd42f.webp", back:"assets/3420d3dbbb74.webp", names:{cover:"Cover: Are you ready?", coverIn:"Specialized divisions and units", mid:"Minimum requirements", flapIn:"Lateral transfers and pay scale", flapOut:"About us, incentives and benefits", back:"Application process"}},{id:"cdo", name:"CDO - Detention", alt:"CDO civilian detention officer recruitment trifold", ar:360/414, cover:"assets/3e2b7870795e.webp", coverIn:"assets/aafdaa4d8809.webp", mid:"assets/6f012886cd17.webp", flapIn:"assets/71f3d0158222.webp", flapOut:"assets/5f7f280e480c.webp", back:"assets/2310d141a37f.webp", names:{cover:"Cover: Join now, Civilian Detention Officer", coverIn:"Incentives and benefits", mid:"Minimum and special requirements", flapIn:"Pay scale", flapOut:"About us", back:"Application process and contact details"}}]},
      {label:"Pop-up banners", title:"Are you ready?", paras:["Two retractable pop-up banners for recruiting events: one leading with the call to join, and one showing the department's divisions and benefits. Hover to tilt them, or select one to view it full size."],
       banners:[{src:"assets/c67633882896.webp",w:1101,h:3136,name:"Are You Ready?",alt:"Pop-up banner: Are You Ready? Join the Dallas Fort Worth Airport Police Department over a police SUV and a departing plane, with a QR code, an About Us blurb, S.W.A.T, Traffic, Vehicle and Bicycle unit photos, and contact details."},{src:"assets/c04193401d43.webp",w:1101,h:3136,name:"Divisions and Benefits",alt:"Pop-up banner: police vehicles and a motorcycle outside the DFW Public Safety building, then specialized divisions and units, incentives and benefits, with Bomb Squad, K-9, Terminal and Investigations photos and contact details."}]},
      {label:"Posters", title:"Letter-size recruiting posters", paras:["The same campaign laid out as letter-size posters, one vertical and one horizontal, plus a handout card for recruiting events. Hover to see them lean out, click a poster to see it full size, or click the card to flip it over."],
@@ -918,7 +918,7 @@ function initFolds(list) {
   const names = ["Closed: front cover", "Cover open", "Fully open"];
   const set = (p, face, src, name) => {
     const el = p.querySelector(".ff." + face); el.querySelector("img")?.remove(); el.querySelector(".ph")?.remove();
-    if (src) { const im = document.createElement("img"); im.src = src; im.alt = name || ""; im.decoding = "async"; im.draggable = false; el.prepend(im); }
+    if (src) { const im = document.createElement("img"); im.src = src; im.alt = name || ""; im.decoding = "async"; im.draggable = false; im.style.objectFit = "contain"; el.prepend(im); }
     else { const d = document.createElement("div"); d.className = "ph"; d.innerHTML = `<span>${esc(name || "")}<small>artwork to come</small></span>`; el.prepend(d); }
   };
   function skin() {
@@ -927,14 +927,23 @@ function initFolds(list) {
     set(pF, "front", f.flapIn, n.flapIn); set(pF, "back", f.flapOut, n.flapOut);
     set(pC, "front", f.coverIn, n.coverIn); set(pC, "back", f.cover, n.cover);
     flipBtn.hidden = !(f.back && f.flapOut);
+    stage.style.setProperty("--ar", f.ar || 1); size();
+    const probe = new Image();
+    probe.onload = () => { if (list[cur] !== f) return; f.ar = probe.naturalWidth / probe.naturalHeight; stage.style.setProperty("--ar", f.ar); size(); draw(); };
+    probe.src = f.cover;
   }
   function size() {
-    const W = stage.clientWidth, H = stage.clientHeight, s = Math.floor(Math.min(W * .62, H * .82));
+    // --s is the panel height; panels are --ar times as wide (1 for square brochures)
+    const ar = list[cur].ar || 1, W = stage.clientWidth, H = stage.clientHeight, s = Math.floor(Math.min(W * .5 / ar, H * .66)), w = Math.round(s * ar);
     stage.style.setProperty("--s", s + "px");
-    zs = [1, Math.min(1, W * .97 / (2 * s)), Math.min(1, W * .97 / (3 * s))];
+    // Panel sizes are set here as well as in CSS so a stale stylesheet can't square them off and crop the artwork
+    pos.style.width = w + "px"; pos.style.height = s + "px";
+    [pB, pF, pC].forEach(p => { p.style.width = w + "px"; p.style.height = s + "px"; });
+    pF.style.left = w + "px"; pC.style.left = -w + "px";
+    zs = [1, Math.min(1, W * .78 / (2 * w)), Math.min(1, W * .78 / (3 * w))];
   }
   function draw() {
-    const s = parseFloat(getComputedStyle(stage).getPropertyValue("--s")) || 200;
+    const s = (parseFloat(getComputedStyle(stage).getPropertyValue("--s")) || 200) * (list[cur].ar || 1);
     const z = zs[st], sx = st === 1 ? (flipped ? -s / 2 : s / 2) : 0;
     stage.dataset.st = st;
     pos.style.transform = `translateX(${sx * z}px) scale(${z})`;
