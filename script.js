@@ -1562,6 +1562,17 @@ document.addEventListener("click", e => {
   if (v === "work") showHome("work"); else if (v === "home") showHome(); else setView(v);
 });
 
+// ---- Mobile menu: the hamburger opens the links as a dropdown; a link, a tap outside or Escape closes it ----
+(function () {
+  const btn = siteNav.querySelector(".nav-toggle"); if (!btn) return;
+  const setOpen = open => { siteNav.classList.toggle("open", open); btn.setAttribute("aria-expanded", String(open)); btn.setAttribute("aria-label", open ? "Close menu" : "Open menu"); };
+  btn.addEventListener("click", () => setOpen(!siteNav.classList.contains("open")));
+  siteNav.querySelector("nav").addEventListener("click", e => { if (e.target.closest("a")) setOpen(false); });
+  document.addEventListener("click", e => { if (!siteNav.contains(e.target)) setOpen(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && siteNav.classList.contains("open")) { setOpen(false); btn.focus(); } });
+  matchMedia("(min-width: 721px)").addEventListener("change", e => { if (e.matches) setOpen(false); });
+})();
+
 // ---- Header gets a soft background once the page scrolls past the top ----
 addEventListener("scroll", syncNav, {passive: true});
 syncNav();
