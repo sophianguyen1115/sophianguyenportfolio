@@ -160,7 +160,7 @@ function makeCard(p) {
 const grid = document.getElementById("projects");
 for (const p of projects) grid.appendChild(makeCard(p));
 
-// Other Work: same card and the same case-study page template as the Work projects
+// Design Work: same card and the same case-study page template as the Work projects
 const IH = "https://sophiacnguyen.framer.website/in-house-work/", AI = "https://sophiacnguyen.framer.website/design-and-ai/";
 const TBD = "[Add a one-line summary of this project.]";
 const otherProjects = [
@@ -1407,7 +1407,7 @@ function renderCase(p) {
   </div>${s.split ? `<div class="split${s.deckFirst ? " dfirst" : ""}"><div>${galHtml(s)}</div><div>${s.gallery2 ? galHtml({gallery: s.gallery2}) : deckHtml(s)}${ctaHtml(s)}</div></div>` : ""}</section>`).join("");
   caseView.innerHTML = `<div class="layout">
     <aside class="side" aria-label="Case study navigation">
-      <a class="back" href="#" data-home="${p.back || "work"}">&#8249; Back to ${p.back ? "other work" : "projects"}</a>
+      <a class="back" href="#" data-home="${p.back || "work"}">&#8249; Back to ${p.back ? "design work" : "projects"}</a>
       <p class="kicker">${p.back === "graphic" ? "In-House Design" : "Case study"}</p><p class="ptitle">${n}</p><ol class="toc" id="toc"></ol>
     </aside>
     <main><section class="chero"><h1>${n}</h1><p class="lede">${esc(c.lede)}</p>
@@ -1551,6 +1551,13 @@ contactForm.addEventListener("submit", e => {
 document.addEventListener("click", e => {
   const a = e.target.closest('[data-action="contact"]');
   if (a) { e.preventDefault(); openContact(); }
+});
+
+// ---- Certifications: each preview opens the full certificate, with arrows through the rest ----
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-cert]"); if (!b) return;
+  const all = [...document.querySelectorAll("[data-cert]")];
+  openPiece(all.map(x => { const im = x.querySelector("img"); return { src: x.dataset.src, name: x.dataset.name, alt: im.alt, w: im.width, h: im.height }; }), all.indexOf(b));
 });
 
 // ---- Header navigation: switches views without leaving the page ----
