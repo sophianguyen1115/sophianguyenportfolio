@@ -999,7 +999,15 @@ function openPiece(list, start) {
   }
   const img = box.querySelector("img"), cap = box.querySelector(".pvc"), prev = box.querySelector(".pvp"), next = box.querySelector(".pvn");
   let cur = start;
-  const show = n => { cur = (n + list.length) % list.length; const p = list[cur]; img.src = p.src; img.alt = p.alt || ""; cap.textContent = (p.name || "") + (list.length > 1 ? `  (${cur + 1} / ${list.length})` : ""); };
+  // Size the image in pixels to fit the screen; left to flex layout, some browsers (Safari) shrink it to a thumbnail
+  const fit = () => {
+    const w = img.naturalWidth, h = img.naturalHeight; if (!w || !h) return;
+    const k = Math.min(1, Math.min(innerWidth * .92, 1400) / w, innerHeight * .84 / h);
+    img.style.width = Math.round(w * k) + "px"; img.style.height = Math.round(h * k) + "px";
+  };
+  img.onload = fit; if (!box.dataset.fit) { box.dataset.fit = "1"; addEventListener("resize", () => { if (box.open) box._fit(); }); }
+  box._fit = fit;
+  const show = n => { cur = (n + list.length) % list.length; const p = list[cur]; img.style.width = img.style.height = ""; img.src = p.src; img.alt = p.alt || ""; if (img.complete) fit(); cap.textContent = (p.name || "") + (list.length > 1 ? `  (${cur + 1} / ${list.length})` : ""); };
   prev.onclick = () => show(cur - 1); next.onclick = () => show(cur + 1);
   prev.hidden = next.hidden = list.length < 2;
   box.onkeydown = e => { if (e.key === "ArrowLeft") show(cur - 1); if (e.key === "ArrowRight") show(cur + 1); };
