@@ -1007,7 +1007,8 @@ function openPiece(list, start) {
   };
   img.onload = fit; if (!box.dataset.fit) { box.dataset.fit = "1"; addEventListener("resize", () => { if (box.open) box._fit(); }); }
   box._fit = fit;
-  const show = n => { cur = (n + list.length) % list.length; const p = list[cur]; img.style.width = img.style.height = ""; img.src = p.src; img.alt = p.alt || ""; if (img.complete) fit(); cap.textContent = (p.name || "") + (list.length > 1 ? `  (${cur + 1} / ${list.length})` : ""); };
+  // Safari can report a cached image as complete before its size is known, so fit again once it has decoded
+  const show = n => { cur = (n + list.length) % list.length; const p = list[cur]; img.src = p.src; img.alt = p.alt || ""; fit(); if (img.decode) img.decode().then(fit, () => {}); cap.textContent = (p.name || "") + (list.length > 1 ? `  (${cur + 1} / ${list.length})` : ""); };
   prev.onclick = () => show(cur - 1); next.onclick = () => show(cur + 1);
   prev.hidden = next.hidden = list.length < 2;
   box.onkeydown = e => { if (e.key === "ArrowLeft") show(cur - 1); if (e.key === "ArrowRight") show(cur + 1); };

@@ -669,7 +669,7 @@ canvas.cvid{height:auto;aspect-ratio:auto;cursor:pointer}
 .pv{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;display:none;align-items:center;justify-content:center}
 .pv[open]{display:flex}
 .pv::backdrop{background:rgba(14,14,12,.88)}
-.pv img{flex:none;max-width:min(92vw,1400px);max-height:84vh;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#fff}
+.pv img{position:absolute;inset:0;margin:auto;max-width:min(92vw,1400px);max-height:84vh;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#fff}
 .pv button{position:absolute;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:50%;width:44px;height:44px;font-size:1.7rem;line-height:1;cursor:pointer}
 .pv button:hover,.pv button:focus-visible{background:rgba(255,255,255,.3)}
 .pvx{top:18px;right:18px}.pvp{left:16px;top:50%;translate:0 -50%}.pvn{right:16px;top:50%;translate:0 -50%}
