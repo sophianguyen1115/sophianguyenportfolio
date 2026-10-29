@@ -1537,7 +1537,7 @@ function buildToc() {
 
 // ---- Contact dialog ----
 // To receive messages, put your email address here. The form then opens your email app with the message filled in.
-const CONTACT_EMAIL = "";
+const CONTACT_EMAIL = "sophianguyen1115@gmail.com";
 const contactDialog = document.getElementById("contactDialog"), contactForm = document.getElementById("contactForm");
 const cStatus = contactForm.querySelector(".cstatus");
 function openContact() { cStatus.textContent = ""; contactDialog.showModal(); contactForm.name.focus(); }
@@ -1567,6 +1567,28 @@ document.addEventListener("click", e => {
   const b = e.target.closest("[data-cert]"); if (!b) return;
   const all = [...document.querySelectorAll("[data-cert]")];
   openPiece(all.map(x => { const im = x.querySelector("img"); return { src: x.dataset.src, name: x.dataset.name, alt: im.alt, w: im.width, h: im.height }; }), all.indexOf(b));
+});
+
+// ---- Home toolkit: the lid opens the case; a tool shows its note on hover, focus or tap ----
+(function () {
+  const root = document.querySelector(".tk-case"); if (!root) return;
+  const lid = root.querySelector(".tk-lid"), tray = root.querySelector(".tk-tray"), word = root.querySelector(".tk-open"), note = root.querySelector(".tk-note"), tools = [...root.querySelectorAll(".tk-tool")];
+  const blank = note.innerHTML;
+  lid.addEventListener("click", () => {
+    const open = !root.classList.contains("open");
+    root.classList.toggle("open", open); tray.inert = !open; lid.setAttribute("aria-expanded", String(open)); word.textContent = open ? "Close the toolkit" : "Open the toolkit";
+    if (!open) { tools.forEach(t => t.classList.remove("on")); note.innerHTML = blank; }
+  });
+  const pick = t => { tools.forEach(x => x.classList.toggle("on", x === t)); note.innerHTML = `<b>${esc(t.querySelector("span").textContent)}</b><span>${t.dataset.note}</span>`; };
+  tools.forEach(t => { t.addEventListener("mouseenter", () => pick(t)); t.addEventListener("focus", () => pick(t)); t.addEventListener("click", () => pick(t)); });
+})();
+
+// ---- Home contact: copy the email address ----
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const done = b.parentElement.querySelector(".hc-copied");
+  const ok = () => { done.textContent = "Copied!"; setTimeout(() => { done.textContent = ""; }, 2000); };
+  if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.copy).then(ok, () => { done.textContent = "Press Cmd+C to copy"; });
 });
 
 // ---- Header navigation: switches views without leaving the page ----
