@@ -1536,14 +1536,16 @@ function buildToc() {
 }
 
 // ---- Contact dialog ----
-// To receive messages, put your email address here. The form then opens your email app with the message filled in.
+// Messages are delivered to CONTACT_EMAIL through FormSubmit (formsubmit.co), since this static site has no server of its own.
+// The very first message sends FormSubmit's one-time confirmation email to that inbox; nothing arrives until it's confirmed.
 const CONTACT_EMAIL = "sophianguyen1115@gmail.com";
+const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/" + CONTACT_EMAIL;
 const contactDialog = document.getElementById("contactDialog"), contactForm = document.getElementById("contactForm");
-const cStatus = contactForm.querySelector(".cstatus");
-function openContact() { cStatus.textContent = ""; contactDialog.showModal(); contactForm.name.focus(); }
+const cStatus = contactForm.querySelector(".cstatus"), cSend = contactForm.querySelector(".csend");
+function openContact() { cStatus.textContent = ""; cStatus.className = "cstatus"; contactDialog.showModal(); contactForm.name.focus(); }
 contactForm.querySelector(".cclose").addEventListener("click", () => contactDialog.close());
 contactDialog.addEventListener("click", e => { if (e.target === contactDialog) contactDialog.close(); });
-contactForm.addEventListener("submit", e => {
+contactForm.addEventListener("submit", async e => {
   e.preventDefault();
   if (contactForm.company.value) return;                      // honeypot: bots fill this hidden field
   let ok = true;
@@ -1552,10 +1554,20 @@ contactForm.addEventListener("submit", e => {
     f.classList.toggle("invalid", bad); ok = ok && !bad;
   }
   if (!ok) { cStatus.textContent = "Please fill in your name, a valid email and a message."; return; }
-  if (!CONTACT_EMAIL) { cStatus.textContent = "This form isn't connected to an email address yet."; return; }
-  const body = `${contactForm.message.value}\n\n${contactForm.name.value} (${contactForm.email.value})`;
-  location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Message from " + contactForm.name.value)}&body=${encodeURIComponent(body)}`;
-  cStatus.textContent = "Opening your email app…";
+  const name = contactForm.name.value.trim(), email = contactForm.email.value.trim(), message = contactForm.message.value.trim();
+  cSend.disabled = true; cSend.textContent = "Sending…"; cStatus.className = "cstatus"; cStatus.textContent = "";
+  try {
+    const r = await fetch(CONTACT_ENDPOINT, {method: "POST", headers: {"Content-Type": "application/json", Accept: "application/json"},
+      body: JSON.stringify({name, email, message, _replyto: email, _subject: "Portfolio message from " + name, _template: "table", _captcha: "false"})});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || String(d.success) === "false") throw new Error(d.message || r.status);
+    contactForm.reset();
+    cStatus.className = "cstatus ok"; cStatus.textContent = "Thanks, your message is on its way. I'll reply by email soon.";
+  } catch (err) {
+    // if the service is unreachable, fall back to the visitor's own email app so the message isn't lost
+    cStatus.className = "cstatus err";
+    cStatus.innerHTML = `Sorry, that didn't send. You can <a href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Portfolio message from " + name)}&body=${encodeURIComponent(message + "\n\n" + name + " (" + email + ")")}">email me directly</a> instead.`;
+  } finally { cSend.disabled = false; cSend.textContent = "Send message"; }
 });
 document.addEventListener("click", e => {
   const a = e.target.closest('[data-action="contact"]');
