@@ -185,6 +185,85 @@ const PA_MOMENT = {note:"An illustrated example. Usernames and numbers are demo 
   {face:"worried", say:"Is anyone here real?", text:"She scrolls to find other artists, and gets ads, reposts and a flood of AI images instead.", chip:["Feed", "12 ads, 3 AI posts"]},
   {face:"upset", say:"No. Absolutely not.", text:"Then a comment under her post: \u201cCan I train my model on this?\u201d", chip:["Comments", "1 request to train AI"]},
   {face:"sad", say:"Where do I even go?", text:"Report it? Delete it? Leave? Nothing on the app protects her work or helps her find real artists."}]};
+// VibeBook opening scene: two fans, one spare seat. Mika wants a ticket, Carson has one to sell, and nothing lets them trust each other.
+// Each beat sets who speaks, both people's pose and face, and an optional status chip.
+const VB_DUO = {note:"An illustrated example. Prices, seats and the show are demo data.",
+  people:[{key:"m", name:"Mika", role:"The fan"}, {key:"c", name:"Carson", role:"The seller"}],
+  beats:[
+    {who:"m", say:"Presale's live!", m:["phone","happy"], c:["idle","neutral"], text:"10:00. Mika's favorite idol plays Brooklyn tonight, and the presale just opened."},
+    {who:"m", say:"Sold out?! It said 2 left.", m:["cheeks","wow"], c:["idle","neutral"], text:"She picks two seats, reaches checkout, and they're gone. The page said they were available a second ago.", chip:["Ticket site", "Sold out"]},
+    {who:"c", say:"Anyone want my spare? Face value.", m:["phone","sad"], c:["show","smile"], text:"Across town, Carson's son can't make it. He has one seat he'd happily sell for what he paid.", chip:["Carson", "1 spare seat, $90"]},
+    {who:"m", say:"How do I know it's real?", m:["phone","worried"], c:["show","curious"], text:"They find each other in a fan group chat. But a screenshot of a ticket proves nothing.", chip:["Group chat", "Unverified"]},
+    {who:"c", say:"And how do I know you'll pay?", m:["phone","worried"], c:["shrug","worried"], text:"Carson has the same worry from the other side. Nothing holds the money until the ticket arrives.", chip:["Payment", "No protection"]},
+    {who:"m", say:"Guess I'll pay the scalper\u2026", m:["idle","sad"], c:["idle","sad"], text:"So she buys a $400 resale ticket, his seat sits empty, and two fans who wanted the same thing never connect.", chip:["Resale", "$400 per ticket"]}]};
+// VibeBook screens as a scroll story: Mika (the fan from the scenario) books a show, one screen per step
+const VB_STORY = {who:"Mika", figure:"mika", theme:"vb", head:"Seven screens, in the order Mika meets them.", steps:[
+  {src:"assets/9eb97bb53713.webp", name:"Home", phase:"First look", face:"curious", say:"Wait, these are all shows I'd go to?",
+   text:"A home feed brings upcoming shows, discovery and recommendations together, so she lands on something relevant instead of a wall of listings.", note:"Her artists first, before anything else.",
+   alt:"Home screen: an upcoming show banner, Discover Events, an Amateurs Unite feature and a Recommended For You list."},
+  {src:"assets/976a7b664aec.webp", name:"Discover", phase:"Exploring", face:"wow", say:"A show near me tonight!",
+   text:"Personalized suggestions keep her exploring, and the location-aware layout suits spontaneous plans with whatever is playing nearby.", note:"Near You first, then artists she may like.",
+   alt:"Discover screen: a Near You event for Siam\u00e9s, Artists You May Like and Upcoming Events with an exclusive merch prompt."},
+  {src:"assets/cef761c22e3d.webp", name:"Seating", phase:"Choosing a seat", face:"smile", say:"A20. Perfect view.",
+   text:"Seat and ticket count are picked in one focused step, with the background dimmed so nothing competes for her attention.", note:"One decision at a time.",
+   alt:"Ticket screen: ticket for the artist at 9:00 PM with seating location A20 and number of tickets."},
+  {src:"assets/8f6bcd4be603.webp", name:"Purchase", phase:"Checking out", face:"neutral", say:"$140 total. No surprises.",
+   text:"A short, readable price breakdown, with the option to add to or edit the order, means she knows exactly what she's paying before she commits.", note:"Every fee shown up front.",
+   alt:"Purchase screen: Siames VIP ticket $120, seating $20, total $140, with an add to this ticket option and a Checkout button."},
+  {src:"assets/43a0a2635138.webp", name:"Payment", phase:"Checking out", face:"happy", say:"Card's already saved!",
+   text:"Saved payment and email details make the last step fast and secure, so the seat can't slip away while she types.", note:"One tap to complete.",
+   alt:"Payment screen: saved card ending 02, email information, order total and a Complete Purchase button."},
+  {src:"assets/2536a4edd72e.webp", name:"Ticket confirmed", phase:"Booked", face:"happy", say:"It's real. I'm going!",
+   text:"Instant confirmation and a physical-style ticket capture the excitement of holding a real one, and settle any doubt that the seat is hers.", note:"No more \u201cseats unavailable.\u201d",
+   alt:"Ticket Confirmed screen: a physical-style VIP ticket with a Go back to Home button."},
+  {src:"assets/461a9ab73ce3.webp", name:"Profile", phase:"Finding her people", face:"smile", say:"Now I can find who's going too.",
+   text:"Her concert persona (selfies, shows attended, saved artists) personalizes the app and turns it into a community, so the next show is one she plans with other fans.", note:"Verified fans, not strangers in a group chat.",
+   alt:"Profile screen: a user name over a photo, with 120 photos, 50K followers, 402 following, and Follow and Message buttons."}]};
+// VibeBook storyboards as two moving filmstrips: the big picture drifts left, the close up drifts right
+const VB_BOARDS = [
+  {label:"Big picture", dir:"l", items:[
+    {src:"assets/9ac61660e758.webp", w:488, h:456, alt:"Storyboard sketch: Zori is frustrated with missing out on exclusive tours."},
+    {src:"assets/e50fce990ae1.webp", w:488, h:456, alt:"Storyboard sketch: Zori downloads the VibeBook app and opens it."},
+    {src:"assets/e67a6b2250a5.webp", w:488, h:456, alt:"Storyboard sketch: Zori is excited that the app is up to date and user friendly."},
+    {src:"assets/8a3cd6e4fbcb.webp", w:488, h:445, alt:"Storyboard sketch: Zori successfully books her tickets."},
+    {src:"assets/3397d0237662.webp", w:488, h:445, alt:"Storyboard sketch: Zori goes to the concert with her digital ticket."},
+    {src:"assets/2d98064051bf.webp", w:488, h:445, alt:"Storyboard sketch: Zori enjoys her exclusive concert from her ticket."}]},
+  {label:"Close up", dir:"r", items:[
+    {src:"assets/273472969588.webp", w:488, h:456, alt:"Storyboard sketch: Zori downloads the VibeBook app and opens it."},
+    {src:"assets/de170a296562.webp", w:488, h:456, alt:"Storyboard sketch: Zori is greeted at the home screen."},
+    {src:"assets/3f4ac56bdf32.webp", w:488, h:456, alt:"Storyboard sketch: Zori picks the event or concert of her choice."},
+    {src:"assets/d54011f6f836.webp", w:488, h:445, alt:"Storyboard sketch: Zori makes her payment, autosaving her info for later events."},
+    {src:"assets/6c7dd3fc1d06.webp", w:488, h:445, alt:"Storyboard sketch: Zori successfully books her tickets, showing the confirmation."},
+    {src:"assets/37ee087b5e3c.webp", w:488, h:445, alt:"Storyboard sketch: Zori gets the event info and an exclusive QR code."}]}];
+// VibeBook personas from the persona slides (empathy maps are drawn from them)
+const VB_PERSONAS = [
+  {name:"Mika Maddeson", title:"Graphic design student", photo:"assets/9b285cab4a84.webp", c:"#2f7bf5", quote:"Love going to my fave idol's meetups.",
+   facts:["22","Brooklyn, NY","Graphic design","Parents, two siblings & her cat"],
+   bio:"Mika is a 22-year-old graphic design student who freelances on the side of her studies. In her free time she goes to concerts and music events with her friends. She is annoyed with online ticketing: even with an account, nothing is personalized to her tastes, and availability can be wrong by the time she reaches checkout.",
+   lists:[["Goals",["A more personalized experience","Streamlined navigation that fits her needs","Only options within her budget","Accurate, secure ticketing with no issues on the day"]],
+          ["Frustrations",["Her feed doesn't show artists she actually likes","Ticket options outside her price range","Ticket info that doesn't match in real time"]]],
+   empathy:{says:["\u201cLove going to my fave idol's meetups.\u201d","\u201cWhy does it say sold out now?\u201d"],
+            thinks:["Making an account should mean it knows her taste.","Her budget is tight, so every dollar counts."],
+            does:["Goes to concerts with friends","Freelances while studying","Hunts for tickets in her price range"],
+            feels:["Annoyed at checkout surprises","Excited for live music","Wary of paying too much"]}},
+  {name:"Dan Fuller", title:"Jazz musician", photo:"assets/5b624115d72b.webp", c:"#1b5fd1", quote:"Let's love! Jazz speaks to me.",
+   facts:["42","Brooklyn, NY","Fine arts","Wife, son, daughter & three dogs"],
+   bio:"Dan is a jazz musician who performs often on stage. When he can, he loves meeting others at more casual events to broaden his friendships. He would like to discover new artists in his field and join discussion boards, but most sites don't show local events near him.",
+   lists:[["Goals",["A more personalized experience","Attend more music events","Make more friends in the music scene"]],
+          ["Frustrations",["Wants better artist recommendations","Few events shown near his location","No discussion boards for music events"]]],
+   empathy:{says:["\u201cLet's love! Jazz speaks to me.\u201d","\u201cWhere are the local shows?\u201d"],
+            thinks:["There must be great artists nearby he hasn't heard yet.","Music is better with people to share it."],
+            does:["Performs on stage often","Goes to casual music events","Looks for new artists in his field"],
+            feels:["Disappointed by missing local events","Eager to connect","Passionate about jazz"]}},
+  {name:"Carson Viso", title:"Music instructor", photo:"assets/817dd916d3cf.webp", c:"#0f2a5c", quote:"Music is the gateway to the soul.",
+   facts:["30","Brooklyn, NY","Music theory","Wife, two sons, a cat & a dog"],
+   bio:"Carson is a 30-year-old music instructor who teaches people about music theory. When he can, he splurges on concerts and often takes his family along to any artist they like. He's displeased with the benefits he gets despite being a frequent buyer, and would like more perks and special deals.",
+   lists:[["Goals",["Buyer and seller relationships for tickets","Streamlined navigation that benefits him","Exclusive events and perks from favorite artists"]],
+          ["Frustrations",["Few perks for how much he spends","No merch shop linked to artists' websites","No exclusive merch from events"]]],
+   empathy:{says:["\u201cMusic is the gateway to the soul.\u201d","\u201cI buy so many tickets, where are the perks?\u201d"],
+            thinks:["Loyal fans should get something back.","Family concert nights should be easy to plan."],
+            does:["Teaches music theory","Takes his family to concerts","Buys tickets often"],
+            feels:["Undervalued as a frequent buyer","Happy sharing music with family","Curious about exclusive events"]}}];
 // Pocket Atelier problem as a Venn diagram: each platform does one thing for artists; nothing covers the middle
 const PA_VENN = {kicker:"The problem", head:["Every platform does one thing.", "None protects the artist."],
   base:{t:"She has to choose between selling, being seen and staying safe.", d:"Artists split their work across marketplaces that take large fees, social feeds that bury them under ads and bots, and AI tools that learn from their art. Hover or tap the diagram."},
@@ -268,45 +347,14 @@ const projects = [
     lede:"One platform for discovering concerts, buying tickets, and connecting through live music.", source: SRC + "vibebook",
     facts:[["Category","Music / Social media"],["Client","VibeBook"],["Year","2025"],["Role","UX & UI designer"]],
     sections:[
+     {label:"The scenario", duo:VB_DUO},
      {label:"Overview", title:"One app. Every concert.", paras:["VibeBook combines verified ticketing with a social platform, so fans can discover events, trade tickets securely and connect with each other.","I mapped the ticket purchasing journey first, then moved from sketches to hi-fi wireframes and an interactive prototype."]},
      {label:"Problem", paras:["Concertgoers face ticket scalping, inaccurate event information and disconnected experiences across ticketing and social apps. Existing platforms focus on transactions rather than community."],
       goals:["Build a following of music fans","Offer secure payment options and no last-minute changes","Cater to user needs and preferences"],goalIcons:["fans","ticket","sliders"]},
-     {label:"Research", title:"Research and personas", paras:["Research surfaced three needs: reliable digital ticketing, flexible resale, and a stronger live-music community. Those needs shaped three personas."],
-      deck:[{src:"assets/fc49e82625e3.webp",w:1920,h:1080,alt:"Persona 1: Mika Maddeson, 22, graphic design student from Brooklyn, NY. Quote: Love going to my fave idol's meetups. Goals include a personalized experience, navigation that fits her needs, options within her budget and secure ticketing."},
-        {src:"assets/fd91bf0b35b1.webp",w:1920,h:1080,alt:"Persona 2: Dan Fuller, 42, jazz musician from Brooklyn, NY. Quote: Let's love! Jazz speaks to me. Goals include a personalized experience, attending more music events and making friends in the music scene."},
-        {src:"assets/9b771bf10529.webp",w:1920,h:1080,alt:"Persona 3: Carson Viso, 30, music instructor from Brooklyn, NY. Quote: Music is the gateway to the soul. Goals include buyer and seller relationships for tickets, streamlined navigation and exclusive events and perks from favorite artists."}], deckLabel:"Personas"},
-     {label:"Storyboards", title:"Sketches", paras:["Early sketches explored the ticket purchasing journey before anything moved into wireframes."],
-      deck:[{src:"assets/6f953d898854.webp",w:2000,h:1166,alt:"UX design storyboard, big picture: Zori is frustrated by a sold-out tour, downloads VibeBook, finds it up to date and user friendly, books her tickets, goes to the concert with her digital ticket and enjoys the exclusive concert."},
-        {src:"assets/fd6479f2bd83.webp",w:2000,h:1166,alt:"UX design storyboard, close up: Zori downloads and opens VibeBook, is greeted at the home screen, picks an event, pays with autosaved info, sees the booking confirmation and gets her event info and exclusive QR code."}], deckLabel:"Storyboards"},
-     {label:"Wireframes", title:"Hi-fi wireframes", paras:["The hi-fi wireframes bring the visual design to the ticket purchasing flow and became an interactive prototype."],
-      annotated:[
-        {title:"Discover and choose", screens:[
-          {src:"assets/9eb97bb53713.webp", name:"Home", alt:"Home screen: an upcoming show banner, Discover Events, an Amateurs Unite feature and a Recommended For You list."},
-          {src:"assets/976a7b664aec.webp", name:"Discover", alt:"Discover screen: a Near You event for Siamés, Artists You May Like and Upcoming Events with an exclusive merch prompt."},
-          {src:"assets/cef761c22e3d.webp", name:"Seating", alt:"Ticket screen: ticket for the artist at 9:00 PM with seating location A20 and number of tickets."},
-          {src:"assets/933ce68d89a1.webp", name:"Finalize ticket", alt:"Finalize Your Ticket screen: ticket summary with seat A20, one ticket, and an option to add or upgrade."}],
-         notes:[
-          {text:"A home feed brings upcoming shows, discovery and recommendations together, so fans land on something relevant.", for:[0]},
-          {text:"Personalized suggestions keep users engaged while buying tickets. The location-aware UI suits concertgoers who want spontaneous plans or other nearby events.", for:[0,1]},
-          {text:"Seating and ticket count are picked in a focused step, with the background dimmed so nothing competes.", for:[2]},
-          {text:"A clear ticket summary with a quick path to add or upgrade keeps the final decision simple.", for:[3]}]},
-        {title:"Checkout", screens:[
-          {src:"assets/8f6bcd4be603.webp", name:"Purchase", alt:"Purchase screen: Siames VIP ticket $120, seating $20, total $140, with an add to this ticket option and a Checkout button."},
-          {src:"assets/b0311d1e9a7b.webp", name:"Confirm order", alt:"Confirm Your Purchase screen with the order total and Edit Order and Looks Great buttons."},
-          {src:"assets/43a0a2635138.webp", name:"Payment", alt:"Payment screen: saved card ending 02, email information, order total and a Complete Purchase button."},
-          {src:"assets/2536a4edd72e.webp", name:"Ticket confirmed", alt:"Ticket Confirmed screen: a physical-style VIP ticket with a Go back to Home button."}],
-         notes:[
-          {text:"A short, readable price breakdown, with options to edit the order, lets fans buy with no surprises.", for:[0,1]},
-          {text:"Saved payment and email details make the final step fast and secure.", for:[2]},
-          {text:"Boosts user confidence with instant confirmation and dynamic visuals, capturing the excitement and satisfaction of receiving a real, physical ticket.", for:[3]}]},
-        {title:"Community", screens:[
-          {src:"", video:{webm:"assets/16c347dba7da.webm",mp4:"",poster:"assets/0a4dc0398194.webp",anim:"assets/4dab79bc2fae.webp"}, name:"Profile", alt:"Profile screen: a user name over a photo, with 120 photos, 50K followers, 402 following, and Follow and Message buttons."},
-          {src:"", video:{webm:"assets/28c2ecfa181b.webm",mp4:"",poster:"assets/d9004748c97e.webp",anim:"assets/e481f54118d2.webp"}, name:"Messages", alt:"Conversations screen: recent chats with fans, with unread counts and a bottom tab bar."}],
-         notes:[
-          {text:"Fans can build a concert persona (selfies, events attended, saved artists), which personalizes the experience and increases app stickiness.", for:[0]},
-          {text:"Artists or influencers can build their identity and grow their following.", for:[0]},
-          {text:"Social interactivity makes this app a community, not just a service. It is ideal for group coordination around concerts.", for:[1]}]}
-      ]},
+     {label:"Research", title:"Research and personas", paras:["Research surfaced three needs: reliable digital ticketing, flexible resale, and a stronger live-music community. Those needs shaped three personas."]},
+     {label:"Personas", title:"Three fans, one stage", paras:["Switch between Mika, Dan and Carson, flip through their goals and frustrations, and tap the empathy map to look closer."], personas:VB_PERSONAS, personaTheme:"vb"},
+     {label:"Storyboards", title:"Sketches", paras:["Early sketches explored the ticket purchasing journey before anything moved into wireframes. Hover or tap a strip to pause it."], ticker:VB_BOARDS},
+     {label:"Wireframes", title:"Hi-fi wireframes", paras:["The hi-fi wireframes bring the visual design to the ticket purchasing flow and became an interactive prototype. Scroll through the flow with Mika, one screen at a time."], story:VB_STORY},
      {label:"Result", title:"Redefining how fans experience music", paras:["The interface uses blue and dark tones, clear navigation, readable type and immersive imagery.","VibeBook combines discovery, verified ticketing, messaging and community, kept to music-related topics only, to create an ecosystem for fans and musicians."]},
      {label:"Next steps", title:"Reflection", paras:["After the course, I kept refining the interface and adding screens. Next steps are more user research, reviewing music ticketing apps, interviewing music enthusiasts, and exploring more interactive, seamless journeys."]}
     ]}},
@@ -1187,12 +1235,12 @@ const storyPerson = () => `<svg class="sy-person" viewBox="20 20 260 320" aria-h
   <ellipse cx="150" cy="158" rx="4.2" ry="3.4" class="nose"/>
   <g class="face"></g>
 </svg>`;
-const storyHtml = st => (storyData = st, `<div class="sy">
+const storyHtml = st => (storyData = st, `<div class="sy${st.theme ? " sy-" + st.theme : ""}">
   <p class="sy-kicker">The screens</p>
   <p class="sy-head">${esc(st.head)}</p>
   <div class="sy-grid">
     <div class="sy-stage" aria-hidden="true">
-      <div class="sy-who"><p class="sy-say"></p>${storyPerson()}</div>
+      <div class="sy-who"><p class="sy-say"></p>${st.figure === "mika" ? `<svg class="sy-person sy-flat" viewBox="22 40 180 360">${duoFigure("m", DUO_HAIR.m)}</svg>` : storyPerson()}</div>
       <div class="sy-phone">${st.steps.map((s, i) => `<img src="${esc(s.src)}" alt="" width="520" height="1050" decoding="async"${i ? ' loading="lazy"' : ""}>`).join("")}</div>
     </div>
     <ol class="sy-steps">${st.steps.map((s, i) => `<li class="sy-step" data-i="${i}">
@@ -1206,15 +1254,16 @@ const storyHtml = st => (storyData = st, `<div class="sy">
 function initStory() {
   const root = caseView.querySelector(".sy"); if (!root || !storyData) return;
   const S = storyData.steps, steps = [...root.querySelectorAll(".sy-step")], shots = [...root.querySelectorAll(".sy-phone img")];
-  const say = root.querySelector(".sy-say"), face = root.querySelector(".sy-person .face");
+  const say = root.querySelector(".sy-say"), face = root.querySelector(".sy-person .face"), flat = storyData.figure === "mika";
   let cur = -1;
   const show = i => {
     if (i === cur) return; cur = i;
     steps.forEach((s, k) => s.classList.toggle("on", k === i));
     shots.forEach((s, k) => s.classList.toggle("on", k === i));
-    face.innerHTML = STORY_FACES[S[i].face] || STORY_FACES.smile;
+    face.innerHTML = (flat ? DUO_FACES : STORY_FACES)[S[i].face] || (flat ? DUO_FACES.smile : STORY_FACES.smile);
     say.textContent = S[i].say; say.classList.remove("pop"); void say.offsetWidth; say.classList.add("pop");
   };
+  if (flat) root.querySelector(".sy-person .arms").innerHTML = duoArms("phone");
   root.addEventListener("click", e => { const b = e.target.closest(".sy-next"); if (b) steps[+b.dataset.to].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"}); });
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) show(+e.target.dataset.i); }), {rootMargin: "-45% 0px -45% 0px"});
@@ -1252,6 +1301,100 @@ function initMoment() {
   }
   show(0);
 }
+
+// ---- Two-person scene (VibeBook): two flat, full-body figures on a pale stage while beats scroll past; each beat sets
+// who speaks, each figure's pose and face, and lights up a status chip ----
+let duoData = null;
+// Faces in an outlined, white-faced style: closed-eye arcs for smiles, small dots otherwise, a tiny nose
+const DUO_FACES = {
+  neutral: '<circle cx="90" cy="102" r="2.6"/><circle cx="110" cy="102" r="2.6"/><path d="M96 117h8" class="m"/>',
+  smile:   '<path d="M85 103q5-5 10 0M105 103q5-5 10 0" class="m"/><path d="M94 115q6 5 12 0" class="m"/>',
+  happy:   '<path d="M85 103q5-6 10 0M105 103q5-6 10 0" class="m"/><path d="M93 113q7 9 14 0z" class="o"/>',
+  wow:     '<circle cx="90" cy="101" r="3.2"/><circle cx="110" cy="101" r="3.2"/><ellipse cx="100" cy="117" rx="3.6" ry="4.8" class="o"/>',
+  curious: '<circle cx="90" cy="102" r="2.6"/><circle cx="110" cy="102" r="2.6"/><path d="M104 92l10-3" class="m"/><circle cx="101" cy="117" r="2.4" class="o"/>',
+  worried: '<circle cx="90" cy="103" r="2.6"/><circle cx="110" cy="103" r="2.6"/><path d="M84 95l9-3M116 95l-9-3" class="m"/><path d="M95 119q5-4 10 0" class="m"/><path d="M126 86q4 6 0 9q-4-3 0-9z" class="sw"/>',
+  sad:     '<path d="M85 101q5 4 10 0M105 101q5 4 10 0" class="m"/><path d="M95 119q5-4 10 0" class="m"/>'};
+// arms for each pose: [left arm path, left hand, right arm path, right hand, extra]
+const DUO_POSES = {
+  idle:   ['M72 158Q60 196 64 228', [64, 232], 'M128 158Q140 196 136 228', [136, 232], ''],
+  phone:  ['M72 158Q60 194 90 202', [91, 204], 'M128 158Q140 194 110 202', [109, 204], '<rect x="88" y="176" width="24" height="38" rx="5" class="ph"/><rect x="91" y="180" width="18" height="28" rx="2" class="scr"/>'],
+  cheeks: ['M72 158Q50 142 78 114', [79, 112], 'M128 158Q150 142 122 114', [121, 112], ''],
+  show:   ['M72 158Q60 196 64 228', [64, 232], 'M128 158Q160 146 150 98', [150, 96], '<rect x="138" y="62" width="24" height="38" rx="5" class="ph"/><rect x="141" y="66" width="18" height="28" rx="2" class="scr"/>'],
+  shrug:  ['M72 158Q50 190 42 160', [41, 156], 'M128 158Q150 190 158 160', [159, 156], '']};
+// One figure: [back hair, front hair & accessories, clothing pattern] come from DUO_HAIR
+const duoFigure = (k, hair) => `<g class="du-fig du-${k}">
+  <ellipse cx="100" cy="392" rx="48" ry="6" class="du-shadow"/>
+  ${hair[0]}
+  <path d="M80 236L74 380h22l6-130zM120 236l6 144h-22l-6-130z" class="pants"/>
+  <rect x="68" y="376" width="30" height="12" rx="6" class="shoe"/><rect x="102" y="376" width="30" height="12" rx="6" class="shoe"/>
+  <rect x="92" y="122" width="16" height="22" rx="4" class="skin"/>
+  <rect x="66" y="140" width="68" height="104" rx="26" class="top"/>
+  ${hair[2] || ""}
+  <circle cx="71" cy="106" r="7" class="skin"/><circle cx="129" cy="106" r="7" class="skin"/>
+  <circle cx="100" cy="100" r="30" class="skin"/>
+  <circle cx="83" cy="112" r="6.5" class="blush"/><circle cx="117" cy="112" r="6.5" class="blush"/>
+  ${hair[1]}
+  <path d="M100 106q-2 3 1 5" class="nose"/>
+  <g class="face"></g>
+  <g class="arms"></g>
+</g>`;
+const DUO_HAIR = {
+  // Mika: long straight navy hair with a top bun, gold hoops, blue headphones; a white top with blue polka dots
+  m: ['<circle cx="100" cy="60" r="14" class="hair"/><path d="M64 190Q58 120 70 88Q84 62 100 62Q116 62 130 88Q142 120 136 190Q120 198 112 184L112 130L88 130L88 184Q80 198 64 190z" class="hair"/>',
+      '<path d="M70 100Q68 66 100 66Q132 66 130 98Q126 84 112 80Q104 92 84 92Q76 92 70 100z" class="hair"/><circle cx="71" cy="120" r="6" class="hoop"/><circle cx="129" cy="120" r="6" class="hoop"/><path d="M80 140Q100 156 120 140" class="hp"/><circle cx="80" cy="140" r="6" class="hpc"/><circle cx="120" cy="140" r="6" class="hpc"/>',
+      '<g class="dots"><circle cx="82" cy="170" r="3.5"/><circle cx="102" cy="162" r="3.5"/><circle cx="121" cy="174" r="3.5"/><circle cx="88" cy="196" r="3.5"/><circle cx="112" cy="200" r="3.5"/><circle cx="78" cy="224" r="3.5"/><circle cx="100" cy="228" r="3.5"/><circle cx="123" cy="222" r="3.5"/></g>'],
+  // Carson: a navy swoop of hair, round glasses, a short beard; a blue sweater with a ribbed navy turtleneck and a zigzag band
+  c: ['',
+      '<path d="M70 98Q66 66 98 64Q122 62 130 80Q136 92 130 100Q126 84 110 82Q104 92 88 90Q76 90 70 98z" class="hair"/><path d="M82 120Q86 134 100 134Q114 134 118 120Q112 126 108 125Q104 130 100 130Q96 130 92 125Q88 126 82 120z" class="hair"/><circle cx="90" cy="102" r="8.5" class="gl"/><circle cx="110" cy="102" r="8.5" class="gl"/><path d="M98.5 102h3" class="gl"/>',
+      '<rect x="84" y="134" width="32" height="16" rx="6" class="neck"/><path d="M91 137v10M97 137v10M103 137v10M109 137v10" class="rib"/><path d="M68 192l8-8 8 8 8-8 8 8 8-8 8 8 8-8 8 8" class="zig"/>']};
+const duoArms = p => { const [la, lh, ra, rh, extra] = DUO_POSES[p] || DUO_POSES.idle;
+  return `<path d="${la}" class="arm-o"/><path d="${ra}" class="arm-o"/><path d="${la}" class="arm"/><path d="${ra}" class="arm"/>${extra}<circle cx="${lh[0]}" cy="${lh[1]}" r="8" class="skin"/><circle cx="${rh[0]}" cy="${rh[1]}" r="8" class="skin"/>`; };
+const duoHtml = d => (duoData = d, `<div class="du">
+  <div class="du-grid">
+    <div class="du-stage" aria-hidden="true">
+      <span class="du-sun"></span><span class="du-beam b1"></span><span class="du-beam b2"></span>
+      <svg class="du-svg" viewBox="0 0 440 410"><g class="du-conf"><circle cx="40" cy="80" r="5"/><circle cx="400" cy="130" r="4"/><circle cx="214" cy="40" r="3.5" class="y"/><path d="M380 60l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" class="y"/><path d="M16 250q8-10 16 0t16 0" class="sq"/><rect x="200" y="300" width="9" height="9" rx="2" transform="rotate(20 204 304)"/></g><g transform="translate(14 8)">${duoFigure("m", DUO_HAIR.m)}</g><g transform="translate(226 8)">${duoFigure("c", DUO_HAIR.c)}</g></svg>
+      ${d.people.map(p => `<p class="du-say du-say-${p.key}"></p>`).join("")}
+      ${d.people.map(p => `<p class="du-tag du-tag-${p.key}"><b>${esc(p.name)}</b> ${esc(p.role)}</p>`).join("")}
+      <ul class="du-chips">${d.beats.filter(b => b.chip).map(b => `<li data-at="${d.beats.indexOf(b)}"><b>${esc(b.chip[0])}</b> &middot; ${esc(b.chip[1])}</li>`).join("")}</ul>
+    </div>
+    <ol class="du-beats">${d.beats.map((b, i) => `<li class="du-beat" data-i="${i}"><div>${b.chip ? `<span class="du-bchip"><b>${esc(b.chip[0])}</b> &middot; ${esc(b.chip[1])}</span>` : ""}<p class="du-line"><b>${esc(d.people.find(p => p.key === b.who).name)}:</b> \u201c${esc(b.say)}\u201d</p><p>${esc(b.text)}</p></div></li>`).join("")}<li class="du-note">${esc(d.note)}</li></ol>
+  </div>
+</div>`);
+function initDuo() {
+  const root = caseView.querySelector(".du"); if (!root || !duoData) return;
+  const B = duoData.beats, beats = [...root.querySelectorAll(".du-beat")], chips = [...root.querySelectorAll(".du-chips li")];
+  const pose = (k, [p, f]) => {
+    const g = root.querySelector(".du-" + k);
+    g.querySelector(".arms").innerHTML = duoArms(p);
+    g.querySelector(".face").innerHTML = DUO_FACES[f] || DUO_FACES.neutral;
+  };
+  let cur = -1;
+  const show = i => {
+    if (i === cur) return; cur = i; const b = B[i];
+    beats.forEach((x, k) => x.classList.toggle("on", k === i));
+    chips.forEach(c => c.classList.toggle("on", +c.dataset.at <= i));
+    pose("m", b.m); pose("c", b.c);
+    duoData.people.forEach(p => {
+      const s = root.querySelector(".du-say-" + p.key), on = p.key === b.who;
+      root.querySelector(".du-" + p.key).classList.toggle("talk", on);
+      if (on) { s.textContent = b.say; s.classList.remove("pop"); void s.offsetWidth; s.classList.add("pop"); }
+      s.classList.toggle("on", on);
+    });
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) show(+e.target.dataset.i); }), {rootMargin: "-45% 0px -45% 0px"});
+    beats.forEach(b => io.observe(b));
+  }
+  show(0);
+}
+
+// ---- Storyboard ticker: each strip of sketch panels loops endlessly (the panels are repeated once so the loop is seamless);
+// hovering or focusing a strip pauses it, and with reduced motion it becomes a plain horizontal scroller ----
+const boardTickerHtml = rows => `<div class="sb">${rows.map(r => {
+  const cards = (dup) => r.items.map((it, i) => `<figure class="sb-card"${dup ? ' aria-hidden="true"' : ""}><span class="sb-n">${String(i + 1).padStart(2, "0")}</span><img src="${esc(it.src)}" alt="${dup ? "" : esc(it.alt)}" width="${it.w}" height="${it.h}" decoding="async"></figure>`).join("");
+  return `<div class="sb-row sb-${r.dir}"><p class="sb-label">${esc(r.label)}</p><div class="sb-view" tabindex="0" aria-label="${esc(r.label)} storyboard, ${r.items.length} panels"><div class="sb-track">${cards(false)}${cards(true)}</div></div></div>`;
+}).join("")}</div>`;
 
 // ---- Problem Venn: three overlapping circles; hovering or tapping a circle (or the "?" in the middle) explains it ----
 let vennData = null;
@@ -1759,6 +1902,8 @@ function renderCase(p) {
     ${s.ring ? ringHtml(s.ring) : ""}
     ${s.posters ? wallHtml(s.posters) : ""}
     ${s.moment ? momentHtml(s.moment) : ""}
+    ${s.duo ? duoHtml(s.duo) : ""}
+    ${s.ticker ? boardTickerHtml(s.ticker) : ""}
     ${s.venn ? vennHtml(s.venn) : ""}
     ${s.timeline ? timelineHtml(s.timeline) : ""}
     ${s.story ? storyHtml(s.story) : ""}
@@ -1800,7 +1945,7 @@ function renderCase(p) {
   initFlow();
   initTimeline();
   initStory();
-  initMoment();
+  initMoment(); initDuo();
   initVenn();
   initComp();
   initPersonas();
@@ -2104,6 +2249,11 @@ document.querySelectorAll(".in-card-wrap").forEach(wrap => {
   });
 });
 
+// ---- Homepage design-work collage: retry a tile once if it fails to load ----
+document.querySelectorAll(".mw-col img").forEach(img => img.addEventListener("error", () => {
+  if (img.dataset.retried) return; img.dataset.retried = "1"; const s = img.src; img.src = ""; img.src = s;
+}));
+
 // ---- Homepage intro: "Explore my work" glides down to the UI/UX projects (a slow ease-in-out, not the browser's quick smooth scroll) ----
 document.querySelector(".in-explore")?.addEventListener("click", e => {
   e.preventDefault();
@@ -2115,6 +2265,33 @@ document.querySelector(".in-explore")?.addEventListener("click", e => {
   const tick = now => { const t = Math.min(1, (now - t0) / ms); scrollTo(0, from + d * ease(t)); if (t < 1) requestAnimationFrame(tick); else root.style.scrollBehavior = ""; };
   requestAnimationFrame(tick);
 });
+
+// ---- About hero: collage pieces show a little story on hover (or tap), and the project pieces open their case study ----
+(function () {
+  const stage = document.querySelector(".abh-stage"); if (!stage) return;
+  const tip = stage.querySelector(".abh-tip"); let pinned = null, lastType = "mouse";
+  stage.addEventListener("pointerdown", e => { lastType = e.pointerType; });
+  const show = (el, x, y) => {
+    const r = stage.getBoundingClientRect(); tip.textContent = el.dataset.tip;
+    const w = Math.min(230, r.width * .6);
+    tip.style.width = w + "px";
+    tip.style.left = Math.max(0, Math.min(r.width - w, x - r.left + 14)) + "px";
+    tip.style.top = Math.max(0, y - r.top + 18) + "px"; tip.classList.add("on");
+  };
+  const hide = () => { tip.classList.remove("on"); pinned = null; };
+  stage.querySelectorAll("[data-tip]").forEach(el => {
+    el.addEventListener("pointermove", e => { if (e.pointerType === "mouse") show(el, e.clientX, e.clientY); });
+    el.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") hide(); });
+    el.addEventListener("focus", () => { const b = el.getBoundingClientRect(); show(el, b.left + b.width / 3, b.top + b.height / 2); });
+    el.addEventListener("blur", hide);
+    el.addEventListener("click", e => {
+      // on touch, the first tap reads the story and a second tap opens the project
+      if (lastType !== "mouse" && e.detail && pinned !== el) { const b = el.getBoundingClientRect(); show(el, b.left + b.width / 4, b.top + b.height / 2); pinned = el; return; }
+      const p = el.dataset.open && [...projects, ...otherProjects].find(o => o.name === el.dataset.open); if (p) openProject(p);
+    });
+  });
+  document.addEventListener("pointerdown", e => { if (pinned && !e.target.closest(".abh-p")) hide(); });
+})();
 
 // ---- About: work experience accordion (one open at a time) ----
 document.querySelectorAll(".ab-jhead").forEach(b => b.addEventListener("click", () => {
