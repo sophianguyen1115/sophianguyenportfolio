@@ -325,8 +325,22 @@ function makeCard(p) {
   el.querySelector(".desc").textContent = p.desc;
   return el;
 }
+// Homepage UI/UX case studies: alternating rows, a framed picture on one side and the story on the other
+function makeRow(p, i) {
+  const el = document.createElement("li");
+  el.className = "wk-row" + (i % 2 ? " flip" : "") + (p.soon ? " soon" : "");
+  const cat = (p.caseStudy && p.caseStudy.facts || []).find(f => f[0] === "Category");
+  const year = (p.caseStudy && p.caseStudy.facts || []).find(f => f[0] === "Year");
+  const meta = p.soon ? "In progress" : [cat && cat[1], year && year[1]].filter(Boolean).join(" \u00b7 ");
+  const tag = p.soon ? "div" : "button";
+  el.innerHTML = `<${tag}${p.soon ? "" : ' type="button"'} class="wk-pic" ${p.soon ? 'aria-hidden="true"' : `aria-label="Open the ${esc(p.name)} case study"`}><img src="${p.image}" alt="" loading="lazy" decoding="async" draggable="false"${p.imageFit ? ' class="fit"' : ""}></${tag}>
+    <div class="wk-copy"><p class="wk-meta"><span>${String(i + 1).padStart(2, "0")}</span>${esc(meta)}</p><h3>${esc(p.name)}</h3><p class="wk-desc">${esc(p.desc)}</p>
+    ${p.soon ? '<span class="wk-soon">Coming soon</span>' : `<button type="button" class="wk-go">View case study <i aria-hidden="true">&#8599;</i></button>`}</div>`;
+  if (!p.soon) el.querySelectorAll(".wk-pic, .wk-go").forEach(b => b.addEventListener("click", () => openProject(p)));
+  return el;
+}
 const grid = document.getElementById("projects");
-for (const p of projects) grid.appendChild(makeCard(p));
+projects.forEach((p, i) => grid.appendChild(makeRow(p, i)));
 
 // Design Work: same card and the same case-study page template as the Work projects
 const IH = "https://sophiacnguyen.framer.website/in-house-work/", AI = "https://sophiacnguyen.framer.website/design-and-ai/";
@@ -2015,6 +2029,11 @@ let riseObserver = null;
 function animateCase() {
   if (riseObserver) riseObserver.disconnect();
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Header: title, intro and each fact label/value fade in one after another
+  const hero = caseView.querySelector(".chero"), fades = [hero.querySelector("h1"), hero.querySelector(".lede")];
+  hero.querySelectorAll(".facts > div").forEach(d => fades.push(d.querySelector("dt"), d.querySelector("dd")));
+  fades.filter(Boolean).forEach((el, i) => { el.classList.add("fd"); el.style.setProperty("--fd", (i < 2 ? i * 260 : 420 + (i - 2) * 110) + "ms"); });
+  if (reduceMotion) hero.classList.add("hin"); else requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("hin")));
   const floaters = [];
   caseView.querySelectorAll(".chero .hero-img, .chero .hero-phones, .chero .phonehero, section.row > div > *, section.row > .split > div > *").forEach(el => {
     // plain paragraphs and buttons stay put; pinned scroll stories are left alone so their sticky stage isn't moved
