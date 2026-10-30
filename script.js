@@ -177,6 +177,14 @@ const PA_STORY = {who:"Himeko", head:"Six screens, in the order Himeko meets the
   {src:"assets/967bf95095bf.webp", name:"Checkout", phase:"Supporting artists", face:"joy", say:"That was easy!",
    text:"A simple cart with an item list and price summary keeps buying familiar and minimal, so supporting an artist takes seconds.", note:"Two items, $50, and done.",
    alt:"Checkout screen: cart with two items and a total of $50."}]};
+// Pocket Atelier opening scene: Himeko posts her art and meets bots and AI scrapers
+const PA_MOMENT = {note:"An illustrated example. Usernames and numbers are demo data.", beats:[
+  {face:"smile", say:"Finally finished!", text:"Late at night, Himeko posts an illustration she spent three weeks on."},
+  {face:"happy", say:"200 likes already?", text:"Within a minute, the likes start rolling in.", chip:["Likes", "214 in one minute"]},
+  {face:"curious", say:"Wait, who are these?", text:"She taps through. Blank profiles, random usernames, no art of their own.", chip:["Followers", "9 new, 0 artists"]},
+  {face:"worried", say:"Is anyone here real?", text:"She scrolls to find other artists, and gets ads, reposts and a flood of AI images instead.", chip:["Feed", "12 ads, 3 AI posts"]},
+  {face:"upset", say:"No. Absolutely not.", text:"Then a comment under her post: \u201cCan I train my model on this?\u201d", chip:["Comments", "1 request to train AI"]},
+  {face:"sad", say:"Where do I even go?", text:"Report it? Delete it? Leave? Nothing on the app protects her work or helps her find real artists."}]};
 const COMPANIO_TIMELINE = {head:"Six months, from understanding pet owners to a prototype they could use.",
   phases:[{name:"Research & define", short:"Research", n:2, c:"#ea8484"}, {name:"Ideate & brand", short:"Brand", n:2, c:"#789042"}, {name:"Design & deliver", short:"Design", n:2, c:"#2a3654"}],
   steps:[
@@ -235,6 +243,7 @@ const projects = [
     heroVideo:{webm:"assets/d4eb7ce36bb8.webm",mp4:"",poster:"assets/d43debad8972.webp",anim:"assets/7aed36793b02.webp",alt:"Pocket Atelier app walkthrough on a phone: an artist profile with shop tags, posts and a feed."},
     facts:[["Category","Art / Social media"],["Client","Pocket Atelier"],["Year","2025"],["Role","UX & UI designer"]],
     sections:[
+     {label:"The moment", moment:PA_MOMENT},
      {label:"Overview", title:"Uplifting art and artists", paras:["Independent artists worry about AI-generated content, high platform fees and few chances to build lasting relationships with their audience. Existing marketplaces focus on transactions rather than community.","Pocket Atelier is a mobile platform that combines social networking with e-commerce, so artists can showcase, sell and promote their work while connecting with other creators and art lovers."], timeline:PA_TIMELINE},
      {label:"Problem", paras:["Artists have to choose between marketplaces that take large fees and social feeds that bury their work. Neither helps them protect human-made art or earn a living from it."]},
      {label:"Research", title:"Research and personas", paras:["Research pointed to three needs: protecting human-made art, helping independent creators earn from their work, and encouraging appreciation for original art. Those needs shaped three personas."],
@@ -1343,7 +1352,10 @@ const STORY_FACES = {
   happy:   '<path d="M121 143 q9 -7 18 0 M161 143 q9 -7 18 0" class="m"/><path d="M141 177 q9 8 18 0" class="m"/>',
   proud:   '<path d="M121 139 q9 6 18 0 M161 139 q9 6 18 0 M121 139 l-3 -2 M179 139 l3 -2" class="m"/><path d="M142 178 q8 6 16 0" class="m"/>',
   wow:     '<circle cx="130" cy="141" r="4.2"/><circle cx="170" cy="141" r="4.2"/><ellipse cx="150" cy="183" rx="4.4" ry="5.6" class="o"/>',
-  joy:     '<path d="M121 143 q9 -7 18 0 M161 143 q9 -7 18 0" class="m"/><path d="M140 175 h20 q-2 12 -10 12 q-8 0 -10 -12z" class="o"/>'};
+  joy:     '<path d="M121 143 q9 -7 18 0 M161 143 q9 -7 18 0" class="m"/><path d="M140 175 h20 q-2 12 -10 12 q-8 0 -10 -12z" class="o"/>',
+  worried: '<circle cx="130" cy="142" r="3.6"/><circle cx="170" cy="142" r="3.6"/><path d="M142 184 q8 -6 16 0" class="m"/><path d="M193 116 q5 7 0 11 q-5 -4 0 -11z" class="sw"/>',
+  sad:     '<path d="M122 141 q8 4 16 0 M162 141 q8 4 16 0" class="m"/><path d="M143 184 q7 -5 14 0" class="m"/>',
+  upset:   '<circle cx="130" cy="142" r="3.4"/><circle cx="170" cy="142" r="3.4"/><path d="M141 182 h18" class="m"/>'};
 // Himeko from the chest up: long straight hair with bangs, oversized knit sweater, phone held in both hands
 const storyPerson = () => `<svg class="sy-person" viewBox="20 20 260 320" aria-hidden="true">
   <path d="M68 340 Q56 210 76 126 Q94 38 150 36 Q208 38 224 126 Q244 214 232 340 Z" class="hair"/>
@@ -1395,6 +1407,36 @@ function initStory() {
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) show(+e.target.dataset.i); }), {rootMargin: "-45% 0px -45% 0px"});
     steps.forEach(s => io.observe(s));
+  }
+  show(0);
+}
+
+// ---- Opening scene: Himeko on a pinned stage while short beats scroll past; each beat sets her face, her line and a status chip ----
+let momentData = null;
+const momentHtml = m => (momentData = m, `<div class="mo">
+  <div class="mo-grid">
+    <div class="mo-stage" aria-hidden="true"><span class="mo-sun"></span>
+      <div class="mo-who"><p class="mo-say"></p>${storyPerson()}</div>
+      <ul class="mo-chips">${m.beats.filter(b => b.chip).map(b => `<li data-at="${m.beats.indexOf(b)}"><b>${esc(b.chip[0])}</b> &middot; ${esc(b.chip[1])}</li>`).join("")}</ul>
+    </div>
+    <ol class="mo-beats">${m.beats.map((b, i) => `<li class="mo-beat" data-i="${i}"><div>${b.chip ? `<span class="mo-bchip"><b>${esc(b.chip[0])}</b> &middot; ${esc(b.chip[1])}</span>` : ""}<p>${esc(b.text)}</p></div></li>`).join("")}<li class="mo-note">${esc(m.note)}</li></ol>
+  </div>
+</div>`);
+function initMoment() {
+  const root = caseView.querySelector(".mo"); if (!root || !momentData) return;
+  const B = momentData.beats, beats = [...root.querySelectorAll(".mo-beat")], chips = [...root.querySelectorAll(".mo-chips li")];
+  const say = root.querySelector(".mo-say"), face = root.querySelector(".mo-who .face");
+  let cur = -1;
+  const show = i => {
+    if (i === cur) return; cur = i;
+    beats.forEach((b, k) => b.classList.toggle("on", k === i));
+    chips.forEach(c => c.classList.toggle("on", +c.dataset.at <= i));
+    face.innerHTML = STORY_FACES[B[i].face] || STORY_FACES.smile;
+    say.textContent = B[i].say; say.classList.remove("pop"); void say.offsetWidth; say.classList.add("pop");
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) show(+e.target.dataset.i); }), {rootMargin: "-45% 0px -45% 0px"});
+    beats.forEach(b => io.observe(b));
   }
   show(0);
 }
@@ -1869,6 +1911,7 @@ function renderCase(p) {
     ${s.folds ? foldHtml(s.folds) : ""}
     ${s.ring ? ringHtml(s.ring) : ""}
     ${s.posters ? wallHtml(s.posters) : ""}
+    ${s.moment ? momentHtml(s.moment) : ""}
     ${s.timeline ? timelineHtml(s.timeline) : ""}
     ${s.story ? storyHtml(s.story) : ""}
     ${s.comp && !s.split ? compHtml(s.comp) : ""}
@@ -1909,6 +1952,7 @@ function renderCase(p) {
   initFlow();
   initTimeline();
   initStory();
+  initMoment();
   initComp();
   initPersonas();
   initScreens();

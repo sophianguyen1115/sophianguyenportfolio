@@ -1448,6 +1448,7 @@ button.card,.card{background:none;border:0;box-shadow:none;-webkit-backdrop-filt
 .sy-person .blush{fill:#ef8a6a;opacity:.85}.sy-person .nose{fill:#ef8a6a}.sy-person .frk{fill:#e0906f}
 .sy-person .ph{fill:#2f2638}.sy-person .scr{fill:#e6dcef}
 .sy-person .face{fill:#1f2a2c}.sy-person .face .m{fill:none;stroke:#1f2a2c;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.sy-person .face .sw{fill:#a9d4f0}
 .sy-person .face .k{fill:#f4a9b2;opacity:.8}.sy-person .face .o{fill:#8a3f4c}
 .sy-phone{position:relative;flex:none;width:min(250px,calc(100cqw - min(165px,36cqw) - 1.2rem));aspect-ratio:520/1050;filter:drop-shadow(0 22px 30px rgba(74,61,92,.28))}
 .sy-phone img{position:absolute;inset:0;width:100%;height:100%;opacity:0;transform:translateY(8px) scale(.985);transition:opacity .45s,transform .55s cubic-bezier(.2,.7,.2,1)}
@@ -1480,3 +1481,37 @@ button.card,.card{background:none;border:0;box-shadow:none;-webkit-backdrop-filt
   .sy-next{display:none}
 }
 @media(prefers-reduced-motion:reduce){.sy-phone img,.sy-step{transition:none}.sy-say.pop{animation:none}}
+
+/* ---- Opening scene (Pocket Atelier): Himeko on a lilac circle, status chips piling up as the beats scroll past ---- */
+.mo{--sy-d:#4a3d5c;margin:.5rem 0 1rem}
+.mo-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.4rem;align-items:start}
+.mo-stage{container-type:inline-size;position:sticky;top:max(1rem,calc(50vh - 260px));height:min(520px,80vh);display:flex;align-items:flex-end;justify-content:center}
+.mo-sun{position:absolute;left:50%;bottom:4%;width:min(92cqw,440px);aspect-ratio:1;translate:-50% 0;border-radius:50%;background:radial-gradient(circle at 40% 35%,#f3ecfa,#e8dcf3)}
+.mo-who{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:min(230px,52cqw);margin-bottom:4%}
+.mo-who .sy-person{display:block;width:100%;height:auto}
+.mo-say{position:relative;z-index:2;margin:0 0 .7rem;padding:.55rem .95rem;border-radius:14px;background:#fff;font-size:.95rem;font-weight:500;line-height:1.3;color:var(--sy-d);text-align:center;box-shadow:0 6px 18px -6px rgba(74,61,92,.28)}
+.mo-say::after{content:"";position:absolute;left:50%;bottom:-7px;width:11px;height:11px;margin-left:-6px;background:#fff;transform:rotate(45deg)}
+.mo-say.pop{animation:sypop .35s cubic-bezier(.3,1.5,.5,1)}
+.mo-chips{position:absolute;z-index:2;left:0;top:4%;display:flex;flex-direction:column;align-items:flex-start;gap:.45rem;margin:0;padding:0;list-style:none}
+.mo-chips li{padding:.4rem .8rem;border-radius:999px;background:#fff;font-size:.8rem;color:#4a3d5c;box-shadow:0 6px 16px -8px rgba(74,61,92,.35);opacity:0;transform:translateY(-6px);transition:opacity .35s,transform .45s cubic-bezier(.3,1.4,.5,1)}
+.mo-chips li b{font-weight:700}
+.mo-chips li.on{opacity:1;transform:none}
+.mo-beats{list-style:none;margin:0;padding:0}
+.mo-beat{min-height:62vh;display:flex;align-items:center;opacity:.25;transition:opacity .45s}
+.mo-beat:first-child{min-height:48vh;align-items:flex-start;padding-top:6vh}
+.mo-beat.on{opacity:1}
+#case .mo-beat p{margin:0;max-width:30ch;font-size:clamp(1.3rem,2.2vw,1.75rem);line-height:1.3;font-weight:500;letter-spacing:-.02em;color:#2b2438}
+.mo-note{margin:0 0 4vh;font-size:.8rem;color:var(--muted)}
+.mo-bchip{display:none}
+@media(max-width:860px){
+  .mo-grid{grid-template-columns:1fr;gap:0}
+  .mo-stage{position:sticky;top:0;z-index:2;height:330px;margin:0 -1rem;padding-top:1rem;background:var(--bg,#fff);box-shadow:0 14px 14px -10px var(--bg,#fff)}
+  .mo-chips{display:none}
+  .mo-bchip{display:inline-block;margin:0 0 .7rem;padding:.35rem .75rem;border-radius:999px;background:#f3ecfa;font-size:.78rem;color:#4a3d5c}
+  .mo-sun{width:280px;bottom:2%}
+  .mo-who{width:170px}
+  .mo-say{font-size:.82rem}
+  .mo-beat,.mo-beat:first-child{min-height:48vh;padding-top:0;align-items:center}
+  #case .mo-beat p{font-size:1.25rem}
+}
+@media(prefers-reduced-motion:reduce){.mo-beat,.mo-chips li{transition:none}.mo-say.pop{animation:none}}
