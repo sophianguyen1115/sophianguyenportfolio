@@ -318,7 +318,7 @@ function makeCard(p) {
   el.className = p.soon ? "card soon" : "card"; el.type = "button";
   // Unfinished projects ("soon") look the same but don't open or react to hover
   if (!p.soon) el.addEventListener("click", () => openProject(p));
-  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<span class="zoom${p.imageFit ? " fit" : ""}"><img src="${p.image}" alt=""${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false"></span>` : `<span class="letter">${esc(p.name[0])}</span>`}</div>
+  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<span class="zoom${p.imageFit ? " fit" : ""}" style="position:absolute;inset:0;display:block;overflow:hidden;border-radius:18px"><img src="${p.image}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none${p.imagePos ? `;object-position:${esc(p.imagePos)}` : ""}" decoding="async" draggable="false"></span>` : `<span class="letter">${esc(p.name[0])}</span>`}</div>
     <div class="body"><div class="head"><h3><span class="t"></span><span class="arr" aria-hidden="true">&rarr;</span></h3><div class="pills"></div></div><p class="desc"></p></div>`;
   el.querySelector("h3 .t").textContent = p.name;
   for (const t of p.tags) { const s = document.createElement("span"); s.className = "pill"; s.textContent = t; el.querySelector(".pills").appendChild(s); }
@@ -476,216 +476,6 @@ if (loader) {
   if ("IntersectionObserver" in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); arm(); } }, {rootMargin: "0px 0px -10% 0px"}); io.observe(loader); }
   else arm();
 }
-
-// ---- Pond: tap to make ripples and feed the koi; tap a koi to say hi ----
-const canvas = document.getElementById("pond");
-const ctx = canvas.getContext("2d");
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-let w, h, dpr, ripples = [], food = [], koi = [];
-const MAX_KOI = 8, SEGS = 15, rand = (a, b) => a + Math.random() * (b - a);
-const INK = "#1d1b1a", PAPER = "#fffaf2", ORANGE = "#f2762e";
-const LOOKS = [   // orange, white and black only
-  {body: PAPER, pool: "rgba(120,92,70,.38)", line: "rgba(45,32,26,.62)", eye: INK,
-   patches: [{i: 4, s: .85, c: ORANGE}, {i: 10, s: .66, c: INK}, {i: 1, s: .5, c: ORANGE}]},
-  {body: ORANGE, pool: "rgba(176,62,12,.5)", line: "rgba(60,28,12,.6)", eye: INK,
-   patches: [{i: 5, s: .82, c: PAPER}, {i: 11, s: .62, c: PAPER}, {i: 2, s: .46, c: INK}]},
-  {body: INK, pool: "rgba(255,250,242,.16)", line: "rgba(15,12,11,.75)", eye: PAPER,
-   patches: [{i: 4, s: .86, c: PAPER}, {i: 10, s: .6, c: ORANGE}, {i: 1, s: .48, c: ORANGE}]}
-];
-function resize() {
-  dpr = Math.min(devicePixelRatio || 1, 2);
-  w = canvas.clientWidth; h = canvas.clientHeight;
-  canvas.width = w * dpr; canvas.height = h * dpr;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  paintWash();
-}
-let wash = null;
-function paintWash() {
-  const dark = false;
-  let seed = 7; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;   // seeded: same wash on every resize
-  wash = document.createElement("canvas"); wash.width = w * dpr; wash.height = h * dpr;
-  const c = wash.getContext("2d"); c.scale(dpr, dpr);
-  const pal = dark ? ["#2f5559", "#3a6468", "#2a4a58", "#35595a", "#2d4f61"] : ["#9fc9cf", "#b6d8d2", "#86b7c4", "#c6e0cd", "#a6cbd8"];
-  c.fillStyle = dark ? "#2a4a4f" : "#cfe3e1"; c.fillRect(0, 0, w, h);
-  // soft overlapping washes of pigment
-  for (let i = 0; i < 16; i++) {
-    const x = r() * w, y = r() * h, rad = 110 + r() * 260, g = c.createRadialGradient(x, y, 0, x, y, rad);
-    g.addColorStop(0, pal[i % pal.length] + "99"); g.addColorStop(1, pal[i % pal.length] + "00");
-    c.fillStyle = g; c.fillRect(0, 0, w, h);
-  }
-  // blotches with a darker rim where the pigment pools, like drying watercolor
-  for (let i = 0; i < 34; i++) {
-    const x = r() * w, y = r() * h, rad = 14 + r() * 70, n = 14, col = pal[(i * 3) % pal.length];
-    const pts = Array.from({length: n}, (_, k) => { const an = k / n * Math.PI * 2, rr = rad * (0.75 + r() * 0.35); return [x + Math.cos(an) * rr, y + Math.sin(an) * rr * 0.85]; });
-    c.beginPath(); c.moveTo((pts[0][0] + pts[n - 1][0]) / 2, (pts[0][1] + pts[n - 1][1]) / 2);
-    for (let k = 0; k < n; k++) { const p = pts[k], q = pts[(k + 1) % n]; c.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2); }
-    c.closePath(); c.fillStyle = col + "2e"; c.fill();
-    c.lineWidth = 2.5; c.strokeStyle = dark ? "rgba(120,180,185,.06)" : "rgba(70,130,145,.07)"; c.stroke();
-  }
-  // paper grain
-  for (let i = 0; i < Math.round(w * h / 90); i++) {
-    c.fillStyle = r() < 0.5 ? "rgba(255,255,255,.10)" : "rgba(40,80,90,.06)";
-    c.fillRect(r() * w, r() * h, 1.2, 1.2);
-  }
-  // pigment gathers toward the edges
-  const e = c.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, Math.max(w, h) * 0.72);
-  e.addColorStop(0, "rgba(60,120,140,0)"); e.addColorStop(1, dark ? "rgba(10,25,30,.35)" : "rgba(60,120,140,.28)");
-  c.fillStyle = e; c.fillRect(0, 0, w, h);
-}
-addEventListener("resize", resize); resize();
-
-const ripple = (x, y, a = 0.4, rings = 2) => ripples.push({x, y, r: 0, a, rings});
-function addKoi(x, y) {
-  if (koi.length >= MAX_KOI) return false;
-  const s = rand(19, 24), px = x ?? rand(80, w - 80), py = y ?? rand(120, h - 100), ang = rand(0, 6.28);
-  const k = {x: px, y: py, ang, s, sp: 0.6, gap: s * 0.36, look: LOOKS[koi.length % LOOKS.length],
-             tx: px, ty: py, boost: 0, bubble: 0, phase: rand(0, 6), seed: rand(0, 100),
-             chain: Array.from({length: SEGS}, (_, i) => ({x: px - Math.cos(ang) * i * s * 0.36, y: py - Math.sin(ang) * i * s * 0.36}))};
-  k.tx = rand(60, w - 60); k.ty = rand(110, h - 90);
-  koi.push(k); ripple(px, py, 0.3);
-  return true;
-}
-for (let i = 0; i < 3; i++) addKoi();
-
-function koiAt(x, y) {
-  return koi.find(k => k.chain.some(p => Math.hypot(x - p.x, y - p.y) < k.s * 0.9));
-}
-canvas.addEventListener("pointerdown", e => {
-  const b = canvas.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top;
-  const k = koiAt(x, y);
-  if (k) { k.boost = 50; k.bubble = 80; k.tx = rand(60, w - 60); k.ty = rand(110, h - 90); ripple(k.x, k.y, 0.35, 1); return; }
-  ripple(x, y, 0.4, 2);
-  if (food.length < 12) food.push({x, y, t: 0});
-});
-canvas.addEventListener("pointermove", e => {
-  if (e.buttons || (e.pointerType === "mouse" && Math.random() < 0.01)) {
-    const b = canvas.getBoundingClientRect(); ripple(e.clientX - b.left, e.clientY - b.top, 0.2, 1);
-  }
-});
-const addBtn = document.getElementById("addKoi"), resetBtn = document.getElementById("resetPond");
-function syncButtons() {
-  const full = koi.length >= MAX_KOI;
-  addBtn.disabled = full; addBtn.textContent = full ? "Pond is full" : "Add a koi";
-  resetBtn.hidden = !full;
-}
-addBtn.addEventListener("click", () => { addKoi(); syncButtons(); });
-resetBtn.addEventListener("click", () => {
-  koi = []; food = []; ripples = [];
-  for (let i = 0; i < 3; i++) addKoi();
-  syncButtons();
-});
-
-const ink = () => getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
-const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
-function updateKoi(k) {
-  const f = food.reduce((best, p) => (!best || Math.hypot(p.x - k.x, p.y - k.y) < Math.hypot(best.x - k.x, best.y - k.y)) ? p : best, null);
-  if (f) { k.tx = f.x; k.ty = f.y; }
-  else if (Math.hypot(k.tx - k.x, k.ty - k.y) < 30) { k.tx = rand(60, w - 60); k.ty = rand(110, h - 90); }
-  const dx = k.tx - k.x, dy = k.ty - k.y, turn = k.boost > 0 ? 0.08 : 0.035;
-  k.ang += Math.max(-turn, Math.min(turn, wrap(Math.atan2(dy, dx) - k.ang)));
-  const speed = reduce ? 0 : k.boost > 0 ? 2.6 : f ? 1.7 : k.sp;
-  k.x += Math.cos(k.ang) * speed; k.y += Math.sin(k.ang) * speed;
-  // keep inside the pond: steer back toward the middle near an edge
-  if (k.x < 30 || k.x > w - 30 || k.y < 80 || k.y > h - 60) { k.tx = w / 2 + rand(-120, 120); k.ty = h / 2 + rand(-80, 80); }
-  k.chain[0].x = k.x; k.chain[0].y = k.y;
-  for (let i = 1; i < SEGS; i++) {
-    const p = k.chain[i], q = k.chain[i - 1], ddx = p.x - q.x, ddy = p.y - q.y, dd = Math.hypot(ddx, ddy) || 1;
-    p.x = q.x + ddx / dd * k.gap; p.y = q.y + ddy / dd * k.gap;
-  }
-  if (f && Math.hypot(f.x - k.x, f.y - k.y) < k.s * 0.8) { food.splice(food.indexOf(f), 1); ripple(f.x, f.y, 0.3, 1); }
-  if (k.boost > 0) k.boost--;
-  if (k.bubble > 0) k.bubble--;
-}
-// ---- rounded, softly shaded koi (top-down view, light from the upper left) ----
-const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
-const mix = (hex, f) => { const c = hexRgb(hex), m = f > 0 ? 255 : 0, a = Math.abs(f); return `rgb(${c.map(v => Math.round(v + (m - v) * a)).join(",")})`; };
-function smoothPath(P) {   // closed path through points using midpoint curves, so every edge is round
-  const n = P.length, path = new Path2D();
-  path.moveTo((P[0].x + P[n - 1].x) / 2, (P[0].y + P[n - 1].y) / 2);
-  for (let i = 0; i < n; i++) { const p = P[i], q = P[(i + 1) % n]; path.quadraticCurveTo(p.x, p.y, (p.x + q.x) / 2, (p.y + q.y) / 2); }
-  path.closePath(); return path;
-}
-function drawKoi(k, t) {
-  const s = k.s, L = k.look, ch = k.chain, sd = k.seed;
-  const pts = ch.map((p, i) => {
-    const q = ch[Math.max(0, i - 1)], r = ch[Math.min(SEGS - 1, i + 1)];
-    const ang = Math.atan2(q.y - r.y, q.x - r.x) + Math.PI / 2, off = Math.sin(t / 300 + k.phase - i * 0.7) * s * 0.22 * (i / SEGS);
-    return {x: p.x + Math.cos(ang) * off, y: p.y + Math.sin(ang) * off};
-  });
-  const rad = i => s * 1.12 * (0.62 * Math.sin(Math.PI * Math.min(1, 0.24 + 0.7 * (i / SEGS))) + 0.07);
-  const dir = i => Math.atan2(pts[Math.max(0, i - 1)].y - pts[Math.min(SEGS - 1, i + 1)].y, pts[Math.max(0, i - 1)].x - pts[Math.min(SEGS - 1, i + 1)].x);
-  const left = [], right = [];
-  for (let i = 0; i < SEGS; i++) {
-    const a = dir(i), nx = -Math.sin(a), ny = Math.cos(a), rr = rad(i);
-    left.push({x: pts[i].x + nx * rr, y: pts[i].y + ny * rr}); right.push({x: pts[i].x - nx * rr, y: pts[i].y - ny * rr});
-  }
-  const a0 = dir(0), aT = dir(SEGS - 1), tl = pts[SEGS - 1];
-  const nose = {x: pts[0].x + Math.cos(a0) * rad(0) * 1.2, y: pts[0].y + Math.sin(a0) * rad(0) * 1.2};
-  const tailEnd = {x: tl.x - Math.cos(aT) * s * 0.12, y: tl.y - Math.sin(aT) * s * 0.12};
-  const body = smoothPath([nose, ...left, tailEnd, ...right.slice().reverse()]);
-  const cx = pts[5].x, cy = pts[5].y;
-  const soft = (alphaTop, alphaBot) => { const g = ctx.createLinearGradient(cx - s * 0.9, cy - s * 0.9, cx + s * 0.9, cy + s * 0.9); g.addColorStop(0, `rgba(255,255,255,${alphaTop})`); g.addColorStop(0.5, "rgba(255,255,255,0)"); g.addColorStop(0.55, "rgba(0,0,0,0)"); g.addColorStop(1, `rgba(0,0,0,${alphaBot})`); return g; };
-  ctx.save(); ctx.lineJoin = "round"; ctx.lineCap = "round";
-  // soft shadow on the water
-  ctx.save(); ctx.translate(s * 0.14, s * 0.2); ctx.globalAlpha = 0.14; ctx.fillStyle = "#235560"; ctx.fill(body); ctx.restore();
-  // fins: rounded lobes in a paler tone of the body
-  const finBase = L.body === INK ? "#4a4644" : L.body === ORANGE ? "#f7a674" : "#f6f0e6";
-  const lobe = (x, y, rx, ry, rot, f) => { ctx.fillStyle = mix(finBase, f); ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, 7); ctx.fill(); };
-  const ta = Math.atan2(tl.y - pts[SEGS - 2].y, tl.x - pts[SEGS - 2].x) + Math.sin(t / 220 + k.phase) * 0.35;
-  ctx.globalAlpha = 0.92;
-  for (const [an, len, f] of [[-0.5, 0.95, -0.06], [0.5, 0.95, 0.04], [0, 1.15, 0.02]])
-    lobe(tl.x + Math.cos(ta + an) * s * len * 0.72, tl.y + Math.sin(ta + an) * s * len * 0.72, s * len * 0.72, s * 0.3, ta + an, f);
-  for (const sg of [-1, 1]) {
-    const iA = 3, a = dir(iA), n = a + sg * Math.PI / 2, fa = a + sg * (Math.PI / 2 + 0.7) + Math.sin(t / 400 + k.phase) * 0.15;
-    const bx = pts[iA].x + Math.cos(n) * rad(iA) * 0.85, by = pts[iA].y + Math.sin(n) * rad(iA) * 0.85;
-    lobe(bx + Math.cos(fa) * s * 0.42, by + Math.sin(fa) * s * 0.42, s * 0.5, s * 0.22, fa, sg > 0 ? -0.05 : 0.05);
-  }
-  ctx.globalAlpha = 1;
-  // body colour, round spots clipped inside, then soft light/shade over the top
-  ctx.fillStyle = L.body; ctx.fill(body);
-  ctx.save(); ctx.clip(body);
-  L.patches.forEach((pt, n) => {
-    const i = Math.max(1, Math.min(SEGS - 3, pt.i + Math.round(Math.sin(sd * 1.3 + n * 2.1) * 1.2)));
-    const lat = Math.sin(sd + n * 3.3) * rad(i) * 0.3, a = dir(i) + Math.PI / 2, r = rad(i) * pt.s * 1.1 + s * 0.08;
-    const x = pts[i].x + Math.cos(a) * lat, y = pts[i].y + Math.sin(a) * lat;
-    ctx.fillStyle = pt.c; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + Math.cos(dir(i) + Math.PI) * r * 0.7, y + Math.sin(dir(i) + Math.PI) * r * 0.7, r * 0.62, 0, 7); ctx.fill();   // a smaller round lobe so spots merge into soft blobs
-  });
-  ctx.fillStyle = soft(L.body === INK ? 0.16 : 0.26, L.body === INK ? 0.1 : 0.2); ctx.fillRect(cx - s * 4, cy - s * 4, s * 8, s * 8);
-  ctx.restore();
-  // gentle highlight along the back
-  ctx.strokeStyle = "rgba(255,255,255,.14)"; ctx.lineWidth = s * 0.35; ctx.beginPath();
-  pts.slice(1, SEGS - 3).forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
-  // eyes
-  ctx.fillStyle = L.eye;
-  for (const sg of [-1, 1]) { ctx.beginPath(); ctx.arc(pts[0].x + Math.cos(a0 + sg * 1.2) * s * 0.3 + Math.cos(a0) * s * 0.15, pts[0].y + Math.sin(a0 + sg * 1.2) * s * 0.3 + Math.sin(a0) * s * 0.15, s * 0.08, 0, 7); ctx.fill(); }
-  ctx.restore();
-  if (k.bubble > 0) {
-    ctx.save(); ctx.globalAlpha = Math.min(1, k.bubble / 20);
-    ctx.font = '600 14px "Hanken Grotesk", system-ui, sans-serif'; ctx.textAlign = "center";
-    const tw = ctx.measureText("blub!").width + 18, bx = k.x - tw / 2, by = k.y - s * 2.4;
-    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(bx, by, tw, 24, 12); ctx.fill();
-    ctx.fillStyle = "#222"; ctx.fillText("blub!", k.x, by + 17); ctx.restore();
-  }
-}
-function frame(t) {
-  ctx.clearRect(0, 0, w, h);
-  if (wash && wash.width && wash.height) ctx.drawImage(wash, 0, 0, w, h);
-  ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(255,255,255,.9)";
-  ripples = ripples.filter(p => p.a > 0.01);
-  for (const p of ripples) {
-    p.r += reduce ? 2 : 1.3; p.a *= 0.972;
-    ctx.globalAlpha = p.a;
-    for (let i = 0; i < p.rings; i++) { ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(0, p.r - i * 16), 0, 7); ctx.stroke(); }
-  }
-  ctx.globalAlpha = 1; ctx.fillStyle = "#b9824a";
-  for (const p of food) { p.t++; ctx.beginPath(); ctx.arc(p.x, p.y + Math.sin(p.t / 14) * 1.2, 4, 0, 7); ctx.fill(); }
-  koi.forEach(updateKoi);
-  koi.forEach(k => drawKoi(k, t));
-  requestAnimationFrame(frame);
-}
-requestAnimationFrame(frame);
-
 
 // ---- Views: home <-> case study (no page navigation) ----
 const home = document.getElementById("home"), caseView = document.getElementById("case"), aboutView = document.getElementById("aboutView"),
@@ -2291,25 +2081,41 @@ document.addEventListener("click", e => {
 addEventListener("scroll", syncNav, {passive: true});
 syncNav();
 
-// ---- Hero role roller: titles slide up one at a time, then loop ----
+// ---- Homepage intro card: tilts toward the pointer, the pointer becomes a ring, and skill pills pop out around it (tap toggles them on touch) ----
 (function () {
-  const track = document.querySelector(".track");
-  if (!track || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const last = track.children.length - 1;
-  let i = 0;
-  track.addEventListener("transitionend", () => {
-    if (i < last) return;
-    track.style.transition = "none"; i = 0; track.style.transform = "translateY(0)";
-    track.offsetHeight; track.style.transition = "";
+  const wrap = document.querySelector(".in-card-wrap"); if (!wrap) return;
+  const card = wrap.querySelector(".in-card"), cur = wrap.querySelector(".in-cursor");
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let raf = 0, tx = 0, ty = 0, rx = 0, ry = 0;
+  const step = () => {
+    rx += (tx - rx) * .12; ry += (ty - ry) * .12;
+    card.style.setProperty("--rx", rx.toFixed(2) + "deg"); card.style.setProperty("--ry", ry.toFixed(2) + "deg");
+    raf = Math.abs(tx - rx) > .02 || Math.abs(ty - ry) > .02 ? requestAnimationFrame(step) : 0;
+  };
+  const go = () => { if (!still && !raf) raf = requestAnimationFrame(step); };
+  wrap.addEventListener("pointermove", e => {
+    const r = card.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - .5, ny = (e.clientY - r.top) / r.height - .5;
+    ty = Math.max(-1, Math.min(1, nx * 2)) * 14; tx = Math.max(-1, Math.min(1, -ny * 2)) * 10; go();
+    if (e.pointerType === "mouse") { const w = wrap.getBoundingClientRect(); cur.style.transform = `translate(${e.clientX - w.left}px, ${e.clientY - w.top}px)`; wrap.classList.add("hov", "open"); }
   });
-  setInterval(() => { i++; track.style.transform = `translateY(${-i * 1.5}em)`; }, 2600);
+  wrap.addEventListener("pointerleave", e => { tx = 0; ty = 0; go(); if (e.pointerType === "mouse") wrap.classList.remove("hov", "open"); });
+  wrap.addEventListener("pointerdown", e => {
+    wrap.classList.remove("clk"); void wrap.offsetWidth; wrap.classList.add("clk");
+    if (e.pointerType !== "mouse") wrap.classList.toggle("open");
+  });
 })();
 
+// ---- Homepage intro: photo, label, the three lines of the hello and the intro fade up one after another ----
+(function () {
+  const items = [...document.querySelectorAll(".intro .in-fd")];
+  items.forEach((el, i) => el.style.setProperty("--fd", i * 150 + "ms"));
+  const go = () => document.querySelector(".intro")?.classList.add("in");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) go(); else requestAnimationFrame(() => requestAnimationFrame(go));
+})();
 
 // ---- About portrait: a printed photo on a soft spring; it leans toward the cursor and settles with a gentle wobble ----
-(function () {
-  const el = document.getElementById("polaroid");
-  if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+document.querySelectorAll("[data-tilt]").forEach(el => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const REST = -2, K = 0.07, D = 0.83;
   let rot = REST, vel = 0, target = REST, sx = 0, sxT = 0, raf = 0;
   const frame = () => {
@@ -2331,4 +2137,4 @@ syncNav();
   const settle = () => { target = REST; sxT = 0; go(); };
   el.addEventListener("pointerleave", settle);
   el.addEventListener("pointercancel", settle);
-})();
+});
