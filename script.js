@@ -2104,10 +2104,16 @@ document.querySelectorAll(".in-card-wrap").forEach(wrap => {
   });
 });
 
-// ---- Homepage intro: "Explore my work" glides down to the UI/UX projects ----
+// ---- Homepage intro: "Explore my work" glides down to the UI/UX projects (a slow ease-in-out, not the browser's quick smooth scroll) ----
 document.querySelector(".in-explore")?.addEventListener("click", e => {
   e.preventDefault();
-  document.getElementById("work").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"});
+  const to = document.getElementById("work").getBoundingClientRect().top + scrollY, from = scrollY, d = to - from;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return scrollTo(0, to);
+  const ms = Math.min(1800, 900 + Math.abs(d) * .5), t0 = performance.now();
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const root = document.documentElement; root.style.scrollBehavior = "auto";   // the page-wide smooth scroll would fight each frame
+  const tick = now => { const t = Math.min(1, (now - t0) / ms); scrollTo(0, from + d * ease(t)); if (t < 1) requestAnimationFrame(tick); else root.style.scrollBehavior = ""; };
+  requestAnimationFrame(tick);
 });
 
 // ---- About: work experience accordion (one open at a time) ----

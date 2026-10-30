@@ -1833,3 +1833,11 @@ section.js{padding-top:2.5rem}
 #graphicView .card .pill{background:#e3ece4;color:#46705a;font-weight:500}
 #graphicView .card .pill:nth-child(even){background:color-mix(in srgb,#ba8b5a 16%,var(--bg));color:#8a6238}
 .ab-brands{grid-template-columns:repeat(7,1fr);gap:.8rem}@media(max-width:860px){.ab-brands{grid-template-columns:repeat(3,1fr)}.ab-brands li:last-child{grid-column:2}}@media(max-width:480px){.ab-brands{grid-template-columns:repeat(2,1fr)}.ab-brands li:last-child{grid-column:1/-1}}
+
+/* intro headline: even leading now the pen chip is gone, and a hand-drawn caramel underline under "Sophia" (after jilldarrow.com) */
+.intro .in-head{gap:.08em;line-height:1.15}
+.in-name{position:relative;display:inline-block}
+.in-name svg{position:absolute;left:-2%;bottom:-.16em;width:104%;height:auto;overflow:visible;pointer-events:none}
+.in-name path{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.1s cubic-bezier(.6,.1,.3,1) .7s}
+.intro.in .in-name path{stroke-dashoffset:0}
+@media(prefers-reduced-motion:reduce){.in-name path{stroke-dashoffset:0;transition:none}}
