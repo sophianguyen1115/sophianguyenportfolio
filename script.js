@@ -185,6 +185,14 @@ const PA_MOMENT = {note:"An illustrated example. Usernames and numbers are demo 
   {face:"worried", say:"Is anyone here real?", text:"She scrolls to find other artists, and gets ads, reposts and a flood of AI images instead.", chip:["Feed", "12 ads, 3 AI posts"]},
   {face:"upset", say:"No. Absolutely not.", text:"Then a comment under her post: \u201cCan I train my model on this?\u201d", chip:["Comments", "1 request to train AI"]},
   {face:"sad", say:"Where do I even go?", text:"Report it? Delete it? Leave? Nothing on the app protects her work or helps her find real artists."}]};
+// Pocket Atelier problem as a Venn diagram: each platform does one thing for artists; nothing covers the middle
+const PA_VENN = {kicker:"The problem", head:["Every platform does one thing.", "None protects the artist."],
+  base:{t:"She has to choose between selling, being seen and staying safe.", d:"Artists split their work across marketplaces that take large fees, social feeds that bury them under ads and bots, and AI tools that learn from their art. Hover or tap the diagram."},
+  sets:[
+    {key:"shop", name:"Marketplaces", sub:"Take a big fee", c:"#e6dcef", t:"Marketplaces sell her work, at a cost.", d:"High platform fees and a focus on transactions mean she earns less, and buyers never get to know the artist behind the piece."},
+    {key:"feed", name:"Social feeds", sub:"Bury her work", c:"#f6e3ea", t:"Social feeds show her work, to the wrong audience.", d:"Ads, reposts and bot accounts crowd out real artists, so likes rise while genuine connections and sales do not."},
+    {key:"ai", name:"AI tools", sub:"Learn from her art", c:"#e2e7f1", t:"AI tools grow, often on artists' work.", d:"Generated images flood the same spaces she shares in, and her own art can be used to train them without asking."}],
+  gap:{t:"The middle is empty.", d:"No single place lets an independent artist sell fairly, find a real community and keep human-made work protected. That gap is where Pocket Atelier starts."}};
 const COMPANIO_TIMELINE = {head:"Six months, from understanding pet owners to a prototype they could use.",
   phases:[{name:"Research & define", short:"Research", n:2, c:"#ea8484"}, {name:"Ideate & brand", short:"Brand", n:2, c:"#789042"}, {name:"Design & deliver", short:"Design", n:2, c:"#2a3654"}],
   steps:[
@@ -243,9 +251,9 @@ const projects = [
     heroVideo:{webm:"assets/d4eb7ce36bb8.webm",mp4:"",poster:"assets/d43debad8972.webp",anim:"assets/7aed36793b02.webp",alt:"Pocket Atelier app walkthrough on a phone: an artist profile with shop tags, posts and a feed."},
     facts:[["Category","Art / Social media"],["Client","Pocket Atelier"],["Year","2025"],["Role","UX & UI designer"]],
     sections:[
-     {label:"The moment", moment:PA_MOMENT},
+     {label:"The scenario", moment:PA_MOMENT},
      {label:"Overview", title:"Uplifting art and artists", paras:["Independent artists worry about AI-generated content, high platform fees and few chances to build lasting relationships with their audience. Existing marketplaces focus on transactions rather than community.","Pocket Atelier is a mobile platform that combines social networking with e-commerce, so artists can showcase, sell and promote their work while connecting with other creators and art lovers."], timeline:PA_TIMELINE},
-     {label:"Problem", paras:["Artists have to choose between marketplaces that take large fees and social feeds that bury their work. Neither helps them protect human-made art or earn a living from it."]},
+     {label:"Problem", venn:PA_VENN},
      {label:"Research", title:"Research and personas", paras:["Research pointed to three needs: protecting human-made art, helping independent creators earn from their work, and encouraging appreciation for original art. Those needs shaped three personas."],
       goals:["Reward positive interactions within the art community","Make a responsive interface that blends smoothly into the experience","Merge the marketplace with artist engagement"],goalIcons:["reward","responsive","merge"]},
      {label:"Personas", title:"Three artists, one community", paras:["Switch between Himeko, Celia and Robbie, flip through their goals and frustrations, and tap the empathy map to look closer."], personas:PA_PERSONAS, personaTheme:"pa"},
@@ -1441,6 +1449,41 @@ function initMoment() {
   show(0);
 }
 
+// ---- Problem Venn: three overlapping circles; hovering or tapping a circle (or the "?" in the middle) explains it ----
+let vennData = null;
+const VENN_POS = [[150, 150], [270, 150], [210, 255]];
+const vennHtml = v => (vennData = v, `<div class="vn">
+  <p class="vn-k">${esc(v.kicker)}</p>
+  <p class="vn-head">${esc(v.head[0])} <mark>${esc(v.head[1])}</mark></p>
+  <div class="vn-grid">
+    <svg class="vn-svg" viewBox="20 20 380 370" role="group" aria-label="Diagram: three kinds of platform overlap, with an empty middle">
+      ${v.sets.map((s, i) => `<g class="vn-c" data-k="${i}" tabindex="0" role="button" aria-label="${esc(s.name)}: ${esc(s.sub)}"><circle cx="${VENN_POS[i][0]}" cy="${VENN_POS[i][1]}" r="104" style="fill:${s.c}"/></g>`).join("")}
+      ${v.sets.map((s, i) => { const [x, y] = VENN_POS[i], dx = i === 2 ? 0 : (i ? 46 : -46), dy = i === 2 ? 46 : -26; return `<text class="vn-l" x="${x + dx}" y="${y + dy}" text-anchor="middle"><tspan class="vn-n" x="${x + dx}">${esc(s.name)}</tspan><tspan x="${x + dx}" dy="1.35em">${esc(s.sub)}</tspan></text>`; }).join("")}
+      <g class="vn-mid" data-k="gap" tabindex="0" role="button" aria-label="The middle: ${esc(v.gap.t)}"><circle cx="210" cy="186" r="26"/><text x="210" y="198" text-anchor="middle">?</text></g>
+    </svg>
+    <div class="vn-text" aria-live="polite"><p class="vn-t"></p><p class="vn-d"></p></div>
+  </div>
+</div>`);
+function initVenn() {
+  const root = caseView.querySelector(".vn"); if (!root || !vennData) return;
+  const v = vennData, svg = root.querySelector(".vn-svg"), t = root.querySelector(".vn-t"), d = root.querySelector(".vn-d");
+  let pinned = null;
+  const show = k => {
+    const s = k === null ? v.base : k === "gap" ? v.gap : v.sets[+k];
+    t.textContent = s.t; d.textContent = s.d;
+    svg.dataset.f = k === null ? "" : k;
+    svg.querySelectorAll("[data-k]").forEach(g => g.classList.toggle("on", String(g.dataset.k) === String(k)));
+  };
+  svg.querySelectorAll("[data-k]").forEach(g => {
+    g.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") show(g.dataset.k); });
+    g.addEventListener("focus", () => show(g.dataset.k));
+    g.addEventListener("click", () => { pinned = pinned === g.dataset.k ? null : g.dataset.k; show(pinned); });
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); g.click(); } });
+  });
+  svg.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") show(pinned); });
+  show(null);
+}
+
 // ---- Interactive user flow: step through a FigJam flow one node at a time; choices branch, Back retraces, Reset starts over ----
 let flowData = null;
 const FLOW_KIND = {start:"Start", end:"End", step:"Step", choice:"Decision", options:"Choose one", input:"Input"};
@@ -1912,6 +1955,7 @@ function renderCase(p) {
     ${s.ring ? ringHtml(s.ring) : ""}
     ${s.posters ? wallHtml(s.posters) : ""}
     ${s.moment ? momentHtml(s.moment) : ""}
+    ${s.venn ? vennHtml(s.venn) : ""}
     ${s.timeline ? timelineHtml(s.timeline) : ""}
     ${s.story ? storyHtml(s.story) : ""}
     ${s.comp && !s.split ? compHtml(s.comp) : ""}
@@ -1953,6 +1997,7 @@ function renderCase(p) {
   initTimeline();
   initStory();
   initMoment();
+  initVenn();
   initComp();
   initPersonas();
   initScreens();
