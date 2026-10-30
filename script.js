@@ -371,7 +371,7 @@ const otherProjects = [
   {name:"DFW HQ Socks", image:"assets/d5e172021e34.webp", tags:["Visual Design","Apparel"], desc:"", back:"graphic", caseStudy:{
     lede:"Custom socks for DFW HQ, with a colorful palette and iconography made for travelers with cold feet.", source: IH + "socks-for-dfw-hq",
     heroImage:"assets/cb4b536cd579.webp", heroAlt:"A folded pair of white DFW socks with orange stripes and a delivery truck, wrapped in an orange DFW band, on a light grey surface.",
-    facts:[["Category","Visual design / Branding"],["Industry","Aviation"],["Year","2019 - 2021"]],
+    facts:[["Category","Visual design / Branding"],["Industry","Aviation"],["Year","2022"]],
     sections:[
      {label:"Overview", title:"Socks for the cargo division", paras:["These socks were a design exercise in imagining what the cargo division would look like with its own customized socks.","After multiple mockups of different designs, Asiana Airlines also wanted trendy sock designs.","The colorful palette and iconography are meant to appeal to any traveler with cold feet."]},
      {label:"Sock studio", title:"Switch the socks", paras:["Pick any of the eleven designs, then turn the sock to see its front, side and back. Where there is a photo, it shows on the foot too."], studio:true},
@@ -381,7 +381,7 @@ const otherProjects = [
   {name:"DPS and CDO", image:"assets/dd60b0dc78f1.webp", tags:["Visual Design","Promotional Material"], desc:"", back:"graphic", caseStudy:{
     lede:"Recruitment material for two police departments, with square trifolds and a gritty look drawn from their uniforms.", source: IH + "dps-and-cdo",
     heroImage:"assets/866f46ff31d5.webp", heroAlt:"The DPS recruitment trifold opening at an angle: the Are You Ready? cover with a police SUV and departing plane, beside About Us, the Police Services mission, and police incentives and benefits.",
-    facts:[["Category","Visual design / Promotional material"],["Industry","Aviation"],["Year","2019 - 2021"]],
+    facts:[["Category","Visual design / Promotional material"],["Industry","Aviation"],["Year","2022"]],
     sections:[
      {label:"Overview", title:"Recruitment material for DPS and CDO", paras:["Both projects were done within a week of one another, as the police departments needed media to promote their divisions.","The clients wanted something more distinctive than a standard A5 brochure, so I designed square trifolds along with other materials.","Harnessing the uniform grittiness of these departments brought a fresh new perspective to their designs."]},
      {label:"Brochures", title:"Open the trifold", paras:["Both brochures are trifolds: both are square trifolds as the police wanted more unique formats than the regular A4 or letter size. Pick one, click to interact with the layout, and fold it back up again."], folds:[{id:"dps", name:"DPS - Police", alt:"DPS police recruitment trifold", cover:"assets/733b85ad4063.webp", coverIn:"assets/372b57022bcc.webp", mid:"assets/53693625a909.webp", flapIn:"assets/d6c2d2fb6e4c.webp", flapOut:"assets/da318f1fd42f.webp", back:"assets/3420d3dbbb74.webp", names:{cover:"Cover: Are you ready?", coverIn:"Specialized divisions and units", mid:"Minimum requirements", flapIn:"Lateral transfers and pay scale", flapOut:"About us, incentives and benefits", back:"Application process"}},{id:"cdo", name:"CDO - Detention", alt:"CDO civilian detention officer recruitment trifold", ar:360/414, cover:"assets/3e2b7870795e.webp", coverIn:"assets/aafdaa4d8809.webp", mid:"assets/6f012886cd17.webp", flapIn:"assets/71f3d0158222.webp", flapOut:"assets/5f7f280e480c.webp", back:"assets/2310d141a37f.webp", names:{cover:"Cover: Join now, Civilian Detention Officer", coverIn:"Incentives and benefits", mid:"Minimum and special requirements", flapIn:"Pay scale", flapOut:"About us", back:"Application process and contact details"}}]},
@@ -1977,7 +1977,7 @@ document.addEventListener("click", e => {
 const STORY = [
   {n: "01", t: "It started with art.", d: "Art and design studies at UNT, where drawing, layout and type became a daily habit.", c: "#fde9a8", pin: "#c4553f", x: 2, y: 5, r: -2.5},
   {n: "02", t: "Then design got real.", d: "As a design intern at UNT, I made campaigns students actually saw around campus.", c: "#f9c6b4", pin: "#2f6f73", x: 18.5, y: 57, r: 2, work: "UNT Intern"},
-  {n: "03", t: "Clients came next.", d: "Contract work for DFW Airport: police recruiting brochures, banners and custom socks.", c: "#cfe3a8", pin: "#d99a2b", x: 35, y: 4, r: -1.5, work: "DPS and CDO"},
+  {n: "03", t: "Clients came next.", d: "Graphic designer at DFW Airport HQ in 2022: police recruiting brochures, banners and custom socks.", c: "#cfe3a8", pin: "#d99a2b", x: 35, y: 4, r: -1.5, work: "DPS and CDO"},
   {n: "04", t: "I learned the business side.", d: "An MBA in marketing at TWU, then in-house marketing and design at Blend Supply.", c: "#fbd9a0", pin: "#c4553f", x: 51.5, y: 58, r: 2.5, work: "Blend Supply"},
   {n: "05", t: "People pulled me toward UX.", d: "Research, flows and prototypes with UT Austin and Google. Companio was my first full case study.", c: "#bfe0e0", pin: "#d99a2b", x: 68, y: 6, r: -2, work: "Companio"},
   {n: "06", t: "Now: interaction design.", d: "Back at UNT in the grad program for Interaction Design, building on everything before it.", c: "#e6d8f0", pin: "#2f6f73", x: 84, y: 54, r: 1.5}];
@@ -2082,8 +2082,7 @@ addEventListener("scroll", syncNav, {passive: true});
 syncNav();
 
 // ---- Homepage intro card: tilts toward the pointer, the pointer becomes a ring, and skill pills pop out around it (tap toggles them on touch) ----
-(function () {
-  const wrap = document.querySelector(".in-card-wrap"); if (!wrap) return;
+document.querySelectorAll(".in-card-wrap").forEach(wrap => {
   const card = wrap.querySelector(".in-card"), cur = wrap.querySelector(".in-cursor");
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let raf = 0, tx = 0, ty = 0, rx = 0, ry = 0;
@@ -2103,6 +2102,61 @@ syncNav();
     wrap.classList.remove("clk"); void wrap.offsetWidth; wrap.classList.add("clk");
     if (e.pointerType !== "mouse") wrap.classList.toggle("open");
   });
+});
+
+// ---- Homepage intro: "Explore my work" glides down to the UI/UX projects ----
+document.querySelector(".in-explore")?.addEventListener("click", e => {
+  e.preventDefault();
+  document.getElementById("work").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"});
+});
+
+// ---- About: work experience accordion (one open at a time) ----
+document.querySelectorAll(".ab-jhead").forEach(b => b.addEventListener("click", () => {
+  const li = b.parentElement, open = !li.classList.contains("open");
+  li.parentElement.querySelectorAll(".ab-job.open").forEach(o => { o.classList.remove("open"); o.querySelector(".ab-jhead").setAttribute("aria-expanded", "false"); });
+  li.classList.toggle("open", open); b.setAttribute("aria-expanded", String(open));
+}));
+
+// ---- About: the FigJam sticky notes can be dragged around the board ----
+document.querySelectorAll(".fj-note[data-n]").forEach(n => {
+  const board = n.parentElement; let start = null;
+  n.addEventListener("pointerdown", e => {
+    const b = board.getBoundingClientRect(), r = n.getBoundingClientRect();
+    start = {dx: e.clientX - r.left, dy: e.clientY - r.top, b}; n.setPointerCapture(e.pointerId);
+    n.classList.add("drag"); n.style.zIndex = board._z = (board._z || 5) + 1;
+  });
+  n.addEventListener("pointermove", e => {
+    if (!start) return; const {b, dx, dy} = start;
+    const x = Math.max(0, Math.min(b.width - n.offsetWidth, e.clientX - b.left - dx)), y = Math.max(0, Math.min(b.height - n.offsetHeight, e.clientY - b.top - dy));
+    n.style.setProperty("--x", x / b.width * 100 + "%"); n.style.setProperty("--y", y / b.height * 100 + "%"); board.classList.add("moved");
+  });
+  ["pointerup", "pointercancel"].forEach(t => n.addEventListener(t, () => { start = null; n.classList.remove("drag"); }));
+});
+
+// ---- About: a little iPad to draw on, with four pen colors and a clear button ----
+(function () {
+  const cv = document.getElementById("abCanvas"); if (!cv) return;
+  const pad = cv.closest(".ab-ipad"), ctx = cv.getContext("2d");
+  let ink = "#3e3d3d", last = null, drawn = false;
+  const fit = () => {
+    const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; if (!r.width) return;
+    const keep = drawn ? ctx.getImageData(0, 0, cv.width, cv.height) : null;
+    cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.lineCap = ctx.lineJoin = "round"; if (keep) ctx.putImageData(keep, 0, 0);
+  };
+  new ResizeObserver(fit).observe(cv);
+  const at = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); last = at(e); drawn = true; pad.classList.add("drawn"); });
+  cv.addEventListener("pointermove", e => {
+    if (!last) return; const p = at(e);
+    ctx.strokeStyle = ink; ctx.lineWidth = e.pressure && e.pointerType === "pen" ? 1.5 + e.pressure * 5 : 3.5;
+    ctx.beginPath(); ctx.moveTo(...last); ctx.lineTo(...p); ctx.stroke(); last = p;
+  });
+  ["pointerup", "pointercancel"].forEach(t => cv.addEventListener(t, () => { last = null; }));
+  pad.querySelectorAll(".ab-ink").forEach(b => b.addEventListener("click", () => {
+    ink = b.dataset.ink; pad.querySelectorAll(".ab-ink").forEach(o => { o.classList.toggle("on", o === b); o.setAttribute("aria-pressed", String(o === b)); });
+  }));
+  pad.querySelector(".ab-clear").addEventListener("click", () => { ctx.clearRect(0, 0, cv.width, cv.height); drawn = false; pad.classList.remove("drawn"); });
 })();
 
 // ---- Homepage intro: photo, label, the three lines of the hello and the intro fade up one after another ----
