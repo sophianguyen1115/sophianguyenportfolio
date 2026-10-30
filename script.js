@@ -215,7 +215,7 @@ const projects = [
      {label:"Overview", title:"Six months of learning by doing", paras:["Companio was a first complete UX project, taken from research all the way to a final prototype as the capstone of an online course. The result is a working mobile app that improves both the interface and the systems behind it for pet lovers."], timeline:COMPANIO_TIMELINE},
      {label:"Problem", paras:["Looking after a pet usually means switching between several apps: one for GPS tracking, another for health records, another for social features. That fragmentation is the problem Companio sets out to solve, by combining tracking, health management and community in a single mobile experience."]},
      {label:"Competitor analysis", paras:["An audit of existing products showed that each one does well in a single area, such as location, health or community, and almost none combine all three. That gap pointed to a unified pet care ecosystem that gives owners more confidence, convenience and control."],
-      quote:"The team was the first in its class to take on a pet tracking app.",
+      quote:"The team was the first in its class to take on a pet tracking app.", quoteMark:"first in its class", quoteColor:"#ea8484",
       goals:["Record pet health and log behavior observations","Keep pets safe with GPS tracking","Turn memories into a timeline on each pet's profile"],goalIcons:["health","gps","timeline"]},
      {label:"Research", title:"Competitor Analysis and Personas", paras:["Research was shared as a group report and an information architecture and design rationale. Survey results were distilled into personas, each with representative quotes.","Watch the analysis branch out, or tap an app to follow its path and open its audit slides."], comp:COMPANIO_COMP,
       buttons:[{label:"UI/UX Research Group Report",href:"https://www.figma.com/deck/LZXKtb2TqM5sPRZhRvp2uP/Milestone-1-Presentation?node-id=1-42&t=EI2fNBbQSqT7sp6s-1"},{label:"Information Architecture & Design Rationale",href:"https://www.figma.com/deck/DHnB7ZiNIDpx4LBYpMapJF/Milestone-2-Presentation?node-id=1-42&t=ZZXYJonXRF1EpAGq-1"}]},
@@ -1946,7 +1946,7 @@ function renderCase(p) {
   const sections = c.sections.map(s => `<section class="row"><h2>${esc(s.label)}</h2><div>
     ${s.title ? `<h3>${esc(s.title)}</h3>` : ""}
     ${(s.paras || []).map(t => `<p>${esc(t)}</p>`).join("")}
-    ${s.quote ? `<p class="quote">${esc(s.quote)}</p>` : ""}
+    ${s.quote ? `<p class="quote"${s.quoteColor ? ` style="--qm:${s.quoteColor}"` : ""}>${s.quoteMark ? esc(s.quote).replace(esc(s.quoteMark), `<mark>${esc(s.quoteMark)}</mark>`) : esc(s.quote)}</p>` : ""}
     ${s.goals ? `<ul class="goals">${s.goals.map((g, i) => `<li>${s.goalIcons ? goalIcon(s.goalIcons[i], i) : ""}<span>${esc(g)}</span></li>`).join("")}</ul>` : ""}
     ${s.player ? playerHtml(s.player) : ""}
     ${s.banners ? bannersHtml(s.banners) : ""}

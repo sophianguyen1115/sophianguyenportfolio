@@ -1539,3 +1539,4 @@ button.card,.card{background:none;border:0;box-shadow:none;-webkit-backdrop-filt
 #case .vn p.vn-d{margin:0;font-size:1rem;line-height:1.6;color:#6f6a62}
 @media(max-width:860px){.vn-grid{grid-template-columns:1fr;gap:1.2rem}.vn-svg{max-width:340px}}
 @media(prefers-reduced-motion:reduce){.vn-c circle,.vn-mid circle{transition:none}}
+.quote mark{font-weight:700;color:inherit;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--qm,#e6dcef) 45%,#fff) 60%);padding:0 .12em}
