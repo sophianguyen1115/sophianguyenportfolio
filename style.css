@@ -1371,3 +1371,27 @@ button.card:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border
 .card .thumb .zoom{border-radius:18px;box-shadow:none}
 .card .thumb .zoom.fit{height:100%;aspect-ratio:auto}
 button.card,.card{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+
+/* ---- Homepage scroll progress: koi-orange line on the right, dotted ahead, solid behind, a koi as the marker ---- */
+.sp{position:fixed;z-index:4;right:22px;top:96px;bottom:60px;width:40px;pointer-events:none;transition:opacity .3s}
+.sp.off{opacity:0;visibility:hidden}
+.sp-track{position:absolute;left:50%;top:0;bottom:0;width:1.5px;margin-left:-.75px;background:repeating-linear-gradient(180deg,rgba(43,42,39,.28) 0 3px,transparent 3px 7px)}
+.sp-fill{position:absolute;inset:0;background:#3a3836;border-radius:2px;transform-origin:top;transform:scaleY(0)}
+/* bobber: red cap, white base, a little antenna; it bobs while it waits */
+.sp-bob{position:absolute;z-index:1;left:50%;top:-9px;width:14px;height:18px;transform:translate(-50%,0)}
+.sp-bob i{position:absolute;inset:0;border-radius:50%;background:linear-gradient(180deg,#d9452f 0 50%,#fff 50%);box-shadow:0 0 0 1.5px #b43a28,0 3px 5px -1px rgba(80,30,20,.4);animation:spbob 2.6s ease-in-out infinite}
+.sp-bob i::before{content:"";position:absolute;left:50%;top:-6px;width:2px;height:6px;margin-left:-1px;background:#b43a28;border-radius:2px}
+.sp-bob i::after{content:"";position:absolute;left:3px;top:3px;width:4px;height:3px;border-radius:50%;background:rgba(255,255,255,.6)}
+@keyframes spbob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(3px) rotate(4deg)}}
+.sp-hook{position:absolute;left:50%;bottom:-24px;width:14px;height:21px;margin-left:-7px;fill:none;stroke:#8a8f93;stroke-width:2;stroke-linecap:round}
+.sp-stops{position:absolute;left:0;right:0;top:0;bottom:0;margin:0;padding:0;list-style:none}
+.sp-stops li{position:absolute;left:50%;width:0;height:0}
+.sp-stops button{position:absolute;left:-5px;top:-5px;width:10px;height:10px;padding:0;border:1.5px solid #3a3836;border-radius:50%;background:var(--bg);cursor:pointer;pointer-events:auto;transition:background .25s,transform .25s}
+.sp-stops button.past{background:#3a3836}
+.sp-stops button.on{transform:scale(1.25)}
+.sp-stops span{position:absolute;right:20px;top:50%;translate:0 -50%;padding:.2rem .6rem;border-radius:999px;background:var(--ink);color:#fff;font-size:.7rem;font-weight:600;letter-spacing:.06em;white-space:nowrap;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.sp-stops button:hover span,.sp-stops button:focus-visible span{opacity:1;transform:none}
+.sp-stops button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(max-width:1180px){.sp{right:10px}}
+@media(max-width:720px){.sp{display:none}}
+@media(prefers-reduced-motion:reduce){.sp-stops button,.sp-stops span{transition:none}.sp-bob i{animation:none}}

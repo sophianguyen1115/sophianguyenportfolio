@@ -2023,6 +2023,39 @@ document.addEventListener("click", e => {
   const p = otherProjects.find(x => x.name === b.dataset.project); if (p) openProject(p);
 });
 
+// ---- Homepage scroll progress: a bobber rides down a fishing line on the right as the page scrolls; a stop marks each section ----
+(function () {
+  const sp = document.querySelector(".sp"); if (!sp) return;
+  const fill = sp.querySelector(".sp-fill"), bob = sp.querySelector(".sp-bob"), stops = sp.querySelector(".sp-stops");
+  const secs = [["Home", ".hero"], ["Journey", "#journey"], ["Toolkit", "#toolkit"], ["Projects", "#work"], ["Contact", "#contact"]]
+    .map(([n, q]) => [n, document.querySelector(q)]).filter(([, el]) => el);
+  stops.innerHTML = secs.map(([n], i) => `<li><button type="button" data-i="${i}"><span>${n}</span></button></li>`).join("");
+  const btns = [...stops.querySelectorAll("button")];
+  btns.forEach((b, i) => b.addEventListener("click", () => secs[i][1].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"})));
+  let raf = 0;
+  const max = () => Math.max(1, document.documentElement.scrollHeight - innerHeight);
+  const update = () => {
+    raf = 0;
+    const on = !home.hidden; sp.classList.toggle("off", !on); if (!on) return;
+    const m = max(), p = Math.min(1, Math.max(0, scrollY / m)), h = sp.querySelector(".sp-track").clientHeight;
+    fill.style.transform = `scaleY(${p})`;
+    bob.style.transform = `translate(-50%, ${p * h}px)`;
+    let cur = 0;
+    secs.forEach(([, el], i) => {
+      const t = Math.min(1, Math.max(0, (el.getBoundingClientRect().top + scrollY - innerHeight * .35) / m));
+      btns[i].parentElement.style.top = t * 100 + "%";
+      if (scrollY >= t * m - 2) cur = i;
+      btns[i].classList.toggle("past", scrollY >= t * m - 2);
+    });
+    btns.forEach((b, i) => b.classList.toggle("on", i === cur));
+  };
+  const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+  addEventListener("scroll", req, {passive: true}); addEventListener("resize", req);
+  if ("ResizeObserver" in window) new ResizeObserver(req).observe(document.body);
+  new MutationObserver(req).observe(home, {attributes: true, attributeFilter: ["hidden"]});
+  update();
+})();
+
 // ---- Header navigation: switches views without leaving the page ----
 document.addEventListener("click", e => {
   const a = e.target.closest("[data-view]");
