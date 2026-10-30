@@ -114,10 +114,6 @@ h1,h2,h3{letter-spacing:-.02em}
 .toc li{padding:0}
 .toc li::before{pointer-events:none}
 .toc a{padding:.6rem 0 .6rem 2rem}
-.mask{display:block;overflow:hidden;padding-bottom:.15em;margin-bottom:-.15em}
-.rise{display:block;transform:translateY(115%);transition:transform .9s cubic-bezier(.2,.7,.2,1) var(--d,0ms)}
-.mask.in .rise{transform:none}
-@media(prefers-reduced-motion:reduce){.rise{transform:none;transition:none}}
 /* header: logo left, WORK / ABOUT centered, all caps, black */
 :root{--nav-ink:#000}
 .nav{position:fixed;inset:0 0 auto 0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:1rem 1.5rem;color:var(--nav-ink);transition:background .25s}
@@ -1540,3 +1536,8 @@ button.card,.card{background:none;border:0;box-shadow:none;-webkit-backdrop-filt
 @media(max-width:860px){.vn-grid{grid-template-columns:1fr;gap:1.2rem}.vn-svg{max-width:340px}}
 @media(prefers-reduced-motion:reduce){.vn-c circle,.vn-mid circle{transition:none}}
 .quote mark{font-weight:700;color:inherit;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--qm,#e6dcef) 45%,#fff) 60%);padding:0 .12em}
+
+/* case studies: body content floats up gently as it scrolls into view */
+#case .rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--rd,0ms)}
+#case .rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){#case .rv{opacity:1;transform:none;transition:none}}

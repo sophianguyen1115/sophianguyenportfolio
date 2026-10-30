@@ -2010,32 +2010,23 @@ function renderCase(p) {
   buildToc();
 }
 
-// ---- Text rise-on-appear: headline, facts and section titles slide up out of a mask ----
+// ---- Float-up on scroll: section titles, pictures, visual blocks, quotes and goal cards rise gently into view; plain text stays still ----
 let riseObserver = null;
 function animateCase() {
   if (riseObserver) riseObserver.disconnect();
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const targets = [];
-  const wrapEl = (el, delay) => {
-    el.innerHTML = `<span class="mask"><span class="rise" style="--d:${delay}ms">${el.innerHTML}</span></span>`;
-    targets.push(el.firstChild);
-  };
-  const hero = caseView.querySelector(".chero");
-  wrapEl(hero.querySelector("h1"), 0);
-  wrapEl(hero.querySelector(".lede"), 120);
-  hero.querySelectorAll(".facts > div").forEach((item, i) => {
-    wrapEl(item.querySelector("dt"), 260 + i * 120);   // label first, then its text
-    wrapEl(item.querySelector("dd"), 360 + i * 120);
+  const floaters = [];
+  caseView.querySelectorAll(".chero .hero-img, .chero .hero-phones, .chero .phonehero, section.row > div > *, section.row > .split > div > *").forEach(el => {
+    // plain paragraphs and buttons stay put; pinned scroll stories are left alone so their sticky stage isn't moved
+    if (el.matches(".sy, .mo, script, p:not(.quote), .cta, .ctas") || el.querySelector(".sy-stage, .mo-stage")) return;
+    const sib = [...el.parentElement.children].filter(x => x.classList.contains("rv")).length;
+    el.classList.add("rv"); el.style.setProperty("--rd", Math.min(sib, 4) * 90 + "ms"); floaters.push(el);
   });
-  caseView.querySelectorAll("section.row").forEach(sec => {
-    wrapEl(sec.querySelector("h2"), 0);
-    const t = sec.querySelector("h3"); if (t) wrapEl(t, 120);
-  });
-  if (reduceMotion) { targets.forEach(t => t.classList.add("in")); return; }
+  if (reduceMotion || !("IntersectionObserver" in window)) { floaters.forEach(t => t.classList.add("in")); return; }
   riseObserver = new IntersectionObserver(es => es.forEach(en => {
     if (en.isIntersecting) { en.target.classList.add("in"); riseObserver.unobserve(en.target); }
-  }), {threshold: 0.2, rootMargin: "0px 0px -6% 0px"});
-  targets.forEach(t => riseObserver.observe(t));
+  }), {threshold: 0, rootMargin: "0px 0px -8% 0px"});
+  floaters.forEach(t => riseObserver.observe(t));
 }
 
 
