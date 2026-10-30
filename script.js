@@ -20,6 +20,50 @@ function placeholderCase(name, slug, lede, cat, base) {
 }
 
 // The three Companio phone videos shown in the hero.
+// Companio "Track an escaped pet" user flow, rebuilt from the FigJam board so it can be clicked through.
+// kind: start/end (green pill), step (cream box), choice (navy diamond), options (grey circle), input (red trapezoid)
+const COMPANIO_FLOW = {start:"alert", image:"assets/1d072451068f.webp", w:3164, h:882,
+  phases:["Alert","Share","Safety","Search","Recovery","Report"],
+  nodes:{
+    alert:{kind:"start", t:"User receives a real-time alert", ph:0, next:"open"},
+    open:{kind:"step", t:"Open app", ph:0, next:"tracking"},
+    tracking:{kind:"step", t:"Go to Tracking", ph:0, next:"track"},
+    track:{kind:"step", t:"Track Escaped Pet", ph:0, next:"guided"},
+    guided:{kind:"step", t:"Guided tools", ph:0, next:"household"},
+    household:{kind:"choice", t:"Share location with household?", ph:1, yes:"opt1", no:"map"},
+    opt1:{kind:"options", t:"Options", ph:1, pick:[["Suggested safe spots","share1"],["Live tracking link","share1"],["Last pinged location","share1"]]},
+    share1:{kind:"input", t:"Share location with others", ph:1, next:"submit1"},
+    submit1:{kind:"step", t:"Submit", ph:1, next:"someone"},
+    someone:{kind:"choice", t:"Share with someone else?", ph:1, yes:"opt1", no:"map"},
+    map:{kind:"step", t:"Display tracking map", ph:2, next:"safety"},
+    safety:{kind:"step", t:"Safety layer", ph:2, next:"nearby"},
+    nearby:{kind:"choice", t:"Alert others nearby?", ph:2, yes:"opt2", no:"spot"},
+    opt2:{kind:"options", t:"Options", ph:2, pick:[["Meetup point share","share2"],["Geofence alert sharing","share2"],["Temporary share of location","share2"]]},
+    share2:{kind:"input", t:"Share with others", ph:2, next:"submit2"},
+    submit2:{kind:"step", t:"Submit", ph:2, next:"emergency"},
+    emergency:{kind:"choice", t:"Enter Emergency Mode?", ph:2, yes:"activate", no:"spot"},
+    activate:{kind:"options", t:"Activate", ph:2, pick:[["Expanding search radius map","edit"],["Drop pins / report sightings","edit"],["Auto-generated lost pet alert","edit"]]},
+    edit:{kind:"input", t:"Edit alerts & sharing", ph:2, next:"submit3"},
+    submit3:{kind:"step", t:"Submit", ph:2, next:"accurate"},
+    accurate:{kind:"choice", t:"Data accurate?", ph:2, yes:"spot", no:"edit"},
+    spot:{kind:"step", t:"View last known spot", ph:3, next:"found"},
+    found:{kind:"choice", t:"Pet found?", ph:3, yes:"confirm", no:"guided"},
+    confirm:{kind:"step", t:"User confirms", ph:4, next:"log"},
+    log:{kind:"choice", t:"Log escape?", ph:4, yes:"method", no:"submitFound"},
+    submitFound:{kind:"step", t:"Submit pet found", ph:4, next:"timeline"},
+    method:{kind:"options", t:"Input method", ph:4, pick:[["Map visual","photos"],["Manual","info"]]},
+    photos:{kind:"input", t:"Add photos / new parameters", ph:4, next:"save1"},
+    info:{kind:"input", t:"Input information", ph:4, next:"save1"},
+    save1:{kind:"step", t:"Save Data", ph:4, next:"more1"},
+    more1:{kind:"choice", t:"More data to edit?", ph:4, yes:"method", no:"timeline"},
+    timeline:{kind:"step", t:"Timeline summary", ph:5, next:"report"},
+    report:{kind:"choice", t:"Submit report?", ph:5, yes:"opt3", no:"dash"},
+    opt3:{kind:"options", t:"Options", ph:5, pick:[["Geofencing changes","tracker"],["Additional feedback if needed","tracker"],["Location found","tracker"]]},
+    tracker:{kind:"input", t:"Add to tracker / map", ph:5, next:"save2"},
+    save2:{kind:"step", t:"Save Data", ph:5, next:"more2"},
+    more2:{kind:"choice", t:"More data to edit?", ph:5, yes:"opt3", no:"dash"},
+    dash:{kind:"end", t:"Go to dashboard", ph:5}
+  }};
 const COMPANIO_PHONES = [{video:{webm:"assets/c74c93c79408.webm",mp4:"",poster:"assets/30b90009d3f6.webp",anim:"assets/0458b37b0d4a.webp"},label:"Home",panel:1,alt:"Companio welcome screen, in a grey frame"},
         {video:{webm:"assets/d763c1dc9578.webm",mp4:"",poster:"assets/cfa2f59858d2.webp",anim:"assets/a878519ca6a2.webp"},label:"Health dashboard",panel:1,alt:"Companio health dashboard with the Log New menu, in a grey frame"},
         {video:{webm:"assets/ef7412e81a4c.webm",mp4:"",poster:"assets/6c229c7a1626.webp",anim:"assets/45758b09e761.webp"},label:"GPS tracking",panel:1,alt:"Companio GPS tracking map with a pet escape alert, in a grey frame"}];
@@ -54,6 +98,7 @@ const projects = [
       deck:[{src:"assets/c23b09443938.webp",w:2000,h:1333,alt:"Logo sketches: twelve ink sketches of pets, hearts and animal groupings."},{src:"assets/5755a237edc0.webp",w:2000,h:1333,alt:"Logo variations: the final Companio mark in pink, navy and green, with and without the wordmark."},{src:"assets/e5b2bbfca95f.webp",w:2000,h:1333,alt:"Wordmark exploration: Companio lettering built from animal shapes, with notes on each revision."},{src:"assets/bc14c0e54733.webp",w:2000,h:1333,alt:"Ideation board: logo, pattern, shape and iconography inspiration for the Companio brand."}], deckLabel:"Brand identity", split:true, gallery:[{src:"assets/21801337a072.webp",w:2800,h:3278,size:"full bare",alt:"Companio concepts on a white background with a light grey dot grid: 01 affinity map grouping feature ideas into themes, 02 prioritization of the top stickies, and 03 impact and effort matrix ranking the features."}]},
      {label:"Wireframes", title:"User flows to hi-fi prototype", paras:["User flows mapped each key task before wireframes became high-fidelity screens. The interface uses a playful look based on seasonal color palettes, with a simple layout that keeps care, health and GPS features up front."],
       deck:[{src:"assets/7911e4e2fe58.webp",w:1822,h:1020,size:"full",alt:"Geofencing: Track an Escaped Pet. Five Companio app screens: live notification, open app, pet profile tracking, share location and alert types."},{src:"assets/efc9f5a8b810.webp",w:1822,h:1020,size:"full",alt:"Geofencing: Customization of Alerts. Five Companio app screens: alert others option, share link, track path, emergency mode alerts and lost pet alert."},{src:"assets/c870226d0c1f.webp",w:1822,h:1020,size:"full",alt:"Geofencing: Recovery Process. Six Companio app screens: pet found prompt, end emergency mode, pet located recovery, escape summary, logging escape and submission confirmation."}], deckLabel:"User flow", buttons:[{label:"View All User Flows Here",href:"https://www.figma.com/board/I2gimY8SGn6eyTz2DSUV0S/User-Flows?node-id=113-1163&t=aM8BUcZu53Uo42K2-1"},{label:"View All Hi-Fi Prototypes Here",href:"https://www.figma.com/design/V2e4n9kyHilemRM9sZmxiw/Pet-Tracker-Wireframes---Companio--Copy-?node-id=25-318&t=KBkV8HEUfSg69pQR-1"}]},
+     {label:"User flow", title:"Track an escaped pet", paras:["The flow for the moment that matters most: a pet slips out of its geofence. It moves from the first alert, through sharing the pet's location and raising the alarm nearby, to logging the escape once the pet is home.","Click through it yourself. Make a choice at each decision, retrace your steps with Back, or start over with Reset."], flow:COMPANIO_FLOW},
      {label:"Result", title:"Care, health and safety in one place", paras:["Putting records, care routines and location in one platform makes pets easier to look after. Clear data views, organized health logs, real-time alerts and shared access cut friction, so owners can check in quickly and respond when it matters."]},
      {label:"Next steps", title:"Reflection", paras:["Work continued after the course with contextual design, an interactive prototype and a front-end tech spec. With more time, the next steps would be one-on-one interviews for deeper research, tighter links between the app's functions, and smoother animation between screens."]}
     ]}},
@@ -980,6 +1025,48 @@ function initFolds(list) {
   new ResizeObserver(() => { size(); draw(); }).observe(stage);
   skin(); size(); draw();
 }
+// ---- Interactive user flow: step through a FigJam flow one node at a time; choices branch, Back retraces, Reset starts over ----
+let flowData = null;
+const FLOW_KIND = {start:"Start", end:"End", step:"Step", choice:"Decision", options:"Choose one", input:"Input"};
+const flowHtml = f => (flowData = f, `<div class="uf" role="group" aria-label="Interactive user flow">
+  <ol class="uf-phases" aria-label="Stages">${f.phases.map((p, i) => `<li data-ph="${i}">${esc(p)}</li>`).join("")}</ol>
+  <div class="uf-stage">
+    <div class="uf-node" aria-live="polite"><span class="uf-kind"></span><div class="uf-shape"><span class="uf-text"></span></div></div>
+    <div class="uf-actions"></div>
+  </div>
+  <div class="uf-trailwrap"><span class="uf-trail-label">Your path</span><ol class="uf-trail"></ol></div>
+  <div class="uf-bar"><button type="button" class="uf-back">&#8249; Back</button><span class="uf-count"></span><button type="button" class="uf-map">See the full flow</button><button type="button" class="uf-reset">Reset</button></div>
+</div>`);
+function initFlow() {
+  const root = caseView.querySelector(".uf"); if (!root || !flowData) return;
+  const f = flowData, N = f.nodes, $ = s => root.querySelector(s);
+  const node = $(".uf-node"), kind = $(".uf-kind"), text = $(".uf-text"), acts = $(".uf-actions"), trail = $(".uf-trail"), count = $(".uf-count"), back = $(".uf-back");
+  const phases = [...root.querySelectorAll(".uf-phases li")];
+  let path = [];   // [{id, via}] where via is the answer or option that led onward
+  const btn = (label, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "uf-go " + cls; b.innerHTML = label; b.addEventListener("click", fn); acts.appendChild(b); };
+  const go = (to, via) => { path[path.length - 1].via = via; path.push({id: to}); draw(true); };
+  function draw(moved) {
+    const cur = path[path.length - 1], n = N[cur.id];
+    node.dataset.kind = n.kind; kind.textContent = FLOW_KIND[n.kind]; text.textContent = n.t;
+    phases.forEach((li, i) => { li.classList.toggle("on", i === n.ph); li.classList.toggle("done", i < n.ph); });
+    acts.innerHTML = "";
+    if (n.kind === "choice") { btn("Yes", "yes", () => go(n.yes, "Yes")); btn("No", "no", () => go(n.no, "No")); }
+    else if (n.kind === "options") n.pick.forEach(([label, to]) => btn(esc(label), "opt", () => go(to, label)));
+    else if (n.kind === "end") btn("Start over", "again", reset);
+    else btn("Next &rarr;", "next", () => go(n.next, ""));
+    trail.innerHTML = path.map((p, i) => `<li class="k-${N[p.id].kind}${i === path.length - 1 ? " cur" : ""}">${esc(N[p.id].t)}${p.via ? `<em>${esc(p.via)}</em>` : ""}</li>`).join("");
+    trail.scrollLeft = trail.scrollWidth;
+    count.textContent = n.kind === "end" ? `Flow complete in ${path.length} steps` : `Step ${path.length}`;
+    back.disabled = path.length < 2;
+    if (moved) { node.classList.remove("pop"); void node.offsetWidth; node.classList.add("pop"); }
+  }
+  function reset() { path = [{id: f.start}]; draw(true); }
+  back.addEventListener("click", () => { if (path.length < 2) return; path.pop(); delete path[path.length - 1].via; draw(true); });
+  $(".uf-reset").addEventListener("click", reset);
+  $(".uf-map").addEventListener("click", () => openPiece([{src: f.image, name: "Pet Tracking: Escaped Pet user flow", alt: "The full Escaped Pet user flow from the FigJam board, from the real-time alert to the dashboard.", w: f.w, h: f.h}], 0));
+  path = [{id: f.start}]; draw(false);
+}
+
 // ---- Rotating mockups: a ring of pictures you can drag around, spin on its own, or step through ----
 const ringHtml = list => (ringList = list, `<div class="ring" id="ring" role="region" aria-roledescription="carousel" aria-label="Rotating mockups" tabindex="0" data-n="${list.length}">
   <div class="ring-stage"><div class="ring-spin">${list.map((m, i) => `<figure class="ring-item" data-i="${i}"><img src="${esc(m.src)}" width="${m.w}" height="${m.h}" alt="${esc(m.alt || m.name)}" draggable="false" loading="lazy" decoding="async"></figure>`).join("")}</div><div class="ring-floor" aria-hidden="true"></div></div>
@@ -1403,6 +1490,7 @@ function renderCase(p) {
     ${s.folds ? foldHtml(s.folds) : ""}
     ${s.ring ? ringHtml(s.ring) : ""}
     ${s.posters ? wallHtml(s.posters) : ""}
+    ${s.flow ? flowHtml(s.flow) : ""}
     ${s.board ? boardHtml(s.board, s.boardKind) : ""}
     ${s.lunarWindow ? lunarWindowHtml() : ""}
     ${s.lunarLoader ? lunarLoaderHtml() : ""}
@@ -1434,6 +1522,7 @@ function renderCase(p) {
   initFolds(c.sections.map(s => s.folds).find(Boolean));
   initRing();
   initWall();
+  initFlow();
   initBoard();
   initLunarWindow();
   initLunarLoader();
