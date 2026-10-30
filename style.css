@@ -875,41 +875,67 @@ canvas.cvid{height:auto;aspect-ratio:auto;cursor:pointer}
 /* ---- Home: toolkit, a case that opens into four compartments of tools ---- */
 section.toolkit{padding-top:3rem}
 .tk-lead,.hc-sub{margin:-1rem 0 2rem;color:var(--muted);max-width:560px}
-.tk-case{position:relative;border-radius:28px;background:linear-gradient(160deg,#cfe0e1,#bfd6d8 60%,#b3cdd0);box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 18px 40px -22px rgba(40,90,100,.45);padding:14px;perspective:1600px}
-.tk-lid{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;width:100%;min-height:260px;padding:2rem;border:0;border-radius:20px;cursor:pointer;color:var(--ink);font:inherit;
-  background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 24px -14px rgba(30,40,45,.35);
-  transform-origin:50% 0;transition:transform .7s cubic-bezier(.3,.7,.2,1),min-height .6s cubic-bezier(.3,.7,.2,1),padding .6s,background .3s}
-.tk-lid:hover{background:rgba(255,255,255,.75)}
+/* toolkit: a canvas pencil case. Closed it shows a zipper, a masking-tape label and stickers; open, each compartment holds
+   a different kind of art supply (fine-liners, markers, highlighters, pencils, gel pens) with the tool's name on the barrel */
+.tk-case{--canvas:#a9c9cc;--felt:#f6efe4;position:relative;border-radius:30px;padding:14px;perspective:1600px;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 2px,transparent 2px 6px),repeating-linear-gradient(-45deg,rgba(0,40,50,.05) 0 2px,transparent 2px 6px),var(--canvas);
+  box-shadow:inset 0 0 0 7px var(--canvas),inset 0 0 0 9px rgba(255,255,255,.55),0 22px 40px -24px rgba(30,70,80,.6)}
+.tk-case::before{content:"";position:absolute;inset:8px;border:2px dashed rgba(255,255,255,.55);border-radius:24px;pointer-events:none}
+.tk-lid{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;width:100%;min-height:270px;padding:3.2rem 2rem 2rem;border:0;border-radius:22px;cursor:pointer;color:var(--ink);font:inherit;overflow:hidden;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 6px),linear-gradient(180deg,#b9d4d6,#a3c4c7);box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transform-origin:50% 0;transition:transform .7s cubic-bezier(.3,.7,.2,1),min-height .6s cubic-bezier(.3,.7,.2,1),padding .6s}
 .tk-lid:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.tk-clasp{width:58px;height:12px;border-radius:0 0 8px 8px;background:#e9e3da;box-shadow:0 1px 0 #fff inset,0 2px 4px rgba(0,0,0,.12);position:absolute;top:0;left:50%;translate:-50% 0}
-.tk-label{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.9rem 1.6rem;border-radius:10px;background:#fbf8f3;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 18px -12px rgba(0,0,0,.4);rotate:-1.5deg}
-.tk-label b{font-size:1.5rem;font-weight:600;letter-spacing:-.02em}
-.tk-label small{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.tk-open{font-size:.8rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.55rem 1.1rem;border-radius:999px;background:var(--ink);color:#fff}
-.tk-case.open .tk-lid{min-height:44px;padding:.6rem;transform:rotateX(14deg)}
-.tk-case.open .tk-label{display:none}
-.tk-case.open .tk-open{background:transparent;color:var(--ink);padding:.2rem .6rem}
+/* zipper across the top with its pull */
+.tk-zip{position:absolute;left:6%;right:6%;top:22px;height:12px;border-radius:6px;background:repeating-linear-gradient(90deg,#d9d2c6 0 4px,#8e877c 4px 6px);box-shadow:0 1px 0 rgba(255,255,255,.5),inset 0 1px 2px rgba(0,0,0,.25);transition:opacity .3s}
+.tk-pull{position:absolute;left:62%;top:-5px;width:16px;height:30px;border-radius:5px 5px 8px 8px;background:linear-gradient(180deg,#e9e4dc,#b7afa3);box-shadow:0 3px 5px rgba(0,0,0,.25);transition:left .6s cubic-bezier(.3,.7,.2,1)}
+.tk-pull::after{content:"";position:absolute;left:5px;bottom:5px;width:6px;height:9px;border-radius:3px;background:#8e877c}
+.tk-lid:hover .tk-pull{left:66%}
+.tk-label{position:relative;display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.85rem 1.8rem;background:rgba(244,232,206,.92);rotate:-2deg;box-shadow:0 2px 6px rgba(0,0,0,.12);
+  -webkit-mask:linear-gradient(90deg,transparent 0 3px,#000 3px calc(100% - 3px),transparent calc(100% - 3px))}
+.tk-label b{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;color:#2b2a27}
+.tk-label small{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#7a7266}
+.tk-open{position:relative;font-size:.8rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.55rem 1.1rem;border-radius:999px;background:var(--ink);color:#fff}
+.tk-stickers .st{position:absolute;display:grid;place-items:center;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
+.tk-stickers svg.st{width:38px;height:38px;fill:#fff;stroke:#fff;stroke-width:3;paint-order:stroke}
+.tk-stickers .st1{left:10%;top:36%;rotate:-14deg}.tk-stickers .st1 path{fill:var(--accent)}
+.tk-stickers .st2{right:12%;top:30%;rotate:12deg}.tk-stickers .st2 path{fill:#f0c24b}
+.tk-stickers .st3{left:16%;bottom:16%;width:44px;height:44px;border-radius:50%;background:#2b2a27;color:#fff;font-weight:700;font-size:.8rem;border:3px solid #fff;rotate:-8deg}
+.tk-stickers .st4{right:16%;bottom:18%;width:46px;height:46px;rotate:-10deg}.tk-stickers .st4 path{fill:var(--accent)}
+.tk-case.open .tk-lid{min-height:52px;padding:.6rem;transform:rotateX(16deg)}
+.tk-case.open .tk-label,.tk-case.open .tk-stickers{display:none}
+.tk-case.open .tk-pull{left:94%}
+.tk-case.open .tk-zip{top:auto;bottom:4px;height:8px}
+.tk-case.open .tk-open{background:transparent;color:#2b2a27;padding:.2rem .6rem 1rem}
 .tk-tray{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s cubic-bezier(.3,.7,.2,1)}
 .tk-case.open .tk-tray{grid-template-rows:1fr}
 .tk-inner{overflow:hidden;min-height:0}
 .tk-comps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-top:12px}
-.tk-comp{background:#fbf8f3;border-radius:16px;padding:1rem 1rem 1.1rem;box-shadow:0 1px 0 #fff inset,0 2px 0 rgba(0,0,0,.04),inset 0 -6px 12px -10px rgba(0,0,0,.18);opacity:0;translate:0 12px;transition:opacity .45s,translate .55s cubic-bezier(.2,.7,.2,1)}
+/* compartments: felt-lined trays with a masking-tape label */
+.tk-comp{position:relative;padding:1.7rem 1rem 1rem;border-radius:16px;background:radial-gradient(rgba(120,100,70,.08) 1px,transparent 1.2px) 0 0/5px 5px,var(--felt);box-shadow:inset 0 3px 8px rgba(80,60,40,.18),inset 0 -1px 0 #fff;opacity:0;translate:0 12px;transition:opacity .45s,translate .55s cubic-bezier(.2,.7,.2,1)}
 .tk-case.open .tk-comp{opacity:1;translate:none}
-.tk-case.open .tk-comp:nth-child(2){transition-delay:.08s}.tk-case.open .tk-comp:nth-child(3){transition-delay:.16s}.tk-case.open .tk-comp:nth-child(4){transition-delay:.24s}
+.tk-case.open .tk-comp:nth-child(2){transition-delay:.08s}.tk-case.open .tk-comp:nth-child(3){transition-delay:.16s}.tk-case.open .tk-comp:nth-child(4){transition-delay:.24s}.tk-case.open .tk-comp:nth-child(5){transition-delay:.32s}
 .tk-comp:last-child:nth-child(odd){grid-column:1/-1}
-.tk-comp h3{margin:0 0 .8rem;padding-bottom:.6rem;border-bottom:1px dashed #ddd5ca;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.tk-comp h3{position:absolute;top:-8px;left:14px;margin:0;padding:.2rem .7rem;background:rgba(244,232,206,.95);rotate:-2deg;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5b5348;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tk-comp:nth-child(even) h3{rotate:1.5deg}
 .tk-tools{display:flex;flex-wrap:wrap;align-items:flex-start;gap:.5rem}
-.tk-tool{display:flex;flex-direction:column;align-items:center;gap:.4rem;width:84px;padding:.6rem .3rem .5rem;border:1px solid transparent;border-radius:12px;background:none;cursor:pointer;font:inherit;color:var(--ink);transition:background .2s,border-color .2s,transform .2s}
-.tk-tool i{display:grid;place-items:center;width:44px;height:44px;border-radius:11px;background:var(--tb);color:var(--tf);font:700 1.05rem/1 var(--font);font-style:normal;letter-spacing:-.02em;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 4px 10px -6px rgba(0,0,0,.45)}
+/* app icons resting on the felt; the picked one lifts out of its slot */
+.tk-tool{display:flex;flex-direction:column;align-items:center;gap:.4rem;width:84px;padding:.6rem .3rem .5rem;border:1px solid transparent;border-radius:12px;background:none;cursor:pointer;font:inherit;color:var(--ink);transition:background .2s,border-color .2s,transform .3s cubic-bezier(.3,1.4,.5,1),box-shadow .3s}
+.tk-tool i{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--tb);color:var(--tf);font:700 1.05rem/1 var(--font);font-style:normal;letter-spacing:-.02em;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 5px 10px -6px rgba(60,45,30,.55)}
 .tk-tool span{font-size:.78rem;line-height:1.2;text-align:center}
-.tk-tool.on{background:#fff;border-color:#e4ddd2;transform:translateY(-2px)}
-@media(hover:hover){.tk-tool:hover{background:#fff;border-color:#e4ddd2;transform:translateY(-2px)}}
+.tk-tool i.lg{background:var(--lb,#fff)}
+.tk-tool i.lg img{display:block;width:28px;height:28px;object-fit:contain;-webkit-user-drag:none}
+.tk-tool i.lg.full{background:none;box-shadow:0 5px 10px -6px rgba(60,45,30,.55)}
+.tk-tool i.lg.full img{width:46px;height:46px;border-radius:10px}
+.tk-tool.on{background:#fffdf8;border-color:#e4d9c6;transform:translateY(-4px) rotate(-2deg);box-shadow:0 10px 18px -12px rgba(60,45,30,.5)}
+@media(hover:hover){.tk-tool:hover{background:#fffdf8;border-color:#e4d9c6;transform:translateY(-4px) rotate(-2deg);box-shadow:0 10px 18px -12px rgba(60,45,30,.5)}}
 .tk-tool:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-.tk-note{display:flex;gap:.8rem;align-items:baseline;flex-wrap:wrap;margin:12px 0 0;padding:.85rem 1.1rem;border-radius:14px;background:#fff6ef;border:1px solid #f0d9cc;font-size:.92rem;min-height:3.2rem;box-sizing:border-box}
-.tk-note b{font-weight:600;white-space:nowrap}
+/* the note: a sticky note taped to the case */
+.tk-note{position:relative;display:flex;gap:.8rem;align-items:baseline;flex-wrap:wrap;margin:16px 6px 4px;padding:1rem 1.2rem;background:#fde9a8;rotate:-.6deg;font-size:.92rem;min-height:3.2rem;box-sizing:border-box;box-shadow:0 1px 1px rgba(0,0,0,.08),0 12px 18px -14px rgba(60,45,30,.55);border-radius:2px 2px 10px 2px}
+.tk-note::before{content:"";position:absolute;top:-9px;left:50%;width:70px;height:18px;margin-left:-35px;background:rgba(244,232,206,.85);rotate:2deg;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.tk-note b{font-weight:700;white-space:nowrap}
 .tk-note span{color:#4a4640}
-@media(max-width:720px){.tk-comps{grid-template-columns:1fr}.tk-lid{min-height:220px}.tk-tool{width:76px}}
-@media(prefers-reduced-motion:reduce){.tk-lid,.tk-tray,.tk-comp,.tk-tool{transition:none}}
+@media(max-width:720px){.tk-comps{grid-template-columns:1fr}.tk-tool{width:76px}.tk-lid{min-height:240px}.tk-stickers .st1{left:6%;top:24%}.tk-stickers .st2{right:6%;top:22%}.tk-stickers .st3{left:8%;bottom:10%}.tk-stickers .st4{right:8%;bottom:10%}.tk-label b{font-size:1.35rem}}
+@media(prefers-reduced-motion:reduce){.tk-lid,.tk-tray,.tk-comp,.tk-tool,.tk-pull{transition:none}}
 
 /* ---- Home: contact panel in the pond colours, the line picked out in the koi accent ---- */
 section.hcontact{padding-top:2rem}

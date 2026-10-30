@@ -1952,6 +1952,9 @@ document.addEventListener("click", e => {
   const root = document.querySelector(".tk-case"); if (!root) return;
   const lid = root.querySelector(".tk-lid"), tray = root.querySelector(".tk-tray"), word = root.querySelector(".tk-open"), note = root.querySelector(".tk-note"), tools = [...root.querySelectorAll(".tk-tool")];
   const blank = note.innerHTML;
+  // label colour on each barrel: dark on light pens, white on dark ones
+  tools.forEach(t => { const h = t.style.getPropertyValue("--tf").trim().replace("#", ""); if (h.length !== 6) return;
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); t.style.setProperty("--tt", (r * 299 + g * 587 + b * 114) / 1000 > 150 ? "#2b2a27" : "#fff"); });
   lid.addEventListener("click", () => {
     const open = !root.classList.contains("open");
     root.classList.toggle("open", open); tray.inert = !open; lid.setAttribute("aria-expanded", String(open)); word.textContent = open ? "Close the toolkit" : "Open the toolkit";
