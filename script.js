@@ -97,7 +97,7 @@ const COMPANIO_COMP = {root:"Pet care today", end:"Companio", endTags:["GPS trac
      audit:[{src:"assets/ff1e19d2dc3b.webp",w:2000,h:1120,alt:"MyFitnessPal overview and unique features."},{src:"assets/a1b714326318.webp",w:2000,h:1120,alt:"MyFitnessPal audit: onboarding and first impressions."},{src:"assets/ccb0d93a66e6.webp",w:2000,h:1120,alt:"MyFitnessPal audit: performance, accessibility and visual design."},{src:"assets/3390dfe3a72d.webp",w:2000,h:1120,alt:"MyFitnessPal audit: navigation, interaction and feedback."}]}]};
 // Companio personas and their empathy maps. Persona content is from the persona slides; the empathy maps are drawn from it.
 const COMPANIO_PERSONAS = [
-  {name:"Sean", title:"The Overloaded Operator", photo:"assets/bfd2f47e2416.webp", c:"#ea8484",
+  {name:"Sean", title:"The Overloaded Operator", photo:"assets/b4ce61e13fc9.webp", c:"#ea8484",
    facts:["37","San Diego","Heavy tech use","Reddit & Instagram daily"],
    bio:"Sean works full time from home in customer support. He and his partner share an apartment with two aging pets: a 10-year-old dog with dietary needs and a 7-year-old cat on daily medication. Since he's home most of the day, most of the caregiving falls to him, and his paper notebook for meds, food orders and vet visits has become overwhelming and inconsistent.",
    lists:[["Goals",["One central hub for pet health and wellness","Stay consistent with meds, diets and vet visits","Share care duties with his partner","Find dog-friendly places to go together"]],
@@ -108,7 +108,7 @@ const COMPANIO_PERSONAS = [
             thinks:["Pet care feels like a second job on top of work.","What if I forget a dose?"],
             does:["Logs meds, food orders and vet visits in a notebook","Orders special food through the vet","Searches for pet-friendly places after work"],
             feels:["Overwhelmed by the mental load","Guilty when something slips","Hopeful for peace of mind"]}},
-  {name:"Elizabeth", title:"The Practical Caregiver", photo:"assets/222fc1d0fff8.webp", c:"#789042",
+  {name:"Elizabeth", title:"The Practical Caregiver", photo:"assets/7b218cc196e3.webp", c:"#789042",
    facts:["55","Texas","Self-employed","Moderate tech use","Facebook & TikTok"],
    bio:"Elizabeth is self-employed full time and lives with her husband, two kids and two dogs. She values health and wellbeing and tracks her own activity when she has time. The dogs are mostly indoors, with a daily walk and backyard play, and the family relies on memory or reminders for vet visits, grooming and general health.",
    lists:[["Goals",["One central spot for her pets' health and wellness","Peace of mind","Prevent illness or catch it early","Remember vet visits and vaccines"]],
