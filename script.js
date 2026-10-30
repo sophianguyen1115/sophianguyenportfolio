@@ -119,6 +119,64 @@ const COMPANIO_PERSONAS = [
             thinks:["Catching things early matters most.","I'd like to know where they are when it counts."],
             does:["Walks the dogs daily and lets them play in the yard","Relies on memory for vet visits and grooming","Books a sitter when the family travels"],
             feels:["Loves her pets and wants them healthy and happy","Uneasy about tasks outside the routine","Let down by physical trackers"]}}];
+// Pocket Atelier: a six-week timeline and the three personas from the persona slides (empathy maps are drawn from them)
+const PA_TIMELINE = {theme:"pa", unit:"Week", head:"Six weeks, from what artists were missing to a marketplace built around them.",
+  phases:[{name:"Research & define", short:"Research", n:2, c:"#b48fb0"}, {name:"Structure & wireframe", short:"Structure", n:2, c:"#8f78a8"}, {name:"Design & deliver", short:"Design", n:2, c:"#5f4e78"}],
+  steps:[
+    {when:"01", title:"Research", tasks:["Artist needs","AI concerns"]},
+    {when:"02", title:"Define", tasks:["Three personas","Design goals"]},
+    {when:"03", title:"Structure", tasks:["User flows","Onboarding roles"]},
+    {when:"04", title:"Wireframe", tasks:["Feed & profile","Shop & checkout"]},
+    {when:"05", title:"Design", tasks:["Visual style","Hi-fi screens"]},
+    {when:"06", title:"Prototype", tasks:["Interactive flow","Presentation"]}]};
+const PA_PERSONAS = [
+  {name:"Himeko Mori", title:"Illustrator", photo:"assets/17b3f460504c.webp", c:"#a07fb4", quote:"Art will always be made by humans.",
+   facts:["20","Santa Ana, CA","Illustration","Parents & two dogs"],
+   bio:"Himeko is a 20-year-old illustrator with an independent online shop. She would like to connect with more like-minded artists while promoting herself. She is annoyed by the rise of AI and wants a site that protects her art while befriending fellow artists who share her vision.",
+   lists:[["Goals",["A more personalized experience","Protection against AI for artists","A list of things she has bought before","One social platform + shopping site"]],
+          ["Frustrations",["Her feed shows ads and bots, not actual artists","Befriending other independent artists is hard","Shopping and socializing live on separate apps"]]],
+   empathy:{says:["\u201cArt will always be made by humans.\u201d","\u201cI just want to see real artists.\u201d"],
+            thinks:["AI could flood the places she sells.","Finding her people shouldn't be this hard."],
+            does:["Runs an independent online shop","Promotes her own illustrations","Looks for artists who share her ideals"],
+            feels:["Annoyed by the rise of AI","Eager for a real community","Hopeful about growing her shop"]}},
+  {name:"Celia Milla", title:"Oil painter", photo:"assets/51116a0c61de.webp", c:"#b88aa6", quote:"Supporting artists is important to me.",
+   facts:["25","Portland, OR","Art education","Husband & three cats"],
+   bio:"Celia is a 25-year-old oil painter with a steady line of commissions who has shown in art exhibitions. She wants to build her social media skills and talk casually with art lovers and other artists. Hearing AI used in exhibitions over real artists frustrated her, and she wants a platform that protects her work and discusses AI maturely.",
+   lists:[["Goals",["Mature conversations, not bots and fake likes","Protection against AI for artists","Showcase her art to her audience"]],
+          ["Frustrations",["Can't curate her feed to her preferences","Befriending other independent artists","Selling more art while making connections"]]],
+   empathy:{says:["\u201cSupporting artists is important to me.\u201d","\u201cLet's talk about AI, maturely.\u201d"],
+            thinks:["Commissions are steady, but her reach could grow.","Real people should come before bots and likes."],
+            does:["Paints commissions in oil","Shows work in exhibitions","Shares her process online"],
+            feels:["Frustrated by AI in exhibitions","Proud of her craft","Keen to sell and connect"]}},
+  {name:"Robbie Hilt", title:"Photographer & videographer", photo:"assets/16dc7c53c19c.webp", c:"#7e6aa0", quote:"Handmade things fill me with joy!",
+   facts:["28","Santa Ana, CA","Photography","Wife, daughter & cat"],
+   bio:"Robbie is a 28-year-old photographer and videographer who is always on the move and loves collecting other artists' work. He wants to build connections with artists outside his field. He uses AI, but wants to talk about how it should make life easier rather than replace artists, in a casual social setting.",
+   lists:[["Goals",["Support other artists","Protection against AI for artists","One social platform + shopping site"]],
+          ["Frustrations",["His feed shows ads and bots, not actual artists","Wants to build his network outside his field","Hopes to collaborate with other artists"]]],
+   empathy:{says:["\u201cHandmade things fill me with joy!\u201d","\u201cAI should help artists, not replace them.\u201d"],
+            thinks:["There's so much work out there he'd love to collect.","Collaborating could push his own craft."],
+            does:["Shoots photo and video on the move","Collects other artists' work","Uses AI as a tool"],
+            feels:["Joy in handmade work","Curious about other fields","Wary of AI replacing artists"]}}];
+// Pocket Atelier screens as a scroll story: Himeko goes through the app, one screen per step
+const PA_STORY = {who:"Himeko", head:"Six screens, in the order Himeko meets them.", steps:[
+  {src:"assets/8c9d6d9a7faf.webp", name:"Welcome", phase:"First look", face:"curious", say:"Oh, an app just for artists?",
+   text:"A soft greeting with the brand name sets a calm, inviting tone, so Pocket Atelier reads as a supportive art community from the very first screen.", note:"Nothing to decide yet. Just one way in.",
+   alt:"Welcome screen: Welcome to Pocket Atelier, a whole committee for the art enthusiasts, with a Get Started button."},
+  {src:"assets/ed31e880941f.webp", name:"Choose a role", phase:"Getting set up", face:"smile", say:"Artist. Obviously.",
+   text:"Choosing Artist, Business, Art Enthusiast or Other personalizes her feeds and features from the start, which suits a niche community.", note:"The role can be changed or added to later.",
+   alt:"Role screen: What role best suits you? Artist, Business, Art Enthusiast or Other."},
+  {src:"assets/b4d146170d94.webp", name:"Feed", phase:"Settling in", face:"happy", say:"Real artists. No bots.",
+   text:"The feed borrows patterns she already knows from Instagram and X, so liking, sharing and saving feel natural and new creators are easy to find.", note:"Familiar on purpose: no learning curve.",
+   alt:"Feed screen: posts from artists with likes, share and bookmark actions."},
+  {src:"assets/9780da3374dd.webp", name:"Profile", phase:"Settling in", face:"proud", say:"My tags say who I am.",
+   text:"Her profile carries a bio and style tags, with tabs for posts, likes and bookmarks, so followers connect through shared interests rather than numbers.", note:"Style tags do the matchmaking.",
+   alt:"Profile screen: artist profile with bio, style tags, and tabs for posts, likes and bookmarks."},
+  {src:"assets/55afe5163d99.webp", name:"Shop home", phase:"Supporting artists", face:"wow", say:"Ooh, picked just for me.",
+   text:"A personal greeting with In Your Likes, Recommended and Trending sections turns shopping into exploring other artists' work.", note:"Suggestions lead to people, not just products.",
+   alt:"Shop home screen: a custom greeting with In Your Likes, Recommended and Trending sections."},
+  {src:"assets/967bf95095bf.webp", name:"Checkout", phase:"Supporting artists", face:"joy", say:"That was easy!",
+   text:"A simple cart with an item list and price summary keeps buying familiar and minimal, so supporting an artist takes seconds.", note:"Two items, $50, and done.",
+   alt:"Checkout screen: cart with two items and a total of $50."}]};
 const COMPANIO_TIMELINE = {head:"Six months, from understanding pet owners to a prototype they could use.",
   phases:[{name:"Research & define", short:"Research", n:2, c:"#ea8484"}, {name:"Ideate & brand", short:"Brand", n:2, c:"#789042"}, {name:"Design & deliver", short:"Design", n:2, c:"#2a3654"}],
   steps:[
@@ -177,33 +235,12 @@ const projects = [
     heroVideo:{webm:"assets/d4eb7ce36bb8.webm",mp4:"",poster:"assets/d43debad8972.webp",anim:"assets/7aed36793b02.webp",alt:"Pocket Atelier app walkthrough on a phone: an artist profile with shop tags, posts and a feed."},
     facts:[["Category","Art / Social media"],["Client","Pocket Atelier"],["Year","2025"],["Role","UX & UI designer"]],
     sections:[
-     {label:"Overview", title:"Uplifting art and artists", paras:["Independent artists worry about AI-generated content, high platform fees and few chances to build lasting relationships with their audience. Existing marketplaces focus on transactions rather than community.","Pocket Atelier is a mobile platform that combines social networking with e-commerce, so artists can showcase, sell and promote their work while connecting with other creators and art lovers."]},
+     {label:"Overview", title:"Uplifting art and artists", paras:["Independent artists worry about AI-generated content, high platform fees and few chances to build lasting relationships with their audience. Existing marketplaces focus on transactions rather than community.","Pocket Atelier is a mobile platform that combines social networking with e-commerce, so artists can showcase, sell and promote their work while connecting with other creators and art lovers."], timeline:PA_TIMELINE},
      {label:"Problem", paras:["Artists have to choose between marketplaces that take large fees and social feeds that bury their work. Neither helps them protect human-made art or earn a living from it."]},
      {label:"Research", title:"Research and personas", paras:["Research pointed to three needs: protecting human-made art, helping independent creators earn from their work, and encouraging appreciation for original art. Those needs shaped three personas."],
-      goals:["Reward positive interactions within the art community","Make a responsive interface that blends smoothly into the experience","Merge the marketplace with artist engagement"],goalIcons:["reward","responsive","merge"],
-      deck:[{src:"assets/4893a120afbf.webp",w:1920,h:1080,alt:"Persona 1: Himeko Mori, 20, illustrator from Santa Ana, CA. Quote: Art will always be made by humans. Goals include a more personalized experience and protection against AI for artists."},
-        {src:"assets/b848dc73a15f.webp",w:1920,h:1080,alt:"Persona 2: Celia Milla, 25, oil painter from Portland, OR. Quote: Supporting artists is important to me. Goals include mature conversations and showcasing her art to her audience."},
-        {src:"assets/d2f2424de8b2.webp",w:1920,h:1080,alt:"Persona 3: Robbie Hilt, 28, photographer and videographer from Santa Ana, CA. Quote: Handmade things fill me with joy. Goals include supporting artists and finding a social platform plus shopping website."}], deckLabel:"Personas"},
-     {label:"Wireframes", title:"Hi-fi wireframes and analysis", paras:["The hi-fi wireframes put the artwork first, with generous whitespace, simple navigation and a mobile-first layout. Users can discover creators, browse products and services, and join in with content in one flow."],
-      annotated:[
-        {title:"Onboarding", screens:[
-          {src:"assets/8c9d6d9a7faf.webp", name:"Welcome", alt:"Welcome screen: Welcome to Pocket Atelier, a whole committee for the art enthusiasts from art creator to art collector, with a Get Started button."},
-          {src:"assets/ed31e880941f.webp", name:"Choose a role", alt:"Role screen: What role best suits you? Artist, Business, Art Enthusiast or Other."}],
-         notes:[
-          {text:"Soft greeting with the brand name.", for:[0]},
-          {text:"Sets a calm, inviting tone that establishes the app as a supportive art community.", for:[0,1]},
-          {text:"Personalizes the experience (feeds, features) by user type, which suits niche engagement. The role can be changed or added to later.", for:[1]}]},
-        {title:"Core experience", screens:[
-          {src:"assets/b4d146170d94.webp", name:"Feed", alt:"Feed screen: posts from artists with likes, share and bookmark actions."},
-          {src:"assets/9780da3374dd.webp", name:"Profile", alt:"Profile screen: artist profile with bio, style tags, and tabs for posts, likes and bookmarks."},
-          {src:"assets/55afe5163d99.webp", name:"Shop home", alt:"Shop home screen: a custom greeting with In Your Likes, Recommended and Trending sections."},
-          {src:"assets/967bf95095bf.webp", name:"Checkout", alt:"Checkout screen: cart with two items and a total of $50."}],
-         notes:[
-          {text:"The interface mimics social platforms such as Instagram or X, to encourage interaction and the discovery of new creators.", for:[0,1]},
-          {text:"Users can customize their identity, and followers can connect deeply through interests and style tags.", for:[1]},
-          {text:"Custom greetings, reminders, and suggested and trending posts encourage exploration.", for:[2]},
-          {text:"Simple cart with an item list and price summary: a streamlined shopping experience that feels familiar and minimal.", for:[3]}]}
-      ]},
+      goals:["Reward positive interactions within the art community","Make a responsive interface that blends smoothly into the experience","Merge the marketplace with artist engagement"],goalIcons:["reward","responsive","merge"]},
+     {label:"Personas", title:"Three artists, one community", paras:["Switch between Himeko, Celia and Robbie, flip through their goals and frustrations, and tap the empathy map to look closer."], personas:PA_PERSONAS, personaTheme:"pa"},
+     {label:"Wireframes", title:"Hi-fi wireframes and analysis", paras:["The hi-fi wireframes put the artwork first, with generous whitespace, simple navigation and a mobile-first layout. Users can discover creators, browse products and services, and join in with content in one flow."], story:PA_STORY},
      {label:"Result", title:"Supporting artists beyond the buy", paras:["A minimalist interface keeps the artwork central, and a mobile-first layout makes it easy to find creators and shop. Pairing community with marketplace features helps artists grow their audience and promote their work in one place, with social features, simpler purchasing and transparent interactions."]},
      {label:"Next steps", title:"Reflection", paras:["After the course, work continued with contextual design, an interactive prototype and a front-end tech spec. Next time I would integrate AI, show more clearly how social and e-commerce work together, improve contrast for people who find light color schemes hard to read, and build in firmer accessibility practices from the start."]}
     ]}},
@@ -1166,14 +1203,15 @@ function initScreens() {
 const TL_PAW = `<svg class="tl-paw" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.6" cy="9.6" r="2.3"/><circle cx="9.6" cy="5.4" r="2.4"/><circle cx="14.4" cy="5.4" r="2.4"/><circle cx="18.4" cy="9.6" r="2.3"/><path d="M12 11.2c-3.4 0-6.4 3.5-6.4 6.2 0 2 1.6 2.9 3.3 2.9 1.2 0 2-.6 3.1-.6s1.9.6 3.1.6c1.7 0 3.3-.9 3.3-2.9 0-2.7-3-6.2-6.4-6.2z"/></svg>`, TL_HOME = `<svg class="tl-home" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c-4.4 0-8 3.4-8 7.8 0 5.6 8 11.2 8 11.2s8-5.6 8-11.2c0-4.4-3.6-7.8-8-7.8z"/><path d="M8.4 11.2 12 8.3l3.6 2.9v3.3h-2.4v-2h-2.4v2H8.4z" fill="#fff"/></svg>`;
 const timelineHtml = t => {
   let k = 0, i = 0;
-  return `<div class="tl">
-  <p class="tl-kicker">${TL_PAW}Project timeline</p>
+  const pa = t.theme === "pa", mark = pa ? '<i class="tl-shape" aria-hidden="true"></i>' : TL_PAW;
+  return `<div class="tl${pa ? " tl-pa" : ""}">
+  <p class="tl-kicker">${pa ? "" : TL_PAW}Project timeline</p>
   <p class="tl-head">${esc(t.head)}</p>
   <div class="tl-card"><ol class="tl-groups">${t.phases.map(ph => `<li class="tl-group" style="--c:${ph.c}">
     <p class="tl-phase"><b><span class="tl-long">${esc(ph.name)}</span><span class="tl-short">${esc(ph.short)}</span></b></p>
-    <ol class="tl-steps">${t.steps.slice(k, k += ph.n).map(s => `<li class="tl-step" style="--i:${i}" data-i="${i++}"><span class="tl-dot">${TL_PAW}</span><span class="tl-when"><span class="tl-m">Month </span>${esc(s.when)}</span><div class="tl-body"><b class="tl-title">${esc(s.title)}</b><ul>${s.tasks.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div><button type="button" class="tl-pick" aria-label="Month ${esc(s.when)}: ${esc(s.title)}"></button></li>`).join("")}</ol>
+    <ol class="tl-steps">${t.steps.slice(k, k += ph.n).map(s => `<li class="tl-step" style="--i:${i}" data-i="${i++}"><span class="tl-dot">${mark}</span><span class="tl-when"><span class="tl-m">${t.unit || "Month"} </span>${esc(s.when)}</span><div class="tl-body"><b class="tl-title">${esc(s.title)}</b><ul>${s.tasks.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div><button type="button" class="tl-pick" aria-label="Month ${esc(s.when)}: ${esc(s.title)}"></button></li>`).join("")}</ol>
   </li>`).join("")}</ol>
-  <span class="tl-end" title="Home">${TL_HOME}</span>
+  ${pa ? '<span class="tl-end tl-end-pa" aria-hidden="true"></span>' : `<span class="tl-end" title="Home">${TL_HOME}</span>`}
   <div class="tl-detail" aria-live="polite"></div></div>
 </div>`;
 };
@@ -1181,11 +1219,17 @@ const timelineHtml = t => {
 function initTimeline() {
   const root = caseView.querySelector(".tl"); if (!root) return;
   const steps = [...root.querySelectorAll(".tl-step")], detail = root.querySelector(".tl-detail");
+  const endPa = root.querySelector(".tl-end-pa");
+  if (endPa) {   // sit the end marker on the line, level with the last dot
+    const card = root.querySelector(".tl-card"), dot = root.querySelector(".tl-dot");
+    const align = () => { const c = card.getBoundingClientRect(), d = dot.getBoundingClientRect(); endPa.style.top = (d.top + d.height / 2 - c.top - endPa.offsetHeight / 2) + "px"; };
+    if ("ResizeObserver" in window) new ResizeObserver(align).observe(card); align();
+  }
   const pick = n => {
     steps.forEach((s, i) => { s.classList.toggle("on", i === n); s.querySelector(".tl-pick").setAttribute("aria-pressed", String(i === n)); });
     const s = steps[n];
     detail.style.setProperty("--c", getComputedStyle(s).getPropertyValue("--c"));
-    detail.innerHTML = `<span class="tl-d-when">Month ${esc(s.querySelector(".tl-when").lastChild.textContent)}</span><b>${esc(s.querySelector(".tl-title").textContent)}</b><span>${[...s.querySelectorAll("ul li")].map(li => esc(li.textContent)).join(" &middot; ")}</span>`;
+    detail.innerHTML = `<span class="tl-d-when">${esc(s.querySelector(".tl-m").textContent.trim())} ${esc(s.querySelector(".tl-when").lastChild.textContent)}</span><b>${esc(s.querySelector(".tl-title").textContent)}</b><span>${[...s.querySelectorAll("ul li")].map(li => esc(li.textContent)).join(" &middot; ")}</span>`;
   };
   steps.forEach((s, i) => s.querySelector(".tl-pick").addEventListener("click", () => pick(i)));
   pick(0);
@@ -1240,7 +1284,7 @@ function initComp() {
 // slide into place, and an empathy map whose quadrants open up when tapped ----
 let personaData = null;
 const EMP = [["says","Says"],["thinks","Thinks"],["does","Does"],["feels","Feels"]];
-const personaHtml = list => (personaData = list, `<div class="pz">
+const personaHtml = (list, theme) => (personaData = list, `<div class="pz${theme ? " pz-" + theme : ""}">
   <div class="pz-switch" role="tablist" aria-label="Choose a persona">${list.map((p, i) => `<button type="button" role="tab" class="pz-tab" data-i="${i}" style="--c:${p.c}" aria-selected="${i === 0}"><img src="${esc(p.photo)}" alt="" width="40" height="40"><span><b>${esc(p.name)}</b><small>${esc(p.title)}</small></span></button>`).join("")}</div>
   <div class="pz-stage"></div>
 </div>`);
@@ -1255,7 +1299,7 @@ function personaPanel(p) {
       <p class="pz-bio">${esc(p.bio)}</p>
       <div class="pz-ltabs" role="tablist" aria-label="${esc(p.name)} details">${p.lists.map(([h], i) => `<button type="button" role="tab" data-l="${i}" aria-selected="${i === 0}">${esc(h)}</button>`).join("")}</div>
       <ul class="pz-list">${p.lists[0][1].map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-      <div class="pz-traits"><p class="pz-sub">Personality</p>${p.traits.map(([a, b, v]) => `<div class="pz-trait" style="--v:${v}"><span>${esc(a)}</span><i><b></b></i><span>${esc(b)}</span></div>`).join("")}</div>
+      ${p.traits ? `<div class="pz-traits"><p class="pz-sub">Personality</p>${p.traits.map(([a, b, v]) => `<div class="pz-trait" style="--v:${v}"><span>${esc(a)}</span><i><b></b></i><span>${esc(b)}</span></div>`).join("")}</div>` : `<blockquote class="pz-quote">${esc(p.quote || "")}</blockquote>`}
     </div>
   </div>
   <div class="pz-emp-wrap">
@@ -1286,6 +1330,72 @@ function initPersonas() {
     }));
   };
   tabs.forEach((t, i) => t.addEventListener("click", () => show(i)));
+  show(0);
+}
+
+// ---- Scroll story: a pinned stage (character, speech bubble, phone) beside a column of steps; the step in the middle of
+// the screen sets the phone screen, the character's expression and what she says ----
+let storyData = null;
+// Expressions for Himeko's face (front view): eyes, mouth; blush and freckles stay on the figure
+const STORY_FACES = {
+  curious: '<circle cx="130" cy="141" r="3.6"/><circle cx="170" cy="141" r="3.6"/><ellipse cx="150" cy="182" rx="3.2" ry="3.8" class="o"/>',
+  smile:   '<path d="M121 139 q9 6 18 0 M161 139 q9 6 18 0" class="m"/><path d="M143 179 q7 5 14 0" class="m"/>',
+  happy:   '<path d="M121 143 q9 -7 18 0 M161 143 q9 -7 18 0" class="m"/><path d="M141 177 q9 8 18 0" class="m"/>',
+  proud:   '<path d="M121 139 q9 6 18 0 M161 139 q9 6 18 0 M121 139 l-3 -2 M179 139 l3 -2" class="m"/><path d="M142 178 q8 6 16 0" class="m"/>',
+  wow:     '<circle cx="130" cy="141" r="4.2"/><circle cx="170" cy="141" r="4.2"/><ellipse cx="150" cy="183" rx="4.4" ry="5.6" class="o"/>',
+  joy:     '<path d="M121 143 q9 -7 18 0 M161 143 q9 -7 18 0" class="m"/><path d="M140 175 h20 q-2 12 -10 12 q-8 0 -10 -12z" class="o"/>'};
+// Himeko from the chest up: long straight hair with bangs, oversized knit sweater, phone held in both hands
+const storyPerson = () => `<svg class="sy-person" viewBox="20 20 260 320" aria-hidden="true">
+  <path d="M68 340 Q56 210 76 126 Q94 38 150 36 Q208 38 224 126 Q244 214 232 340 Z" class="hair"/>
+  <path d="M136 176 h28 v52 q-14 8 -28 0z" class="skin2"/>
+  <path d="M30 340 Q36 252 88 230 Q118 220 150 224 Q182 220 212 230 Q264 252 270 340 Z" class="knit"/>
+  <path d="M116 228 Q150 254 184 228 L180 236 Q150 260 120 236 Z" class="collar"/>
+  <path d="M46 340 Q62 286 122 286 L124 322 Q88 324 76 340 Z M254 340 Q238 286 178 286 L176 322 Q212 324 224 340 Z" class="sleeve"/>
+  <rect x="127" y="240" width="46" height="84" rx="8" class="ph"/><rect x="132" y="247" width="36" height="70" rx="4" class="scr"/>
+  <ellipse cx="130" cy="304" rx="14" ry="17" class="hand"/><ellipse cx="170" cy="304" rx="14" ry="17" class="hand"/>
+  
+  <ellipse cx="103" cy="146" rx="7" ry="11" class="ear"/><ellipse cx="197" cy="146" rx="7" ry="11" class="ear"/>
+  <ellipse cx="150" cy="142" rx="46" ry="56" class="skin"/>
+  <path d="M102 132 Q100 66 150 62 Q202 66 200 132 Q200 126 194 124 Q150 129 108 124 Q102 126 102 132 Z" class="hair"/>
+  <path d="M94 118 Q94 110 104 110 Q112 110 112 118 L112 196 Q112 206 103 206 Q94 206 94 196 Z M206 118 Q206 110 196 110 Q188 110 188 118 L188 196 Q188 206 197 206 Q206 206 206 196 Z" class="hair"/>
+  <circle cx="122" cy="162" r="12" class="blush"/><circle cx="178" cy="162" r="12" class="blush"/>
+  <circle cx="116" cy="152" r="1.7" class="frk"/><circle cx="121.5" cy="148.5" r="1.7" class="frk"/><circle cx="126" cy="153" r="1.7" class="frk"/><circle cx="174" cy="153" r="1.7" class="frk"/><circle cx="178.5" cy="148.5" r="1.7" class="frk"/><circle cx="184" cy="152" r="1.7" class="frk"/>
+  <ellipse cx="150" cy="158" rx="4.2" ry="3.4" class="nose"/>
+  <g class="face"></g>
+</svg>`;
+const storyHtml = st => (storyData = st, `<div class="sy">
+  <p class="sy-kicker">The screens</p>
+  <p class="sy-head">${esc(st.head)}</p>
+  <div class="sy-grid">
+    <div class="sy-stage" aria-hidden="true">
+      <div class="sy-who"><p class="sy-say"></p>${storyPerson()}</div>
+      <div class="sy-phone">${st.steps.map((s, i) => `<img src="${esc(s.src)}" alt="" width="520" height="1050" decoding="async"${i ? ' loading="lazy"' : ""}>`).join("")}</div>
+    </div>
+    <ol class="sy-steps">${st.steps.map((s, i) => `<li class="sy-step" data-i="${i}">
+      <div class="sy-m"><img class="sy-mini" src="${esc(s.src)}" alt="${esc(s.alt)}" width="520" height="1050" loading="lazy" decoding="async"><p class="sy-msay"><b>${esc(storyData.who)}:</b> \u201c${esc(s.say)}\u201d</p></div>
+      <p class="sy-meta">Step ${i + 1} of ${st.steps.length} &middot; ${esc(s.phase)}</p>
+      <h3>${esc(s.name)}</h3><p class="sy-text">${esc(s.text)}</p><p class="sy-note">${esc(s.note)}</p>
+      ${i < st.steps.length - 1 ? `<button type="button" class="sy-next" data-to="${i + 1}">Next: ${esc(st.steps[i + 1].name)} &rarr;</button>` : ""}
+    </li>`).join("")}</ol>
+  </div>
+</div>`);
+function initStory() {
+  const root = caseView.querySelector(".sy"); if (!root || !storyData) return;
+  const S = storyData.steps, steps = [...root.querySelectorAll(".sy-step")], shots = [...root.querySelectorAll(".sy-phone img")];
+  const say = root.querySelector(".sy-say"), face = root.querySelector(".sy-person .face");
+  let cur = -1;
+  const show = i => {
+    if (i === cur) return; cur = i;
+    steps.forEach((s, k) => s.classList.toggle("on", k === i));
+    shots.forEach((s, k) => s.classList.toggle("on", k === i));
+    face.innerHTML = STORY_FACES[S[i].face] || STORY_FACES.smile;
+    say.textContent = S[i].say; say.classList.remove("pop"); void say.offsetWidth; say.classList.add("pop");
+  };
+  root.addEventListener("click", e => { const b = e.target.closest(".sy-next"); if (b) steps[+b.dataset.to].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"}); });
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) show(+e.target.dataset.i); }), {rootMargin: "-45% 0px -45% 0px"});
+    steps.forEach(s => io.observe(s));
+  }
   show(0);
 }
 
@@ -1760,8 +1870,9 @@ function renderCase(p) {
     ${s.ring ? ringHtml(s.ring) : ""}
     ${s.posters ? wallHtml(s.posters) : ""}
     ${s.timeline ? timelineHtml(s.timeline) : ""}
+    ${s.story ? storyHtml(s.story) : ""}
     ${s.comp && !s.split ? compHtml(s.comp) : ""}
-    ${s.personas ? personaHtml(s.personas) : ""}
+    ${s.personas ? personaHtml(s.personas, s.personaTheme) : ""}
     ${s.flow ? flowHtml(s.flow) : ""}
     ${s.screens ? screensHtml(s.screens) : ""}
     ${s.board ? boardHtml(s.board, s.boardKind) : ""}
@@ -1797,6 +1908,7 @@ function renderCase(p) {
   initWall();
   initFlow();
   initTimeline();
+  initStory();
   initComp();
   initPersonas();
   initScreens();
