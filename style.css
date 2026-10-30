@@ -2110,3 +2110,11 @@ button.abh-p{cursor:pointer}
   .sb-track{animation:none}
   .sb-card[aria-hidden="true"]{display:none}
 }
+
+/* collage pencil: a clean outline pencil that "writes" a little squiggle, rocking along as the line draws in */
+.abh-pen{width:9cqw;overflow:visible}
+.abh-pen .pen-line{stroke-dasharray:1 2;stroke-dashoffset:1.05;animation:penline 3.2s linear infinite}
+.abh-pen .pen-body{transform-box:fill-box;transform-origin:0% 100%;animation:penmove 3.2s ease-in-out infinite}
+@keyframes penline{0%{stroke-dashoffset:1.05;opacity:1}55%{stroke-dashoffset:0;opacity:1}80%{stroke-dashoffset:0;opacity:0}81%,100%{stroke-dashoffset:1.05;opacity:0}}
+@keyframes penmove{0%{transform:translate(-16px,0) rotate(0)}9%{transform:translate(-11px,-3px) rotate(-4deg)}18%{transform:translate(-5px,0) rotate(2deg)}27%{transform:translate(1px,-1px) rotate(-2deg)}36%{transform:translate(7px,0) rotate(3deg)}46%{transform:translate(12px,-3px) rotate(-4deg)}55%{transform:translate(18px,0) rotate(0)}68%{transform:translate(18px,0) rotate(0)}85%,100%{transform:translate(-16px,0) rotate(0)}}
+@media(prefers-reduced-motion:reduce){.abh-pen .pen-line{animation:none;stroke-dasharray:none}.abh-pen .pen-body{animation:none}}
