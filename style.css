@@ -873,7 +873,7 @@ canvas.cvid{height:auto;aspect-ratio:auto;cursor:pointer}
 #case .facts dt{font-size:.75rem}#case .facts dd{font-size:.9rem}
 
 /* ---- Home: toolkit, a case that opens into four compartments of tools ---- */
-section.toolkit{padding-top:3rem}
+section.toolkit{padding-top:3rem;padding-bottom:1rem}
 .tk-lead,.hc-sub{margin:-1rem 0 2rem;color:var(--muted);max-width:560px}
 /* toolkit: a canvas pencil case. Closed it shows a zipper, a masking-tape label and stickers; open, each compartment holds
    a different kind of art supply (fine-liners, markers, highlighters, pencils, gel pens) with the tool's name on the barrel */
@@ -1259,3 +1259,115 @@ section.hcontact{padding-top:2rem}
 @media(prefers-reduced-motion:reduce){.pz-stage,.pz-trait b,.pz-q{transition:none}.pz-list.pop li{animation:none}}
 #case .pz .pz-name{margin:.8rem 0 0}#case .pz .pz-title{margin:.35rem 0 .7rem}
 @container (max-width:640px){#case .pz .pz-name{margin:0}#case .pz .pz-title{margin:.3rem 0 0}}
+
+/* ---- Homepage journey: a Mac window holding a teal cutting mat with pinned sticky notes and string ---- */
+section.js{padding-top:3rem;padding-bottom:1rem}
+.js-lead{margin:-1rem 0 2rem;color:var(--muted);max-width:560px}
+.js-win{border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15),0 24px 44px -26px rgba(20,60,40,.7)}
+.js-bar{display:flex;align-items:center;gap:8px;padding:.6rem .9rem;background:linear-gradient(180deg,#2b3536,#222b2c);border-bottom:1px solid #121819}
+.js-bar i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.js-bar i:nth-child(2){background:#febc2e}.js-bar i:nth-child(3){background:#28c840}
+.js-bar span{margin-left:.6rem;font-size:.8rem;font-weight:500;color:#cfdcdc;letter-spacing:.01em}
+/* self-healing cutting mat: green with a fine and a coarse grid */
+.js-board{position:relative;aspect-ratio:1.9/1;overflow:hidden;
+  background:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px) 0 0/100% 10%,linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px) 0 0/5% 100%,
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/100% 2%,linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/1% 100%,
+  radial-gradient(ellipse at 40% 20%,#2f6a4b,#1f4b35 75%)}
+.js-doodles .dd{position:absolute;color:rgba(255,255,255,.28);pointer-events:none;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.js-doodles svg.dd{stroke:currentColor;stroke-width:2.5;fill:none}
+.dd-ruler{left:1.5%;right:1.5%;bottom:2.5%;height:14px;border-top:1.5px solid currentColor;background:repeating-linear-gradient(90deg,currentColor 0 1.5px,transparent 1.5px 2%) 0 0/100% 7px no-repeat,repeating-linear-gradient(90deg,currentColor 0 1.5px,transparent 1.5px 10%) 0 0/100% 13px no-repeat;color:rgba(255,255,255,.22)}
+.dd-crop{width:22px;height:22px;border:1.5px solid currentColor}
+.dd-crop.c1{left:1.5%;top:4%;border-right:0;border-bottom:0}.dd-crop.c2{right:1.5%;top:4%;border-left:0;border-bottom:0}
+.dd-crop.c3{left:1.5%;bottom:9%;border-right:0;border-top:0}.dd-crop.c4{right:1.5%;bottom:9%;border-left:0;border-top:0}
+.dd-hex{right:4%;top:5%;font-size:clamp(.7rem,1.4vw,1.1rem)}
+.dd-aa{left:55%;top:9%;font-family:var(--font);font-weight:700;font-size:clamp(1.6rem,3.6vw,2.8rem)}
+.dd-cmd{left:4%;bottom:12%;font-size:clamp(.9rem,2vw,1.5rem)}
+.dd-foot{right:4%;bottom:10%;font-size:clamp(.7rem,1.5vw,1.15rem)}
+.dd-pen{left:19%;top:6%;width:17%}.dd-pen .h{stroke-dasharray:4 4;stroke-width:1.5}.dd-pen rect,.dd-pen circle{fill:rgba(255,255,255,.18)}
+.dd-koi{left:44%;bottom:13%;width:9%}
+.dd-cursor{left:63%;top:52%;width:2.6%}
+/* the string */
+.js-string{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.js-string path{fill:none;stroke:#e0603f;stroke-width:2.5;stroke-linecap:round;stroke-dashoffset:var(--len,2000);transition:stroke-dashoffset 2.2s cubic-bezier(.5,.1,.3,1) .3s;filter:drop-shadow(0 2px 1px rgba(0,0,0,.25))}
+.js-win.in .js-string path{stroke-dashoffset:0}
+/* notes */
+.js-notes{list-style:none;margin:0;padding:0}
+.js-note{position:absolute;left:var(--x);top:var(--y);width:var(--w);z-index:1}
+.js-paper{position:relative;display:flex;flex-direction:column;gap:.35rem;width:100%;min-height:clamp(120px,15vw,175px);box-sizing:border-box;margin:0;padding:1.1rem .9rem .9rem;border:0;border-radius:2px 2px 2px 2px;background:var(--c);color:#2b2a27;font:inherit;text-align:left;
+  rotate:var(--r);box-shadow:0 1px 1px rgba(0,0,0,.12),0 14px 18px -12px rgba(0,0,0,.5);opacity:0;transform:translateY(-14px) scale(.96);
+  transition:opacity .4s calc(var(--i) * .25s + .2s),transform .5s cubic-bezier(.3,1.4,.5,1) calc(var(--i) * .25s + .2s),rotate .3s,box-shadow .3s}
+.js-paper::after{content:"";position:absolute;right:0;bottom:0;width:16px;height:16px;background:linear-gradient(135deg,transparent 50%,rgba(0,0,0,.12) 50%)}
+.js-win.in .js-paper{opacity:1;transform:none}
+button.js-paper{cursor:pointer}
+@media(hover:hover){.js-note:hover{z-index:3}.js-note:hover .js-paper{rotate:0deg;box-shadow:0 2px 2px rgba(0,0,0,.12),0 22px 26px -14px rgba(0,0,0,.55)}}
+button.js-paper:focus-visible{outline:3px solid #fff;outline-offset:3px;rotate:0deg}
+.js-pin{position:absolute;z-index:2;left:50%;top:3px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7),var(--pin) 45%,color-mix(in srgb,var(--pin) 60%,#000));box-shadow:0 3px 3px rgba(0,0,0,.35)}
+.js-n{position:absolute;right:.6rem;top:.45rem;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.7rem;font-weight:700;color:rgba(43,42,39,.55)}
+.js-paper b{font-size:clamp(.82rem,1.3vw,1rem);line-height:1.2;letter-spacing:-.01em}
+.js-d{font-size:clamp(.7rem,1.05vw,.82rem);line-height:1.35;color:#3a3732}
+.js-go{margin-top:auto;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:color-mix(in srgb,var(--pin) 80%,#000)}
+/* narrow: the notes stack down the mat, tied by a straight string */
+@media(max-width:820px){
+  .js-board{aspect-ratio:auto;padding:1.4rem 1rem 3rem}
+  .js-string,.dd-pen,.dd-koi,.dd-cursor,.dd-aa{display:none}
+  .js-notes{position:relative;display:flex;flex-direction:column;gap:1.4rem}
+  .js-notes::before{content:"";position:absolute;left:50%;top:1rem;bottom:1rem;border-left:2.5px dashed #e0603f}
+  .js-note{position:relative;left:auto;top:auto;width:min(86%,340px);align-self:flex-start}
+  .js-note:nth-child(even){align-self:flex-end}
+  .js-paper{min-height:0}
+  .js-paper b{font-size:1rem}.js-d{font-size:.86rem}
+}
+@media(prefers-reduced-motion:reduce){.js-paper,.js-string path{transition:none}}
+
+/* ---- Homepage "more design work": branding cards and a print & promotional banner with a drifting collage ---- */
+.mw{margin:3rem 0 0}
+.mw-label{margin:0 0 .9rem;font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.mw-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:0 0 2.4rem}
+.mw-card{position:relative;display:block;aspect-ratio:16/9;padding:0;border:0;border-radius:18px;overflow:hidden;cursor:pointer;background:var(--card);font:inherit;text-align:left;box-shadow:0 14px 28px -20px rgba(30,25,20,.6);transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s}
+.mw-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.mw-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.62))}
+.mw-cap{position:absolute;left:1.1rem;right:1.1rem;bottom:.95rem;z-index:1;display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;color:#fff}
+.mw-cap b{font-size:.84rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.25}
+.mw-cap small{font-size:.84rem;font-weight:700;flex:none}
+@media(hover:hover){.mw-card:hover{transform:translateY(-4px);box-shadow:0 22px 34px -20px rgba(30,25,20,.65)}.mw-card:hover img{transform:scale(1.05)}}
+.mw-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.mw-feature{position:relative;display:block;height:clamp(380px,46vw,520px);border-radius:24px;overflow:hidden;text-decoration:none;color:#fff;background:#f3eee6;box-shadow:0 18px 36px -24px rgba(30,25,20,.6)}
+.mw-feature:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.mw-collage{position:absolute;inset:0;background:radial-gradient(rgba(60,48,36,.14) 1px,transparent 1.4px) 0 0/18px 18px,#f3eee6}
+.mw-tilt{position:absolute;left:14%;top:-55%;width:118%;height:220%;display:grid;grid-template-columns:repeat(7,1fr);gap:16px;align-items:start;transform:rotate(-14deg)}
+.mw-col{display:flex;flex-direction:column;gap:16px;animation:mwdrift 26s ease-in-out infinite alternate}
+.mw-col:nth-child(even){animation-direction:alternate-reverse;margin-top:-60px}
+.mw-col img{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 10px 18px -10px rgba(30,25,20,.55);background:#fff}
+@keyframes mwdrift{from{transform:translateY(0)}to{transform:translateY(-18%)}}
+.mw-feature:hover .mw-col{animation-play-state:paused}
+.mw-feature::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(28,27,25,.95) 0,rgba(28,27,25,.86) 30%,rgba(28,27,25,.35) 52%,rgba(28,27,25,0) 66%)}
+.mw-panel{position:absolute;z-index:2;left:clamp(1.4rem,4vw,3rem);top:50%;translate:0 -50%;max-width:min(420px,46%);display:flex;flex-direction:column;gap:.8rem}
+.mw-panel small{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.mw-panel b{font-size:clamp(2rem,4.4vw,3.4rem);line-height:1;font-weight:700;letter-spacing:-.035em}
+.mw-panel>span{font-size:1rem;line-height:1.5;color:rgba(255,255,255,.85)}
+.mw-go{position:absolute;z-index:2;right:1.2rem;bottom:1.2rem;display:flex;align-items:center;gap:.5rem;padding:.75rem 1.2rem;border-radius:999px;background:#fff;color:var(--ink);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 18px -10px rgba(0,0,0,.5)}
+.mw-go i{font-style:normal;transition:transform .3s}
+.mw-feature:hover .mw-go i{transform:translateX(4px)}
+@media(max-width:820px){.mw-cards{grid-template-columns:1fr}
+  .mw-feature{height:auto;display:flex;flex-direction:column}
+  .mw-feature::before{display:none}
+  .mw-panel{position:relative;left:auto;top:auto;translate:none;max-width:none;padding:1.6rem 1.4rem;background:#1c1b19}
+  .mw-collage{position:relative;height:260px;order:2}
+  .mw-tilt{left:-20%;width:150%;top:-70%;height:260%}
+  .mw-go{position:relative;right:auto;bottom:auto;align-self:flex-start;margin:-1px 0 0;order:3;border-radius:0 0 24px 24px;width:100%;box-sizing:border-box;justify-content:center;background:#fff}}
+@media(prefers-reduced-motion:reduce){.mw-col{animation:none}.mw-card,.mw-card img{transition:none}}
+
+/* project cards: on hover the picture slowly zooms inside its frame (no overlay, sheen or label pill) */
+.card .thumb .zoom{position:relative;z-index:1;display:block;width:100%;height:100%;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.14),0 8px 22px rgba(30,25,20,.14);transform:translateZ(0)}
+.card .thumb .zoom.fit{height:auto;aspect-ratio:86/61}
+.card .thumb .zoom img,#graphicView .card .thumb .zoom img{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:cover;border-radius:0;box-shadow:none;transform:none;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+button.card .thumb::before{display:none}
+button.card:not(.soon):hover,button.card:focus-visible{transform:none;box-shadow:none}
+button.card:not(.soon):hover .thumb .zoom img,button.card:focus-visible .thumb .zoom img{transform:scale(1.06)}
+button.card:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:18px}
+@media(prefers-reduced-motion:reduce){.card .thumb .zoom img{transition:none}}
+/* no frame: the picture fills the whole thumbnail, rounded, and zooms inside it */
+.card .thumb,#graphicView .card .thumb{padding:0;border-radius:18px;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.card .thumb::after,.card .thumb .glint{display:none}
+.card .thumb .zoom{border-radius:18px;box-shadow:none}
+.card .thumb .zoom.fit{height:100%;aspect-ratio:auto}
+button.card,.card{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}

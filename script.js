@@ -264,7 +264,7 @@ function makeCard(p) {
   el.className = p.soon ? "card soon" : "card"; el.type = "button";
   // Unfinished projects ("soon") look the same but don't open or react to hover
   if (!p.soon) el.addEventListener("click", () => openProject(p));
-  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<img src="${p.image}" alt=""${p.imageFit ? ` class="fit"` : ""}${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false">` : `<span class="letter">${esc(p.name[0])}</span>`}<span class="glint" aria-hidden="true"></span><span class="view">View project <i>&#8599;</i></span></div>
+  el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<span class="zoom${p.imageFit ? " fit" : ""}"><img src="${p.image}" alt=""${p.imagePos ? ` style="object-position:${esc(p.imagePos)}"` : ""} loading="lazy" draggable="false"></span>` : `<span class="letter">${esc(p.name[0])}</span>`}</div>
     <div class="body"><div class="head"><h3><span class="t"></span><span class="arr" aria-hidden="true">&rarr;</span></h3><div class="pills"></div></div><p class="desc"></p></div>`;
   el.querySelector("h3 .t").textContent = p.name;
   for (const t of p.tags) { const s = document.createElement("span"); s.className = "pill"; s.textContent = t; el.querySelector(".pills").appendChild(s); }
@@ -1970,6 +1970,57 @@ document.addEventListener("click", e => {
   const done = b.parentElement.querySelector(".hc-copied");
   const ok = () => { done.textContent = "Copied!"; setTimeout(() => { done.textContent = ""; }, 2000); };
   if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.copy).then(ok, () => { done.textContent = "Press Cmd+C to copy"; });
+});
+
+// ---- Homepage journey: pinned sticky notes on a cutting mat, tied together with string that draws in on scroll ----
+const STORY = [
+  {n: "01", t: "It started with art.", d: "Art and design studies at UNT, where drawing, layout and type became a daily habit.", c: "#fde9a8", pin: "#c4553f", x: 2, y: 5, r: -2.5},
+  {n: "02", t: "Then design got real.", d: "As a design intern at UNT, I made campaigns students actually saw around campus.", c: "#f9c6b4", pin: "#2f6f73", x: 18.5, y: 57, r: 2, work: "UNT Intern"},
+  {n: "03", t: "Clients came next.", d: "Contract work for DFW Airport: police recruiting brochures, banners and custom socks.", c: "#cfe3a8", pin: "#d99a2b", x: 35, y: 4, r: -1.5, work: "DPS and CDO"},
+  {n: "04", t: "I learned the business side.", d: "An MBA in marketing at TWU, then in-house marketing and design at Blend Supply.", c: "#fbd9a0", pin: "#c4553f", x: 51.5, y: 58, r: 2.5, work: "Blend Supply"},
+  {n: "05", t: "People pulled me toward UX.", d: "Research, flows and prototypes with UT Austin and Google. Companio was my first full case study.", c: "#bfe0e0", pin: "#d99a2b", x: 68, y: 6, r: -2, work: "Companio"},
+  {n: "06", t: "Now: interaction design.", d: "Back at UNT in the grad program for Interaction Design, building on everything before it.", c: "#e6d8f0", pin: "#2f6f73", x: 84, y: 54, r: 1.5}];
+(function initStory() {
+  const board = document.getElementById("jsBoard"); if (!board) return;
+  const W = 14.5;   // note width, % of the board
+  board.innerHTML = `
+    <div class="js-doodles" aria-hidden="true">
+      <span class="dd dd-ruler"></span><span class="dd dd-crop c1"></span><span class="dd dd-crop c2"></span><span class="dd dd-crop c3"></span><span class="dd dd-crop c4"></span>
+      <span class="dd dd-hex">#C4553F</span><span class="dd dd-aa">Aa</span><span class="dd dd-cmd">&#8984;Z</span><span class="dd dd-foot">sketch &rarr; design &rarr; delight</span>
+      <svg class="dd dd-pen" viewBox="0 0 220 90"><path d="M10,70 C60,-10 150,-10 200,60" fill="none"/><path d="M10,70 L55,18 M200,60 L160,12" class="h"/><rect x="4" y="64" width="12" height="12"/><rect x="194" y="54" width="12" height="12"/><circle cx="55" cy="18" r="5"/><circle cx="160" cy="12" r="5"/></svg>
+      <svg class="dd dd-koi" viewBox="0 0 120 60"><path d="M10,30 C30,8 80,8 100,26 C106,30 106,30 100,34 C80,52 30,52 10,30 Z M10,30 L-6,16 M10,30 L-6,44" fill="none"/></svg>
+      <svg class="dd dd-cursor" viewBox="0 0 40 50"><path d="M4,4 L4,40 L14,30 L22,46 L28,43 L20,27 L34,27 Z" fill="none"/></svg>
+    </div>
+    <svg class="js-string" aria-hidden="true"><path/></svg>
+    <ol class="js-notes">${STORY.map((s, i) => {
+      const tag = s.work ? "button" : "div";
+      return `<li class="js-note" style="--x:${s.x}%;--y:${s.y}%;--w:${W}%;--r:${s.r}deg;--c:${s.c};--pin:${s.pin};--i:${i}"><${tag}${s.work ? ` type="button" data-work="${esc(s.work)}" aria-label="${esc(s.t)} See the ${esc(s.work)} project"` : ""} class="js-paper"><span class="js-n">${s.n}</span><b>${esc(s.t)}</b><span class="js-d">${esc(s.d)}</span>${s.work ? `<span class="js-go">See the work &nearr;</span>` : ""}</${tag}></li>`;
+    }).join("")}</ol>`;
+  // the string runs from the bottom of each upper note to the pin of the lower one, measured from where the notes really sit
+  const svg = board.querySelector(".js-string"), path = svg.querySelector("path"), papers = [...board.querySelectorAll(".js-paper")];
+  const tie = () => {
+    const bw = board.clientWidth, bh = board.clientHeight; if (!bw) return;
+    // resting layout positions (ignores the drop-in transform, so it is right even mid-animation)
+    const pt = (el, top) => { const li = el.parentElement; return [li.offsetLeft + li.offsetWidth / 2, li.offsetTop + (top ? 1 : el.offsetHeight - 6)]; };
+    svg.setAttribute("viewBox", `0 0 ${bw} ${bh}`);
+    const p = papers.map((el, i) => pt(el, STORY[i].y > 30));
+    let d = `M${p[0][0].toFixed(2)},${p[0][1].toFixed(2)}`;
+    for (let i = 1; i < p.length; i++) { const [x0, y0] = p[i - 1], [x1, y1] = p[i]; d += ` Q${((x0 + x1) / 2).toFixed(2)},${(Math.max(y0, y1) - 6).toFixed(2)} ${x1.toFixed(2)},${y1.toFixed(2)}`; }   // hang down into the top of the lower note
+    path.setAttribute("d", d);
+    const L = path.getTotalLength(); path.style.strokeDasharray = L; path.style.setProperty("--len", L);
+  };
+  if ("ResizeObserver" in window) new ResizeObserver(tie).observe(board); tie();
+  board.addEventListener("click", e => { const b = e.target.closest("[data-work]"); if (!b) return; const p = projects.find(x => x.name === b.dataset.work) || otherProjects.find(x => x.name === b.dataset.work); if (p) openProject(p); });
+  const win = board.closest(".js-win");
+  if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) { win.classList.add("in"); return; }
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { win.classList.add("in"); io.disconnect(); } }, {threshold: .3});
+  io.observe(board);
+})();
+
+// ---- Homepage "more design work": branding cards open their project ----
+document.addEventListener("click", e => {
+  const b = e.target.closest(".mw-card[data-project]"); if (!b) return;
+  const p = otherProjects.find(x => x.name === b.dataset.project); if (p) openProject(p);
 });
 
 // ---- Header navigation: switches views without leaving the page ----
