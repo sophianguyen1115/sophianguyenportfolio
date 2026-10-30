@@ -64,6 +64,70 @@ const COMPANIO_FLOW = {start:"alert", image:"assets/1d072451068f.webp", w:3164, 
     more2:{kind:"choice", t:"More data to edit?", ph:5, yes:"opt3", no:"dash"},
     dash:{kind:"end", t:"Go to dashboard", ph:5}
   }};
+const COMPANIO_SCREENS = [
+  {title:"Track an escaped pet", desc:"From the first alert to raising the alarm, built for clarity and speed in a stressful moment.", screens:[
+    {src:"assets/73d2674e6e18.webp",name:"Live Notification",alt:"Lock screen with a Companio notification: Umi has left your geofence."},
+    {src:"assets/2818dec34d0e.webp",name:"Open App",alt:"Companio welcome screen with the logo and a dog."},
+    {src:"assets/f142310f60d8.webp",name:"Pet Profile: Tracking",alt:"Umi's profile with heart rate, a weekly activity chart and today's timeline, and a Pet Left Safe Zone: Find my Pet button."},
+    {src:"assets/52dc8769e354.webp",name:"Share Location",alt:"Map showing Umi has left Home Base, with Escaped Pet Mode and a Share location with household button."},
+    {src:"assets/24878a23240b.webp",name:"Alert Types",alt:"Map with an Alert others nearby prompt, time lost and distance from home, and suggested safe spots, live tracking and last location options."}]},
+  {title:"Customization of alerts", desc:"Alerts that match the severity of the situation, from sharing a link to switching on Emergency Mode.", screens:[
+    {src:"assets/1316d5b98985.webp",name:"Alert Others Option",alt:"Map with an Alert Others? pop-up offering Yes or Cancel."},
+    {src:"assets/b1b625413efd.webp",name:"Share Link",alt:"Share Link panel with suggested safe spots, live tracking and last location ticked."},
+    {src:"assets/59676d1d1112.webp",name:"Track Path",alt:"Map tracing Umi's path, with battery life and connection strength, and buttons for guided tools or the last known spot."},
+    {src:"assets/7ba3173369bf.webp",name:"Emergency Mode Alerts",alt:"Emergency Mode alert previews: expanding search radius, report sightings and a lost pet alert, each with edit and delete."},
+    {src:"assets/5cf186a1ad3a.webp",name:"Lost Pet Alert",alt:"Lost pet alert form for Umi the Shiba Inu, with date, time, photos and last seen location."}]},
+  {title:"Recovery process", desc:"Relief and closure once the pet is found: confirming the return, summarizing the escape and logging it.", screens:[
+    {src:"assets/f915fa22cbfa.webp",name:"Pet Found? Prompt",alt:"Map with Umi's lost profile card and a Pet Found? prompt with Yes and No."},
+    {src:"assets/fa379217ad17.webp",name:"End Emergency Mode",alt:"Map with an End Emergency Mode? pop-up over the Pet Found? prompt."},
+    {src:"assets/8e0041076eca.webp",name:"Pet Located",alt:"Pet Found! screen with the route to where Umi was found and a Confirmed: Pet Located button."},
+    {src:"assets/2b28830d9888.webp",name:"Escape Summary",alt:"Umi's Escape 1 summary: where Umi was found, steps taken and the route, with Log Escape and Go back to Dashboard."},
+    {src:"assets/bddc59a06526.webp",name:"Logging Escape",alt:"Escape log form with geofencing changes, photos, date, time and location found."},
+    {src:"assets/94aeef8168ec.webp",name:"Submission Confirmation",alt:"Report Submitted! confirmation with confetti and a dog holding a phone."}]}
+];
+// Companio project timeline: six months from research to prototype
+// Companio competitor analysis as a tree: the three apps audited, what each does best, and where they meet in Companio
+const COMPANIO_COMP = {root:"Pet care today", end:"Companio", endTags:["GPS tracking","Health records","Community"],
+  apps:[
+    {name:"Tractive GPS", kind:"Direct competitor", area:"Location", c:"#2a3654", features:["Vital health metrics","Power saving zone","Global range","Bark monitoring"],
+     audit:[{src:"assets/4006057678f0.webp",w:2000,h:1120,alt:"Tractive GPS overview and unique features."},{src:"assets/2d5298977e61.webp",w:2000,h:1120,alt:"Tractive GPS audit: onboarding and first impressions."},{src:"assets/6abbdb4a2764.webp",w:2000,h:1120,alt:"Tractive GPS audit: performance, accessibility and visual design."},{src:"assets/faf273a40b03.webp",w:2000,h:1120,alt:"Tractive GPS audit: navigation, interaction and feedback."}]},
+    {name:"My Pet", kind:"Direct competitor", area:"Health records", c:"#ea8484", features:["Pet timeline","Photo-first entries","Multi-pet support","Exportable records"],
+     audit:[{src:"assets/6fadc17e446a.webp",w:2000,h:1120,alt:"My Pet overview and unique features."},{src:"assets/9329f789fcd7.webp",w:2000,h:1120,alt:"My Pet audit: onboarding and first impressions."},{src:"assets/f2d7140439b0.webp",w:2000,h:1120,alt:"My Pet audit: performance, accessibility and visual design."},{src:"assets/dd57fe185ba6.webp",w:2000,h:1120,alt:"My Pet audit: navigation, interaction and feedback."}]},
+    {name:"MyFitnessPal", kind:"Aspirational", area:"Community", c:"#789042", features:["Barcode scanning","Community support","Custom goals","Wearable integration"],
+     audit:[{src:"assets/ff1e19d2dc3b.webp",w:2000,h:1120,alt:"MyFitnessPal overview and unique features."},{src:"assets/a1b714326318.webp",w:2000,h:1120,alt:"MyFitnessPal audit: onboarding and first impressions."},{src:"assets/ccb0d93a66e6.webp",w:2000,h:1120,alt:"MyFitnessPal audit: performance, accessibility and visual design."},{src:"assets/3390dfe3a72d.webp",w:2000,h:1120,alt:"MyFitnessPal audit: navigation, interaction and feedback."}]}]};
+// Companio personas and their empathy maps. Persona content is from the persona slides; the empathy maps are drawn from it.
+const COMPANIO_PERSONAS = [
+  {name:"Sean", title:"The Overloaded Operator", photo:"assets/bfd2f47e2416.webp", c:"#ea8484",
+   facts:["37","San Diego","Heavy tech use","Reddit & Instagram daily"],
+   bio:"Sean works full time from home in customer support. He and his partner share an apartment with two aging pets: a 10-year-old dog with dietary needs and a 7-year-old cat on daily medication. Since he's home most of the day, most of the caregiving falls to him, and his paper notebook for meds, food orders and vet visits has become overwhelming and inconsistent.",
+   lists:[["Goals",["One central hub for pet health and wellness","Stay consistent with meds, diets and vet visits","Share care duties with his partner","Find dog-friendly places to go together"]],
+          ["Pain points",["Notebook tracking is clunky and hard to share","Ordering special dog food through the vet takes too long","Worries about missing a dose or reminder","Feels guilty when care slips through the cracks"]],
+          ["Motivations",["The best quality of life for his aging pets","Relief from the mental load of details","Pets included in family and social life","Simple, reliable tools that are easy to share"]]],
+   traits:[["Introvert","Extrovert",.7],["Analytical","Creative",.78],["Busy","Time rich",.29],["Messy","Organized",.2],["Independent","Team player",.39],["Passive","Active",.5],["Safe","Risky",.29]],
+   empathy:{says:["\u201cI need one place for all of it.\u201d","\u201cIs there a dog-friendly spot near us?\u201d"],
+            thinks:["Pet care feels like a second job on top of work.","What if I forget a dose?"],
+            does:["Logs meds, food orders and vet visits in a notebook","Orders special food through the vet","Searches for pet-friendly places after work"],
+            feels:["Overwhelmed by the mental load","Guilty when something slips","Hopeful for peace of mind"]}},
+  {name:"Elizabeth", title:"The Practical Caregiver", photo:"assets/222fc1d0fff8.webp", c:"#789042",
+   facts:["55","Texas","Self-employed","Moderate tech use","Facebook & TikTok"],
+   bio:"Elizabeth is self-employed full time and lives with her husband, two kids and two dogs. She values health and wellbeing and tracks her own activity when she has time. The dogs are mostly indoors, with a daily walk and backyard play, and the family relies on memory or reminders for vet visits, grooming and general health.",
+   lists:[["Goals",["One central spot for her pets' health and wellness","Peace of mind","Prevent illness or catch it early","Remember vet visits and vaccines"]],
+          ["Routine",["Indoor pets with moderate to low activity","Relies on memory or reminders when needed","A designated sitter for travel"]],
+          ["Frustrations",["No central hub for her pets' records","Unhappy with physical tracking options","Little peace of mind for tasks outside the daily routine"]]],
+   traits:[["Introvert","Extrovert",.7],["Analytical","Creative",.41],["Busy","Time rich",.32],["Messy","Organized",.75],["Independent","Team player",.7],["Passive","Active",.8],["Safe","Risky",.14]],
+   empathy:{says:["\u201cI just want one spot for their health records.\u201d","\u201cWhen are the vaccines due again?\u201d"],
+            thinks:["Catching things early matters most.","I'd like to know where they are when it counts."],
+            does:["Walks the dogs daily and lets them play in the yard","Relies on memory for vet visits and grooming","Books a sitter when the family travels"],
+            feels:["Loves her pets and wants them healthy and happy","Uneasy about tasks outside the routine","Let down by physical trackers"]}}];
+const COMPANIO_TIMELINE = {head:"Six months, from understanding pet owners to a prototype they could use.",
+  phases:[{name:"Research & define", short:"Research", n:2, c:"#ea8484"}, {name:"Ideate & brand", short:"Brand", n:2, c:"#789042"}, {name:"Design & deliver", short:"Design", n:2, c:"#2a3654"}],
+  steps:[
+    {when:"01", title:"Research", tasks:["Surveys","Competitor audit"]},
+    {when:"02", title:"Define", tasks:["Personas","IA & rationale"]},
+    {when:"03", title:"Ideate", tasks:["Affinity map","Effort matrix"]},
+    {when:"04", title:"Brand", tasks:["Logo & wordmark","Palette & type"]},
+    {when:"05", title:"Design", tasks:["User flows","Hi-fi screens"]},
+    {when:"06", title:"Prototype", tasks:["Geofencing flows","Presentation"]}]};
 const COMPANIO_PHONES = [{video:{webm:"assets/c74c93c79408.webm",mp4:"",poster:"assets/30b90009d3f6.webp",anim:"assets/0458b37b0d4a.webp"},label:"Home",panel:1,alt:"Companio welcome screen, in a grey frame"},
         {video:{webm:"assets/d763c1dc9578.webm",mp4:"",poster:"assets/cfa2f59858d2.webp",anim:"assets/a878519ca6a2.webp"},label:"Health dashboard",panel:1,alt:"Companio health dashboard with the Log New menu, in a grey frame"},
         {video:{webm:"assets/ef7412e81a4c.webm",mp4:"",poster:"assets/6c229c7a1626.webp",anim:"assets/45758b09e761.webp"},label:"GPS tracking",panel:1,alt:"Companio GPS tracking map with a pet escape alert, in a grey frame"}];
@@ -74,30 +138,35 @@ const projects = [
     lede:"One app for everything about your pet's wellbeing.", source: SRC + "companio", heroVideos:COMPANIO_PHONES,
     facts:[["Category","Pet wellness / tracking"],["Client","Companio"],["Year","2025"],["Role","Lead UX & UI designer"]],
     sections:[
-     {label:"Overview", title:"Six months of learning by doing", paras:["Companio was a first complete UX project, taken from research all the way to a final prototype as the capstone of an online course. The result is a working mobile app that improves both the interface and the systems behind it for pet lovers."]},
+     {label:"Overview", title:"Six months of learning by doing", paras:["Companio was a first complete UX project, taken from research all the way to a final prototype as the capstone of an online course. The result is a working mobile app that improves both the interface and the systems behind it for pet lovers."], timeline:COMPANIO_TIMELINE},
      {label:"Problem", paras:["Looking after a pet usually means switching between several apps: one for GPS tracking, another for health records, another for social features. That fragmentation is the problem Companio sets out to solve, by combining tracking, health management and community in a single mobile experience."]},
      {label:"Competitor analysis", paras:["An audit of existing products showed that each one does well in a single area, such as location, health or community, and almost none combine all three. That gap pointed to a unified pet care ecosystem that gives owners more confidence, convenience and control."],
       quote:"The team was the first in its class to take on a pet tracking app.",
       goals:["Record pet health and log behavior observations","Keep pets safe with GPS tracking","Turn memories into a timeline on each pet's profile"],goalIcons:["health","gps","timeline"]},
-     {label:"Research", title:"Competitor Analysis and Personas", paras:["Research was shared as a group report and an information architecture and design rationale. Survey results were distilled into personas, each with representative quotes."],
-      buttons:[{label:"UI/UX Research Group Report",href:"https://www.figma.com/deck/LZXKtb2TqM5sPRZhRvp2uP/Milestone-1-Presentation?node-id=1-42&t=EI2fNBbQSqT7sp6s-1"},{label:"Information Architecture & Design Rationale",href:"https://www.figma.com/deck/DHnB7ZiNIDpx4LBYpMapJF/Milestone-2-Presentation?node-id=1-42&t=ZZXYJonXRF1EpAGq-1"}],
-      deck:[{src:"assets/4006057678f0.webp",w:2000,h:1120,alt:"Competitor 1: Tractive GPS. Overview of the direct competitor with its unique features: vital health metrics, power saving zone, global range and bark monitoring."},
-        {src:"assets/2d5298977e61.webp",w:2000,h:1120,alt:"Tractive GPS audit: Onboarding and first impressions, with the pairing tracker guide, onboarding question and demo expired screens."},
-        {src:"assets/6abbdb4a2764.webp",w:2000,h:1120,alt:"Tractive GPS audit: Performance, accessibility and visual design, with the login options, permissions list and activity dashboard screens."},
-        {src:"assets/faf273a40b03.webp",w:2000,h:1120,alt:"Tractive GPS audit: Navigation, interaction and feedback, with the virtual fences, location tracking and health dashboard screens."},
-        {src:"assets/6fadc17e446a.webp",w:2000,h:1120,alt:"Competitor 2: My Pet, The Record Maker App. Overview of the direct competitor with its unique features: pet timeline, photo-first entries, multi-pet support and exportable records."},
-        {src:"assets/9329f789fcd7.webp",w:2000,h:1120,alt:"My Pet audit: Onboarding and first impressions, with the adding first pet, onboarding question and welcome prepare syncing screens."},
-        {src:"assets/f2d7140439b0.webp",w:2000,h:1120,alt:"My Pet audit: Performance, accessibility and visual design, with the look and feel settings, collaboration and web access, and network and media quality screens."},
-        {src:"assets/dd57fe185ba6.webp",w:2000,h:1120,alt:"My Pet audit: Navigation, interaction and feedback, with the home dashboard, document management and developer feedback screens."},
-        {src:"assets/ff1e19d2dc3b.webp",w:2000,h:1120,alt:"Competitor 3: MyFitnessPal. Overview of the aspirational competitor with its unique features: barcode scanning, recipe importer, community support, custom goals and wearable integration."},
-        {src:"assets/a1b714326318.webp",w:2000,h:1120,alt:"MyFitnessPal audit: Onboarding and first impressions, with the welcome sign up carousel, custom goal support and premium offerings screens."},
-        {src:"assets/ccb0d93a66e6.webp",w:2000,h:1120,alt:"MyFitnessPal audit: Performance, accessibility and visual design, with the diary dashboard, easy access logging and smart tag suggestions screens."},
-        {src:"assets/3390dfe3a72d.webp",w:2000,h:1120,alt:"MyFitnessPal audit: Navigation, interaction and feedback, with the habit tracking, app sync and recent activity screens."}], deckLabel:"Competitor analysis"},
+     {label:"Research", title:"Competitor Analysis and Personas", paras:["Research was shared as a group report and an information architecture and design rationale. Survey results were distilled into personas, each with representative quotes.","Watch the analysis branch out, or tap an app to follow its path and open its audit slides."], comp:COMPANIO_COMP,
+      buttons:[{label:"UI/UX Research Group Report",href:"https://www.figma.com/deck/LZXKtb2TqM5sPRZhRvp2uP/Milestone-1-Presentation?node-id=1-42&t=EI2fNBbQSqT7sp6s-1"},{label:"Information Architecture & Design Rationale",href:"https://www.figma.com/deck/DHnB7ZiNIDpx4LBYpMapJF/Milestone-2-Presentation?node-id=1-42&t=ZZXYJonXRF1EpAGq-1"}]},
+     {label:"Personas", title:"Two pet owners, two kinds of overwhelmed", paras:["Survey results became two personas: Sean, who carries most of the care for two aging pets, and Elizabeth, who keeps a busy family's dogs healthy on memory and routine. Switch between them, explore what they want and what gets in the way, and tap the empathy map to look closer."], personas:COMPANIO_PERSONAS},
      {label:"Concepts", title:"Brainstorming and branding", paras:["An impact-effort matrix helped rank features by value, and affinity mapping grouped card-sorting ideas into themes. Together they defined the core functions and the qualities users cared about most, which shaped the product vision and the brand identity."],
       buttons:[{label:"View Branding Identity Here",href:"https://www.figma.com/board/ebVnFh7DPcCpiHdoRsud73/Branding-Identity?node-id=93-107&t=VmIOiXruhjnQAK2w-1"},{label:"View Brainstorming Activity Here",href:"https://www.figma.com/board/jmhkZmiIuTSoyS1t8zgU6d/Brainstorming-and-MVP-Exploration?node-id=0-1&t=91i6lfpMtiQtCS8U-1"}],
-      deck:[{src:"assets/c23b09443938.webp",w:2000,h:1333,alt:"Logo sketches: twelve ink sketches of pets, hearts and animal groupings."},{src:"assets/5755a237edc0.webp",w:2000,h:1333,alt:"Logo variations: the final Companio mark in pink, navy and green, with and without the wordmark."},{src:"assets/e5b2bbfca95f.webp",w:2000,h:1333,alt:"Wordmark exploration: Companio lettering built from animal shapes, with notes on each revision."},{src:"assets/bc14c0e54733.webp",w:2000,h:1333,alt:"Ideation board: logo, pattern, shape and iconography inspiration for the Companio brand."}], deckLabel:"Brand identity", split:true, gallery:[{src:"assets/21801337a072.webp",w:2800,h:3278,size:"full bare",alt:"Companio concepts on a white background with a light grey dot grid: 01 affinity map grouping feature ideas into themes, 02 prioritization of the top stickies, and 03 impact and effort matrix ranking the features."}]},
-     {label:"Wireframes", title:"User flows to hi-fi prototype", paras:["User flows mapped each key task before wireframes became high-fidelity screens. The interface uses a playful look based on seasonal color palettes, with a simple layout that keeps care, health and GPS features up front."],
-      deck:[{src:"assets/7911e4e2fe58.webp",w:1822,h:1020,size:"full",alt:"Geofencing: Track an Escaped Pet. Five Companio app screens: live notification, open app, pet profile tracking, share location and alert types."},{src:"assets/efc9f5a8b810.webp",w:1822,h:1020,size:"full",alt:"Geofencing: Customization of Alerts. Five Companio app screens: alert others option, share link, track path, emergency mode alerts and lost pet alert."},{src:"assets/c870226d0c1f.webp",w:1822,h:1020,size:"full",alt:"Geofencing: Recovery Process. Six Companio app screens: pet found prompt, end emergency mode, pet located recovery, escape summary, logging escape and submission confirmation."}], deckLabel:"User flow", buttons:[{label:"View All User Flows Here",href:"https://www.figma.com/board/I2gimY8SGn6eyTz2DSUV0S/User-Flows?node-id=113-1163&t=aM8BUcZu53Uo42K2-1"},{label:"View All Hi-Fi Prototypes Here",href:"https://www.figma.com/design/V2e4n9kyHilemRM9sZmxiw/Pet-Tracker-Wireframes---Companio--Copy-?node-id=25-318&t=KBkV8HEUfSg69pQR-1"}]},
+      board:[
+        {src:"assets/bc14c0e54733.webp",w:2000,h:1333,name:"Ideation board",alt:"Ideation board: logo, pattern, shape and iconography inspiration for the Companio brand.",d:{x:2,y:3,w:44,r:-2},m:{x:2,y:0.9,w:70,r:-2}},
+        {src:"assets/5755a237edc0.webp",w:2000,h:1333,name:"Logo variations",alt:"Logo variations: the final Companio mark in pink, navy and green, with and without the wordmark.",d:{x:52,y:2,w:45,r:2},m:{x:28,y:16.5,w:70,r:2}},
+        {src:"assets/c23b09443938.webp",w:2000,h:1333,name:"Logo sketches",alt:"Logo sketches: twelve ink sketches of pets, hearts and animal groupings.",d:{x:3,y:42,w:36,r:1.5},m:{x:2,y:34.7,w:62,r:1.5}},
+        {src:"assets/21801337a072.webp",w:2800,h:3278,name:"Affinity map and prioritization",alt:"Companio concepts: 01 affinity map grouping feature ideas into themes, 02 prioritization of the top stickies, and 03 impact and effort matrix ranking the features.",d:{x:38,y:33,w:21,r:-1.5},m:{x:67,y:39.3,w:31,r:3}},
+        {src:"assets/e5b2bbfca95f.webp",w:2000,h:1333,name:"Wordmark exploration",alt:"Wordmark exploration: Companio lettering built from animal shapes, with notes on each revision.",d:{x:59,y:42,w:38,r:-2},m:{x:26,y:53.0,w:72,r:-2}},
+        {note:"Geofencing",sub:"Top priority",c:"#fcd3a5",w:1,h:1,d:{x:86,y:78,w:12,r:-5},m:{x:75,y:1.8,w:22,r:5}},
+        {note:"1 household profile",sub:"Top priority",c:"#fcd3a5",w:1,h:1,d:{x:60,y:79,w:12,r:3},m:{x:3,y:22.9,w:22,r:-4}},
+        {note:"Health tracking dashboard",sub:"Top priority",c:"#cfe3a8",w:1,h:1,d:{x:73,y:76,w:12,r:-2},m:{x:3,y:54.9,w:22,r:3}},
+        {note:"Temporary sharing",sub:"Feature idea",c:"#cfe3a8",w:1,h:1,d:{x:43,y:61,w:12,r:4},m:{x:3,y:65.8,w:22,r:-3}},
+        {note:"Photo albums & milestones",sub:"Feature idea",c:"#cfe3a8",w:1,h:1,d:{x:84,y:31,w:13,r:6},m:{x:4,y:88,w:22,r:4}},
+        {note:"Community",sub:"Affinity theme",c:"#f3a3a0",w:1,h:1,d:{x:28,y:33,w:11,r:-6},m:{x:76,y:66.7,w:22,r:-4}},
+        {swatch:"#2A3654",name:"Navy",w:1,h:1.3,d:{x:3,y:76,w:7.5,r:-3},m:{x:2,y:79.5,w:13,r:-3}},
+        {swatch:"#EA8484",name:"Coral",w:1,h:1.3,d:{x:11.5,y:78,w:7.5,r:2},m:{x:16.5,y:80.5,w:13,r:2}},
+        {swatch:"#789042",name:"Olive",w:1,h:1.3,d:{x:20,y:76,w:7.5,r:-1},m:{x:31,y:79.5,w:13,r:-1}},
+        {swatch:"#F8F1E9",name:"Cream",w:1,h:1.3,d:{x:28.5,y:78,w:7.5,r:-2},m:{x:45.5,y:79.5,w:13,r:-2}},
+        {font:"Jua",name:"Jua typeface",w:1,h:1.15,d:{x:37.5,y:76,w:13,r:2},m:{x:62,y:79,w:20,r:-2}}], boardKind:"mood"},
+     {label:"Wireframes", title:"User flows to hi-fi prototype", paras:["User flows mapped each key task before wireframes became high-fidelity screens. The interface uses a playful look based on seasonal color palettes, with a simple layout that keeps care, health and GPS features up front.","Every screen below comes from the final design, grouped by the geofencing flow. Swipe, drag or use the arrows."],
+      screens:COMPANIO_SCREENS, buttons:[{label:"View All User Flows Here",href:"https://www.figma.com/board/I2gimY8SGn6eyTz2DSUV0S/User-Flows?node-id=113-1163&t=aM8BUcZu53Uo42K2-1"},{label:"View All Hi-Fi Prototypes Here",href:"https://www.figma.com/design/V2e4n9kyHilemRM9sZmxiw/Pet-Tracker-Wireframes---Companio--Copy-?node-id=25-318&t=KBkV8HEUfSg69pQR-1"}]},
      {label:"User flow", title:"Track an escaped pet", paras:["The flow for the moment that matters most: a pet slips out of its geofence. It moves from the first alert, through sharing the pet's location and raising the alarm nearby, to logging the escape once the pet is home.","Click through it yourself. Make a choice at each decision, retrace your steps with Back, or start over with Reset."], flow:COMPANIO_FLOW},
      {label:"Result", title:"Care, health and safety in one place", paras:["Putting records, care routines and location in one platform makes pets easier to look after. Clear data views, organized health logs, real-time alerts and shared access cut friction, so owners can check in quickly and respond when it matters."]},
      {label:"Next steps", title:"Reflection", paras:["Work continued after the course with contextual design, an interactive prototype and a front-end tech spec. With more time, the next steps would be one-on-one interviews for deeper research, tighter links between the app's functions, and smoother animation between screens."]}
@@ -1025,6 +1094,201 @@ function initFolds(list) {
   new ResizeObserver(() => { size(); draw(); }).observe(stage);
   skin(); size(); draw();
 }
+// ---- Screen carousels: each flow's screens in phone frames; the centred one is full size, neighbours shrink and fade ----
+// While on screen each carousel advances by itself and loops; hovering or focusing pauses it, and any touch, drag, arrow or key
+// hands control to the visitor until they've left it alone for a while.
+const screensHtml = groups => `<div class="scr">${groups.map((g, gi) => `<div class="scr-group">
+  <h3 class="scr-head"><span class="scr-num">${String(gi + 1).padStart(2, "0")}</span>${esc(g.title)}</h3>
+  <p class="scr-desc">${esc(g.desc)}</p>
+  <div class="scr-car" role="region" aria-roledescription="carousel" aria-label="${esc(g.title)} screens">
+    <button type="button" class="scr-nav prev" aria-label="Previous screen">&#8249;</button>
+    <div class="scr-track" tabindex="0">${g.screens.map((s, i) => `<figure class="scr-item" data-i="${i}"><div class="scr-phone"><img src="${esc(s.src)}" width="393" height="852" alt="${esc(s.alt)}" draggable="false" loading="lazy" decoding="async"></div><figcaption>${esc(s.name)}</figcaption></figure>`).join("")}</div>
+    <button type="button" class="scr-nav next" aria-label="Next screen">&#8250;</button>
+  </div>
+  <div class="scr-progress" aria-hidden="true"><i></i></div>
+  <p class="scr-now" aria-live="polite"></p>
+</div>`).join("")}</div>`;
+function initScreens() {
+  caseView.querySelectorAll(".scr-car").forEach(car => {
+    const track = car.querySelector(".scr-track"), items = [...track.children], group = car.parentElement;
+    const bar = group.querySelector(".scr-progress i"), now = group.querySelector(".scr-now"), prev = car.querySelector(".prev"), next = car.querySelector(".next");
+    let cur = -1, raf = 0;
+    const centreOf = el => el.offsetLeft + el.offsetWidth / 2;
+    const scrollTo = i => { i = Math.max(0, Math.min(items.length - 1, i)); track.scrollTo({left: centreOf(items[i]) - track.clientWidth / 2, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); };
+    function paint() {
+      raf = 0;
+      const mid = track.scrollLeft + track.clientWidth / 2, w = items[0].offsetWidth || 1;
+      let best = 0, bd = Infinity;
+      items.forEach((el, i) => {
+        const d = (centreOf(el) - mid) / w, a = Math.min(Math.abs(d), 2);
+        el.style.setProperty("--s", (1 - a * .14).toFixed(3)); el.style.setProperty("--o", (1 - a * .32).toFixed(3));
+        if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
+      });
+      if (best !== cur) {
+        cur = best; items.forEach((el, i) => el.classList.toggle("on", i === cur));
+        now.textContent = items[cur].querySelector("figcaption").textContent;
+        bar.style.width = ((cur + 1) / items.length * 100) + "%";
+        prev.disabled = cur === 0; next.disabled = cur === items.length - 1;
+      }
+    }
+    track.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(paint); }, {passive: true});
+    addEventListener("resize", () => { if (track.isConnected) paint(); });
+    // autoplay
+    const AUTO_MS = 3500, IDLE_MS = 8000, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let visible = false, hover = false, idleUntil = 0, timer = 0;
+    const touched = () => { idleUntil = Date.now() + IDLE_MS; };
+    const tick = () => {
+      if (!track.isConnected) return clearInterval(timer);
+      if (!visible || hover || document.hidden || Date.now() < idleUntil || car.querySelector(":focus-visible")) return;   // keyboard focus pauses; a mouse click doesn't
+      scrollTo(cur >= items.length - 1 ? 0 : cur + 1);
+    };
+    if (!still) {
+      timer = setInterval(tick, AUTO_MS);
+      if ("IntersectionObserver" in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, {threshold: .6}).observe(car);
+      car.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") hover = true; });
+      car.addEventListener("pointerleave", () => { hover = false; });
+      ["pointerdown", "touchstart", "wheel", "keydown"].forEach(t => car.addEventListener(t, touched, {passive: true}));
+    }
+    prev.addEventListener("click", () => { touched(); scrollTo(cur - 1); });
+    next.addEventListener("click", () => { touched(); scrollTo(cur + 1); });
+    items.forEach((el, i) => el.addEventListener("click", () => { if (moved) return; if (i !== cur) scrollTo(i); else openPiece(items.map(x => { const im = x.querySelector("img"); return {src: im.getAttribute("src"), name: x.querySelector("figcaption").textContent, alt: im.alt, w: 393, h: 852}; }), i); }));
+    track.addEventListener("keydown", e => { if (e.key === "ArrowRight") { e.preventDefault(); scrollTo(cur + 1); } if (e.key === "ArrowLeft") { e.preventDefault(); scrollTo(cur - 1); } });
+    // mouse drag (touch already scrolls natively)
+    let down = false, sx = 0, sl = 0, moved = false;
+    track.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") return; down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; track.classList.add("drag"); });
+    addEventListener("pointermove", e => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 4) moved = true; track.scrollLeft = sl - dx; });
+    addEventListener("pointerup", () => { if (!down) return; down = false; track.classList.remove("drag"); if (moved) scrollTo(cur); setTimeout(() => { moved = false; }, 0); });
+    requestAnimationFrame(() => { track.scrollLeft = centreOf(items[0]) - track.clientWidth / 2; paint(); });
+  });
+}
+
+// ---- Project timeline: phases bracketed above a line of milestones; the line draws in and the dots fill as it comes into view ----
+const TL_PAW = `<svg class="tl-paw" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.6" cy="9.6" r="2.3"/><circle cx="9.6" cy="5.4" r="2.4"/><circle cx="14.4" cy="5.4" r="2.4"/><circle cx="18.4" cy="9.6" r="2.3"/><path d="M12 11.2c-3.4 0-6.4 3.5-6.4 6.2 0 2 1.6 2.9 3.3 2.9 1.2 0 2-.6 3.1-.6s1.9.6 3.1.6c1.7 0 3.3-.9 3.3-2.9 0-2.7-3-6.2-6.4-6.2z"/></svg>`, TL_HOME = `<svg class="tl-home" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c-4.4 0-8 3.4-8 7.8 0 5.6 8 11.2 8 11.2s8-5.6 8-11.2c0-4.4-3.6-7.8-8-7.8z"/><path d="M8.4 11.2 12 8.3l3.6 2.9v3.3h-2.4v-2h-2.4v2H8.4z" fill="#fff"/></svg>`;
+const timelineHtml = t => {
+  let k = 0, i = 0;
+  return `<div class="tl">
+  <p class="tl-kicker">${TL_PAW}Project timeline</p>
+  <p class="tl-head">${esc(t.head)}</p>
+  <div class="tl-card"><ol class="tl-groups">${t.phases.map(ph => `<li class="tl-group" style="--c:${ph.c}">
+    <p class="tl-phase"><b><span class="tl-long">${esc(ph.name)}</span><span class="tl-short">${esc(ph.short)}</span></b></p>
+    <ol class="tl-steps">${t.steps.slice(k, k += ph.n).map(s => `<li class="tl-step" style="--i:${i}" data-i="${i++}"><span class="tl-dot">${TL_PAW}</span><span class="tl-when"><span class="tl-m">Month </span>${esc(s.when)}</span><div class="tl-body"><b class="tl-title">${esc(s.title)}</b><ul>${s.tasks.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div><button type="button" class="tl-pick" aria-label="Month ${esc(s.when)}: ${esc(s.title)}"></button></li>`).join("")}</ol>
+  </li>`).join("")}</ol>
+  <span class="tl-end" title="Home">${TL_HOME}</span>
+  <div class="tl-detail" aria-live="polite"></div></div>
+</div>`;
+};
+// On narrow screens only the dots fit in the row, so tapping a month shows its details underneath.
+function initTimeline() {
+  const root = caseView.querySelector(".tl"); if (!root) return;
+  const steps = [...root.querySelectorAll(".tl-step")], detail = root.querySelector(".tl-detail");
+  const pick = n => {
+    steps.forEach((s, i) => { s.classList.toggle("on", i === n); s.querySelector(".tl-pick").setAttribute("aria-pressed", String(i === n)); });
+    const s = steps[n];
+    detail.style.setProperty("--c", getComputedStyle(s).getPropertyValue("--c"));
+    detail.innerHTML = `<span class="tl-d-when">Month ${esc(s.querySelector(".tl-when").lastChild.textContent)}</span><b>${esc(s.querySelector(".tl-title").textContent)}</b><span>${[...s.querySelectorAll("ul li")].map(li => esc(li.textContent)).join(" &middot; ")}</span>`;
+  };
+  steps.forEach((s, i) => s.querySelector(".tl-pick").addEventListener("click", () => pick(i)));
+  pick(0);
+  if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) { root.classList.add("in"); return; }
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { root.classList.add("in"); io.disconnect(); } }, {threshold: .35});
+  io.observe(root.querySelector(".tl-card"));
+}
+
+// ---- Competitor tree: a root branches to each app, its features stack below, and every path meets at Companio.
+// It builds in order when it comes into view; Replay rebuilds it, and tapping an app focuses its path and offers its audit. ----
+let compData = null;
+const compHtml = t => (compData = t, `<div class="ct">
+  <div class="ct-bar"><button type="button" class="ct-replay">&#8635; Replay</button><span class="ct-hint">Tap an app to follow its path</span></div>
+  <div class="ct-card">
+    <div class="ct-root ct-n" style="--o:0"><span>${esc(t.root)}</span></div>
+    <div class="ct-cols">${t.apps.map((a, i) => `<div class="ct-col" style="--c:${a.c}" data-i="${i}">
+      <button type="button" class="ct-app ct-n" style="--o:${1 + i}" aria-pressed="false"><b>${esc(a.name)}</b><small>${esc(a.kind)}</small></button>
+      <span class="ct-area ct-n" style="--o:${4 + i}">Best at: ${esc(a.area)}</span>
+      <ul class="ct-feats">${a.features.map((f, k) => `<li class="ct-n" style="--o:${7 + k * 3 + i}">${esc(f)}</li>`).join("")}</ul>
+    </div>`).join("")}</div>
+    <div class="ct-join" aria-hidden="true">${t.apps.map(a => `<i style="--c:${a.c}"></i>`).join("")}</div>
+    <div class="ct-end ct-n" style="--o:20"><b>${esc(t.end)}</b><span>${t.endTags.map((g, i) => `<em style="--c:${t.apps[i].c}">${esc(g)}</em>`).join("")}</span></div>
+  </div>
+  <div class="ct-detail" aria-live="polite"></div>
+</div>`);
+function initComp() {
+  const root = caseView.querySelector(".ct"); if (!root || !compData) return;
+  const t = compData, cols = [...root.querySelectorAll(".ct-col")], detail = root.querySelector(".ct-detail");
+  let focus = -1;
+  const build = () => { root.classList.remove("in"); void root.offsetWidth; root.classList.add("in"); };
+  const setFocus = i => {
+    focus = focus === i ? -1 : i;
+    root.classList.toggle("focus", focus > -1);
+    cols.forEach((c, k) => { c.classList.toggle("on", k === focus); c.querySelector(".ct-app").setAttribute("aria-pressed", String(k === focus)); });
+    root.querySelectorAll(".ct-join i").forEach((l, k) => l.classList.toggle("on", k === focus));
+    root.querySelectorAll(".ct-end em").forEach((g, k) => g.classList.toggle("on", k === focus));
+    if (focus < 0) { detail.innerHTML = ""; detail.classList.remove("show"); return; }
+    const a = t.apps[focus];
+    detail.style.setProperty("--c", a.c);
+    detail.innerHTML = `<div><small>${esc(a.kind)}</small><b>${esc(a.name)}</b><span>Strongest at ${esc(a.area.toLowerCase())}, but on its own it covers only part of what pet owners need. Companio brings it together with the other two.</span></div><button type="button" class="ct-open">View the audit (${a.audit.length} slides)</button>`;
+    detail.classList.add("show");
+    detail.querySelector(".ct-open").addEventListener("click", () => openPiece(a.audit.map((s, k) => ({...s, name: `${a.name}: ${k ? "audit " + k : "overview"}`})), 0));
+  };
+  cols.forEach((c, i) => c.querySelector(".ct-app").addEventListener("click", () => setFocus(i)));
+  root.querySelector(".ct-replay").addEventListener("click", () => { if (focus > -1) setFocus(focus); build(); });
+  if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) { root.classList.add("in"); return; }
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { build(); io.disconnect(); } }, {threshold: .3});
+  io.observe(root.querySelector(".ct-card"));
+}
+
+// ---- Personas: a switcher between the personas; each shows a profile card with tabbed lists, personality sliders that
+// slide into place, and an empathy map whose quadrants open up when tapped ----
+let personaData = null;
+const EMP = [["says","Says"],["thinks","Thinks"],["does","Does"],["feels","Feels"]];
+const personaHtml = list => (personaData = list, `<div class="pz">
+  <div class="pz-switch" role="tablist" aria-label="Choose a persona">${list.map((p, i) => `<button type="button" role="tab" class="pz-tab" data-i="${i}" style="--c:${p.c}" aria-selected="${i === 0}"><img src="${esc(p.photo)}" alt="" width="40" height="40"><span><b>${esc(p.name)}</b><small>${esc(p.title)}</small></span></button>`).join("")}</div>
+  <div class="pz-stage"></div>
+</div>`);
+function personaPanel(p) {
+  return `<div class="pz-card" style="--c:${p.c}">
+    <div class="pz-id">
+      <div class="pz-photo"><img src="${esc(p.photo)}" alt="Persona photo: ${esc(p.name)}, ${esc(p.title)}"></div>
+      <p class="pz-name">${esc(p.name)}</p><p class="pz-title">${esc(p.title)}</p>
+      <ul class="pz-facts">${p.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+    </div>
+    <div class="pz-main">
+      <p class="pz-bio">${esc(p.bio)}</p>
+      <div class="pz-ltabs" role="tablist" aria-label="${esc(p.name)} details">${p.lists.map(([h], i) => `<button type="button" role="tab" data-l="${i}" aria-selected="${i === 0}">${esc(h)}</button>`).join("")}</div>
+      <ul class="pz-list">${p.lists[0][1].map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <div class="pz-traits"><p class="pz-sub">Personality</p>${p.traits.map(([a, b, v]) => `<div class="pz-trait" style="--v:${v}"><span>${esc(a)}</span><i><b></b></i><span>${esc(b)}</span></div>`).join("")}</div>
+    </div>
+  </div>
+  <div class="pz-emp-wrap">
+    <p class="pz-sub">Empathy map</p>
+    <div class="pz-emp" style="--c:${p.c}">${EMP.map(([k, h], i) => `<button type="button" class="pz-q q${i}" data-q="${k}" aria-expanded="false"><b>${h}</b><ul>${p.empathy[k].map(x => `<li>${esc(x)}</li>`).join("")}</ul></button>`).join("")}
+      <span class="pz-hub"><img src="${esc(p.photo)}" alt=""></span></div>
+  </div>`;
+}
+function initPersonas() {
+  const root = caseView.querySelector(".pz"); if (!root || !personaData) return;
+  const stage = root.querySelector(".pz-stage"), tabs = [...root.querySelectorAll(".pz-tab")];
+  const show = n => {
+    const p = personaData[n];
+    tabs.forEach((t, i) => t.setAttribute("aria-selected", String(i === n)));
+    stage.innerHTML = personaPanel(p);
+    stage.classList.remove("in"); requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.add("in")));
+    const lt = [...stage.querySelectorAll(".pz-ltabs button")], list = stage.querySelector(".pz-list");
+    lt.forEach((b, i) => b.addEventListener("click", () => {
+      lt.forEach(x => x.setAttribute("aria-selected", String(x === b)));
+      list.innerHTML = p.lists[i][1].map(x => `<li>${esc(x)}</li>`).join("");
+      list.classList.remove("pop"); void list.offsetWidth; list.classList.add("pop");
+    }));
+    const emp = stage.querySelector(".pz-emp"), qs = [...emp.querySelectorAll(".pz-q")];
+    qs.forEach(q => q.addEventListener("click", () => {
+      const open = q.getAttribute("aria-expanded") !== "true";
+      qs.forEach(x => x.setAttribute("aria-expanded", String(x === q && open)));
+      emp.classList.toggle("focus", open); emp.dataset.f = open ? q.dataset.q : "";
+    }));
+  };
+  tabs.forEach((t, i) => t.addEventListener("click", () => show(i)));
+  show(0);
+}
+
 // ---- Interactive user flow: step through a FigJam flow one node at a time; choices branch, Back retraces, Reset starts over ----
 let flowData = null;
 const FLOW_KIND = {start:"Start", end:"End", step:"Step", choice:"Decision", options:"Choose one", input:"Input"};
@@ -1104,7 +1368,7 @@ function openPiece(list, start) {
 
 // ---- Interactive board: printed pieces you can drag around; they lean toward the cursor and wobble on a soft spring. Click one to open it. ----
 let boardList = [], boardKind = "";
-const boardHtml = (list, kind) => (boardList = list, boardKind = kind || "", `<div class="mb${kind ? " mb-" + kind : ""}"><div class="mb-bar"><span>Drag the pieces around, or click one to open it. Postcards flip over.</span><button type="button" class="mb-reset">Reset layout</button></div><div class="mb-stage" role="group" aria-label="Interactive board">${list.map((p, i) => `<figure class="mb-piece${p.back ? " mb-flip" : ""}" tabindex="0" data-i="${i}" aria-label="${esc((p.name || p.alt || "Open image") + (p.back ? " (press Enter to flip)" : ""))}">${kind === "cork" ? '<i class="pin" aria-hidden="true"></i>' : ""}${p.back ? `<span class="mb-persp"><span class="mb-card" style="aspect-ratio:${p.w}/${p.h}"><img class="mb-side" src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt || "")}" draggable="false" loading="lazy" decoding="async"><img class="mb-side mb-backside" src="${esc(p.back)}" width="${p.w}" height="${p.h}" alt="${esc(p.backAlt || "")}" draggable="false" loading="lazy" decoding="async"></span></span><button type="button" class="mb-zoom" aria-label="View both sides full size">&#10530;</button><span class="mb-flipcue" aria-hidden="true">Click to flip</span>` : `<img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt || "")}" draggable="false" loading="lazy" decoding="async">`}</figure>`).join("")}</div></div>`);
+const boardHtml = (list, kind) => (boardList = list, boardKind = kind || "", `<div class="mb${kind ? " mb-" + kind : ""}"><div class="mb-bar"><span>${kind === "mood" ? "Drag anything around the board. Click a picture to open it, or a swatch to copy its color." : "Drag the pieces around, or click one to open it. Postcards flip over."}</span><button type="button" class="mb-reset">Reset layout</button></div><div class="mb-stage" role="group" aria-label="Interactive board">${list.map((p, i) => `<figure class="mb-piece${p.back ? " mb-flip" : ""}" tabindex="0" data-i="${i}" aria-label="${esc(p.font ? `Typeface: ${p.font}` : p.note ? "Sticky note: " + p.note : p.swatch ? `${p.name} swatch, ${p.swatch} (press Enter to copy)` : (p.name || p.alt || "Open image") + (p.back ? " (press Enter to flip)" : ""))}">${kind === "cork" ? '<i class="pin" aria-hidden="true"></i>' : ""}${kind === "mood" && p.src ? '<i class="tape" aria-hidden="true"></i>' : ""}${p.back ? `<span class="mb-persp"><span class="mb-card" style="aspect-ratio:${p.w}/${p.h}"><img class="mb-side" src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt || "")}" draggable="false" loading="lazy" decoding="async"><img class="mb-side mb-backside" src="${esc(p.back)}" width="${p.w}" height="${p.h}" alt="${esc(p.backAlt || "")}" draggable="false" loading="lazy" decoding="async"></span></span><button type="button" class="mb-zoom" aria-label="View both sides full size">&#10530;</button><span class="mb-flipcue" aria-hidden="true">Click to flip</span>` : p.font ? `<div class="mb-type"><span class="mb-aa">Aa</span><span class="mb-word">Companio</span><span class="mb-fname"><b>${esc(p.font)}</b><small>Typeface</small></span></div>` : p.note ? `<div class="mb-note" style="--nc:${p.c}"><b>${esc(p.note)}</b><small>${esc(p.sub || "")}</small></div>` : p.swatch ? `<div class="mb-swatch" style="--sw:${p.swatch}"><i></i><span><b>${esc(p.name)}</b><small>${p.swatch}</small></span><em class="mb-copied" aria-hidden="true">Copied!</em></div>` : `<img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.alt || "")}" draggable="false" loading="lazy" decoding="async">`}</figure>`).join("")}</div></div>`);
 function initBoard() {
   const root = document.querySelector("#case .mb"); if (!root) return;
   const list = boardList, stage = root.querySelector(".mb-stage"), mq = matchMedia("(max-width:700px)");
@@ -1165,7 +1429,12 @@ function initBoard() {
     });
     const end = () => { if (!s.drag) return; s.drag = false; el.classList.remove("lift"); s.target = s.rest; go(); };
     const flipList = () => [{ src: list[i].src, name: list[i].name + " (front)", alt: list[i].alt }, { src: list[i].back, name: list[i].name + " (back)", alt: list[i].backAlt }];
-    const act = () => { if (list[i].back) el.classList.toggle("flipped"); else openPiece(list, i); };
+    const act = () => {
+      const p = list[i];
+      if (p.back) el.classList.toggle("flipped");
+      else if (p.swatch) { const done = () => { el.classList.add("copied"); setTimeout(() => el.classList.remove("copied"), 1200); }; if (navigator.clipboard) navigator.clipboard.writeText(p.swatch).then(done, done); else done(); }
+      else if (p.src) { const pics = list.filter(q => q.src); openPiece(pics, pics.indexOf(p)); }
+    };
     el.addEventListener("pointerup", () => { const tap = moved < 6; end(); if (tap) act(); });
     const zoom = el.querySelector(".mb-zoom");
     if (zoom) { zoom.addEventListener("pointerdown", e => e.stopPropagation()); zoom.addEventListener("pointerup", e => e.stopPropagation()); zoom.addEventListener("click", e => { e.stopPropagation(); openPiece(flipList(), 0); }); }
@@ -1490,7 +1759,11 @@ function renderCase(p) {
     ${s.folds ? foldHtml(s.folds) : ""}
     ${s.ring ? ringHtml(s.ring) : ""}
     ${s.posters ? wallHtml(s.posters) : ""}
+    ${s.timeline ? timelineHtml(s.timeline) : ""}
+    ${s.comp && !s.split ? compHtml(s.comp) : ""}
+    ${s.personas ? personaHtml(s.personas) : ""}
     ${s.flow ? flowHtml(s.flow) : ""}
+    ${s.screens ? screensHtml(s.screens) : ""}
     ${s.board ? boardHtml(s.board, s.boardKind) : ""}
     ${s.lunarWindow ? lunarWindowHtml() : ""}
     ${s.lunarLoader ? lunarLoaderHtml() : ""}
@@ -1501,7 +1774,7 @@ function renderCase(p) {
     ${s.split ? "" : galHtml(s)}
     ${s.split ? "" : ctaHtml(s)}
     ${annHtml(s)}
-  </div>${s.split ? `<div class="split${s.deckFirst ? " dfirst" : ""}"><div>${galHtml(s)}</div><div>${s.gallery2 ? galHtml({gallery: s.gallery2}) : deckHtml(s)}${ctaHtml(s)}</div></div>` : ""}</section>`).join("");
+  </div>${s.split ? `<div class="split${s.deckFirst ? " dfirst" : ""}${s.comp ? " ct-split" : ""}"><div>${s.comp ? compHtml(s.comp) : galHtml(s)}</div><div>${s.gallery2 ? galHtml({gallery: s.gallery2}) : deckHtml(s)}${ctaHtml(s)}</div></div>` : ""}</section>`).join("");
   caseView.innerHTML = `<div class="layout">
     <aside class="side" aria-label="Case study navigation">
       <a class="back" href="#" data-home="${p.back || "work"}">&#8249; Back to ${p.back ? "design work" : "projects"}</a>
@@ -1523,6 +1796,10 @@ function renderCase(p) {
   initRing();
   initWall();
   initFlow();
+  initTimeline();
+  initComp();
+  initPersonas();
+  initScreens();
   initBoard();
   initLunarWindow();
   initLunarLoader();
