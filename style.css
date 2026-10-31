@@ -2122,10 +2122,15 @@ button.abh-p{cursor:pointer}
 #graphicView .card .desc{margin:.45rem 0 0;font-size:1rem;line-height:1.5;color:var(--muted)}
 @media(max-width:980px){#graphicView .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){#graphicView .grid{grid-template-columns:1fr;gap:2rem}}
-/* Design Work hover, after jilldarrow.com/work: the frame presses in a touch while the picture stays still */
-#graphicView .card .thumb .zoom{clip-path:inset(0 round 14px);transition:clip-path .4s cubic-bezier(.2,.7,.2,1)}
+/* Design Work hover, after jilldarrow.com/work: the whole image eases down to 98% and back, 500ms with a soft curve */
+#graphicView button.card .thumb{transition:transform .5s cubic-bezier(.4,.2,.2,1);will-change:transform}
 #graphicView button.card:not(.soon):hover .thumb .zoom img,#graphicView button.card:focus-visible .thumb .zoom img{transform:none}
-@media(hover:hover){#graphicView button.card:not(.soon):hover .thumb .zoom{clip-path:inset(3px round 14px)}}
-#graphicView button.card:focus-visible .thumb .zoom{clip-path:inset(3px round 14px)}
-@media(prefers-reduced-motion:reduce){#graphicView .card .thumb .zoom{transition:none}}
+@media(hover:hover){#graphicView button.card:not(.soon):hover .thumb{transform:scale(.98)}}
+#graphicView button.card:focus-visible .thumb{transform:scale(.98)}
+@media(prefers-reduced-motion:reduce){#graphicView button.card .thumb{transition:none}}
 #graphicView button.card .thumb{background:none}
+
+/* Lunar Shades guidelines: the board reaches across the label column to the section's full width; phones get its three panels instead */
+.gimg.part{display:none}
+@media(min-width:721px){.gimg.big{position:relative;width:calc(100% + 232px);max-width:none;margin-left:-232px}}
+@media(max-width:720px){.gimg.big{display:none}.gimg.part{display:block}}
