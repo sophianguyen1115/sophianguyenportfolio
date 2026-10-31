@@ -22,48 +22,47 @@ function placeholderCase(name, slug, lede, cat, base) {
 // The three Companio phone videos shown in the hero.
 // Companio "Track an escaped pet" user flow, rebuilt from the FigJam board so it can be clicked through.
 // kind: start/end (green pill), step (cream box), choice (navy diamond), options (grey circle), input (red trapezoid)
+// Companio's Escaped Pet flow, condensed from the FigJam board into a tree: c is the column (0 main path, 1 side branch), r the row.
+// Edge kinds: straight (default), "merge" (side branch rejoins the main path), "join" (leaves sideways onto the main path), "loop" and "back" (dashed returns)
 const COMPANIO_FLOW = {start:"alert", image:"assets/1d072451068f.webp", w:3164, h:882,
-  phases:["Alert","Share","Safety","Search","Recovery","Report"],
   nodes:{
-    alert:{kind:"start", t:"User receives a real-time alert", ph:0, next:"open"},
-    open:{kind:"step", t:"Open app", ph:0, next:"tracking"},
-    tracking:{kind:"step", t:"Go to Tracking", ph:0, next:"track"},
-    track:{kind:"step", t:"Track Escaped Pet", ph:0, next:"guided"},
-    guided:{kind:"step", t:"Guided tools", ph:0, next:"household"},
-    household:{kind:"choice", t:"Share location with household?", ph:1, yes:"opt1", no:"map"},
-    opt1:{kind:"options", t:"Options", ph:1, pick:[["Suggested safe spots","share1"],["Live tracking link","share1"],["Last pinged location","share1"]]},
-    share1:{kind:"input", t:"Share location with others", ph:1, next:"submit1"},
-    submit1:{kind:"step", t:"Submit", ph:1, next:"someone"},
-    someone:{kind:"choice", t:"Share with someone else?", ph:1, yes:"opt1", no:"map"},
-    map:{kind:"step", t:"Display tracking map", ph:2, next:"safety"},
-    safety:{kind:"step", t:"Safety layer", ph:2, next:"nearby"},
-    nearby:{kind:"choice", t:"Alert others nearby?", ph:2, yes:"opt2", no:"spot"},
-    opt2:{kind:"options", t:"Options", ph:2, pick:[["Meetup point share","share2"],["Geofence alert sharing","share2"],["Temporary share of location","share2"]]},
-    share2:{kind:"input", t:"Share with others", ph:2, next:"submit2"},
-    submit2:{kind:"step", t:"Submit", ph:2, next:"emergency"},
-    emergency:{kind:"choice", t:"Enter Emergency Mode?", ph:2, yes:"activate", no:"spot"},
-    activate:{kind:"options", t:"Activate", ph:2, pick:[["Expanding search radius map","edit"],["Drop pins / report sightings","edit"],["Auto-generated lost pet alert","edit"]]},
-    edit:{kind:"input", t:"Edit alerts & sharing", ph:2, next:"submit3"},
-    submit3:{kind:"step", t:"Submit", ph:2, next:"accurate"},
-    accurate:{kind:"choice", t:"Data accurate?", ph:2, yes:"spot", no:"edit"},
-    spot:{kind:"step", t:"View last known spot", ph:3, next:"found"},
-    found:{kind:"choice", t:"Pet found?", ph:3, yes:"confirm", no:"guided"},
-    confirm:{kind:"step", t:"User confirms", ph:4, next:"log"},
-    log:{kind:"choice", t:"Log escape?", ph:4, yes:"method", no:"submitFound"},
-    submitFound:{kind:"step", t:"Submit pet found", ph:4, next:"timeline"},
-    method:{kind:"options", t:"Input method", ph:4, pick:[["Map visual","photos"],["Manual","info"]]},
-    photos:{kind:"input", t:"Add photos / new parameters", ph:4, next:"save1"},
-    info:{kind:"input", t:"Input information", ph:4, next:"save1"},
-    save1:{kind:"step", t:"Save Data", ph:4, next:"more1"},
-    more1:{kind:"choice", t:"More data to edit?", ph:4, yes:"method", no:"timeline"},
-    timeline:{kind:"step", t:"Timeline summary", ph:5, next:"report"},
-    report:{kind:"choice", t:"Submit report?", ph:5, yes:"opt3", no:"dash"},
-    opt3:{kind:"options", t:"Options", ph:5, pick:[["Geofencing changes","tracker"],["Additional feedback if needed","tracker"],["Location found","tracker"]]},
-    tracker:{kind:"input", t:"Add to tracker / map", ph:5, next:"save2"},
-    save2:{kind:"step", t:"Save Data", ph:5, next:"more2"},
-    more2:{kind:"choice", t:"More data to edit?", ph:5, yes:"opt3", no:"dash"},
-    dash:{kind:"end", t:"Go to dashboard", ph:5}
-  }};
+    alert:{k:"end", t:"Real-time alert", c:0, r:0, cap:"The pet slips out of its geofence, and the alert reaches the owner right away."},
+    open:{t:"Open app, go to Tracking", c:0, r:1, cap:"One tap from the alert into Tracking, with no hunting through menus."},
+    guided:{t:"Track Escaped Pet: guided tools", c:0, r:2, cap:"Guided tools take over, so a stressed owner always has a next step."},
+    household:{k:"dec", t:"Share location with household?", c:0, r:3, cap:"The first decision: bring the household in, or keep moving."},
+    share1:{t:"Pick what to share and submit", c:1, r:3, cap:"Suggested safe spots, a live tracking link or the last pinged location."},
+    someone:{k:"dec", t:"Share with someone else?", c:1, r:4, cap:"Sharing can repeat for as many people as the owner needs."},
+    map:{t:"Tracking map and safety layer", c:0, r:5, cap:"Every path lands here: the live map with the safety layer on top."},
+    nearby:{k:"dec", t:"Alert others nearby?", c:0, r:6, cap:"Neighbors can help, but only if the owner chooses to raise the alarm."},
+    share2:{t:"Share a meetup point or alert", c:1, r:6, cap:"Nearby people get a meetup point, a geofence alert or a temporary location."},
+    emergency:{k:"dec", t:"Enter Emergency Mode?", c:1, r:7, cap:"For the worst case, Emergency Mode is one clear decision away."},
+    activate:{t:"Search radius, sightings and lost pet alert", c:1, r:8, cap:"An expanding search radius, pinned sightings and an auto-generated lost pet alert."},
+    accurate:{k:"dec", t:"Data accurate?", c:1, r:9, cap:"The owner checks the alert before it goes out, and can fix anything first."},
+    spot:{t:"View last known spot", c:0, r:10, cap:"All the searching leads to one place: the pet's last known spot."},
+    found:{k:"dec", t:"Pet found?", c:0, r:11, cap:"If not, the owner goes straight back to the guided tools."},
+    confirm:{t:"User confirms", c:0, r:12, cap:"The owner confirms the pet is home safe, and the search ends."},
+    log:{k:"dec", t:"Log the escape?", c:0, r:13, cap:"Logging is optional, so a relieved owner can skip it."},
+    method:{t:"Add details by map or manually", c:1, r:13, cap:"Add photos and new parameters on the map, or type the details in."},
+    submitFound:{t:"Submit pet found", c:0, r:14, cap:"One tap closes the alert for everyone who was helping."},
+    more1:{k:"dec", t:"More data to edit?", c:1, r:14, cap:"Details save as they go, and the owner can keep adding until it's right."},
+    timeline:{t:"Timeline summary", c:0, r:15, cap:"The whole escape, summed up as a timeline."},
+    report:{k:"dec", t:"Submit report?", c:0, r:16, cap:"An optional report helps prevent the next escape."},
+    tracker:{t:"Add details to the tracker and map", c:1, r:16, cap:"Geofence changes, extra feedback and where the pet was found."},
+    more2:{k:"dec", t:"More data to edit?", c:1, r:17, cap:"The report can keep growing until the owner is done."},
+    dash:{k:"end", t:"Go to dashboard", c:0, r:18, cap:"Back on the dashboard, with the pet home and the story saved."}},
+  edges:[
+    ["alert","open"],["open","guided"],["guided","household"],["household","share1","yes"],["household","map","no"],
+    ["share1","someone"],["someone","share1","yes","loop"],["someone","map","no","merge"],["map","nearby"],
+    ["nearby","share2","yes"],["nearby","spot","no"],["share2","emergency"],["emergency","activate","yes"],["emergency","spot","no","join"],
+    ["activate","accurate"],["accurate","activate","no","loop"],["accurate","spot","yes","merge"],["spot","found"],
+    ["found","confirm","yes"],["found","guided","keep searching","back"],["confirm","log"],["log","method","yes"],["log","submitFound","no"],
+    ["method","more1"],["more1","method","yes","loop"],["more1","timeline","no","merge"],["submitFound","timeline"],["timeline","report"],
+    ["report","tracker","yes"],["report","dash","no"],["tracker","more2"],["more2","tracker","yes","loop"],["more2","dash","no","merge"]],
+  tours:[
+    {cap:"The best case: the pet turns up quickly and the owner heads home.", path:"alert open guided household map nearby spot found confirm log submitFound timeline report dash"},
+    {cap:"The household helps search, and the owner logs the escape afterward.", path:"alert open guided household share1 someone map nearby spot found confirm log method more1 timeline report dash"},
+    {cap:"The worst case: Emergency Mode, a lost pet alert and a full report.", path:"alert open guided household map nearby share2 emergency activate accurate spot found confirm log submitFound timeline report tracker more2 dash"},
+    {cap:"Not found yet: the flow never leaves the owner stuck, it loops back to the guided tools.", path:"alert open guided household map nearby spot found guided"}]};
 const COMPANIO_SCREENS = [
   {title:"Track an escaped pet", desc:"From the first alert to raising the alarm, built for clarity and speed in a stressful moment.", screens:[
     {src:"assets/73d2674e6e18.webp",name:"Live Notification",alt:"Lock screen with a Companio notification: Umi has left your geofence."},
@@ -320,7 +319,7 @@ const projects = [
         {font:"Jua",name:"Jua typeface",w:1,h:1.15,d:{x:37.5,y:76,w:13,r:2},m:{x:62,y:79,w:20,r:-2}}], boardKind:"mood"},
      {label:"Wireframes", title:"User flows to hi-fi prototype", paras:["User flows mapped each key task before wireframes became high-fidelity screens. The interface uses a playful look based on seasonal color palettes, with a simple layout that keeps care, health and GPS features up front.","Every screen below comes from the final design, grouped by the geofencing flow. Swipe, drag or use the arrows."],
       screens:COMPANIO_SCREENS, buttons:[{label:"View All User Flows Here",href:"https://www.figma.com/board/I2gimY8SGn6eyTz2DSUV0S/User-Flows?node-id=113-1163&t=aM8BUcZu53Uo42K2-1"},{label:"View All Hi-Fi Prototypes Here",href:"https://www.figma.com/design/V2e4n9kyHilemRM9sZmxiw/Pet-Tracker-Wireframes---Companio--Copy-?node-id=25-318&t=KBkV8HEUfSg69pQR-1"}]},
-     {label:"User flow", title:"Track an escaped pet", paras:["The flow for the moment that matters most: a pet slips out of its geofence. It moves from the first alert, through sharing the pet's location and raising the alarm nearby, to logging the escape once the pet is home.","Click through it yourself. Make a choice at each decision, retrace your steps with Back, or start over with Reset."], flow:COMPANIO_FLOW},
+     {label:"User flow", title:"Alert first. Then a search, and a way home.", paras:["The flow for the moment that matters most: a pet slips out of its geofence.","Click any box to trace how someone ends up there. It plays on its own until you do."], flow:COMPANIO_FLOW},
      {label:"Result", title:"Care, health and safety in one place", paras:["Putting records, care routines and location in one platform makes pets easier to look after. Clear data views, organized health logs, real-time alerts and shared access cut friction, so owners can check in quickly and respond when it matters."]},
      {label:"Next steps", title:"Reflection", paras:["Work continued after the course with contextual design, an interactive prototype and a front-end tech spec. With more time, the next steps would be one-on-one interviews for deeper research, tighter links between the app's functions, and smoother animation between screens."]}
     ]}},
@@ -367,9 +366,8 @@ function makeCard(p) {
   // Unfinished projects ("soon") look the same but don't open or react to hover
   if (!p.soon) el.addEventListener("click", () => openProject(p));
   el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<span class="zoom${p.imageFit ? " fit" : ""}" style="position:absolute;inset:0;display:block;overflow:hidden;border-radius:18px"><img src="${p.image}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none${p.imagePos ? `;object-position:${esc(p.imagePos)}` : ""}" decoding="async" draggable="false"></span>` : `<span class="letter">${esc(p.name[0])}</span>`}</div>
-    <div class="body"><div class="head"><h3><span class="t"></span><span class="arr" aria-hidden="true">&rarr;</span></h3><div class="pills"></div></div><p class="desc"></p></div>`;
+    <div class="body"><div class="head"><h3><span class="t"></span></h3></div><p class="desc"></p></div>`;
   el.querySelector("h3 .t").textContent = p.name;
-  for (const t of p.tags) { const s = document.createElement("span"); s.className = "pill"; s.textContent = t; el.querySelector(".pills").appendChild(s); }
   el.querySelector(".desc").textContent = p.desc;
   return el;
 }
@@ -394,7 +392,7 @@ projects.forEach((p, i) => grid.appendChild(makeRow(p, i)));
 const IH = "https://sophiacnguyen.framer.website/in-house-work/", AI = "https://sophiacnguyen.framer.website/design-and-ai/";
 const TBD = "[Add a one-line summary of this project.]";
 const otherProjects = [
-  {name:"Blend Supply", image:"assets/20950abf89a2.webp", tags:["Visual Design","Promotional Material"], desc:"", back:"graphic", caseStudy:{
+  {name:"Blend Supply", image:"assets/20950abf89a2.webp", tags:["Visual Design","Promotional Material"], desc:"In-house marketing for aerospace and industry", back:"graphic", caseStudy:{
     lede:"In-house aerospace and industrial marketing: campaigns, customer collaborations and promotional material.", source: IH + "blend-supply",
     heroImage:"assets/20950abf89a2.webp",
     facts:[["Category","Visual design / Promotional material"],["Industry","Aerospace and industrial"],["Year","2023 - 2024"]],
@@ -404,7 +402,7 @@ const otherProjects = [
      {label:"Milwaukee", title:"A winter campaign for Milwaukee", paras:["As an official Milwaukee distributor, Blend Supply ran a winter campaign that paired heated apparel with Milwaukee power tools. A launch-party flyer listed discounted in-stock tools, while web banners promoted the distributor partnership and the heated jacket as the weather turned cold."], gallery:[{src:"assets/27011807d5cb.webp",w:1112,h:1446,size:"full",alt:"Milwaukee Launch Party flyer from Blend Supply: discounted in-stock Milwaukee products in a grid of fifteen tools with item numbers, from an M18 Fuel Packout wet/dry vacuum to a Packout radio, with contact details and branch locations."}], gallery2:[{src:"assets/fa0916675619.webp",w:1290,h:320,size:"full",alt:"Web banner on a blue snowflake background: Blend Supply is an official distributor of Milwaukee, beside a Milwaukee polisher, drill driver and bit sets."},{src:"assets/96ba4fc777bb.webp",w:1229,h:304,size:"full",alt:"Web banner: Milwaukee Heated Jacket in camouflage, machine washable with five heating zones, wind and water resistance, thermal fleece lining, up to 8 hours of heat and variable heat settings."}], split:true},
      {label:"Expanding knowledge", title:"Growing beyond design", paras:["Along the way I expanded my skills in video editing, videography and copywriting, so campaigns could be taken from concept to finished promotional pieces."]}
     ]}},
-  {name:"HeliExpo Collab", image:"assets/54ff46644fd5.webp", tags:["Visual Design","Promotional Material"], desc:"", back:"graphic", caseStudy:{
+  {name:"HeliExpo Collab", image:"assets/54ff46644fd5.webp", tags:["Visual Design","Promotional Material"], desc:"A campaign built around helping local veterans", back:"graphic", caseStudy:{
     lede:"A Blend Supply collaboration with Straubes Aircraft Services, built around helping local veterans.", source: IH + "heli-expo",
     heroImage:"assets/54ff46644fd5.webp",
     facts:[["Category","Visual design / Promotional material"],["Partners","Blend Supply and Straubes Aircraft Services"],["Year","2023 - 2024"]],
@@ -416,7 +414,7 @@ const otherProjects = [
      {label:"Collateral", title:"Branded pieces", paras:["Supporting pieces carried the Blend Supply brand and listed the products used on the finished aircraft."],
       gallery:[{src:"assets/949e7f5f36c5.webp",w:990,h:898,size:"half",alt:"A glowing white cube with the Blend Supply logo on three faces, on a dark background."},{src:"assets/ee54be8f54f6.webp",w:936,h:1302,size:"half",alt:"Products Used sheet: the primer, three Skyscapes paint colors and clearcoat used on the camouflage helicopter, with partner logos for the Veterans Training Fund, Sherwin-Williams, Straube's and Blend Supply's 10 year anniversary."}]}
     ]}},
-  {name:"DFW HQ Socks", image:"assets/d5e172021e34.webp", tags:["Visual Design","Apparel"], desc:"", back:"graphic", caseStudy:{
+  {name:"DFW HQ Socks", image:"assets/d5e172021e34.webp", tags:["Visual Design","Apparel"], desc:"Custom socks for the airport's cargo division", back:"graphic", caseStudy:{
     lede:"Custom socks for DFW HQ, with a colorful palette and iconography made for travelers with cold feet.", source: IH + "socks-for-dfw-hq",
     heroImage:"assets/cb4b536cd579.webp", heroAlt:"A folded pair of white DFW socks with orange stripes and a delivery truck, wrapped in an orange DFW band, on a light grey surface.",
     facts:[["Category","Visual design / Branding"],["Industry","Aviation"],["Year","2022"]],
@@ -426,7 +424,7 @@ const otherProjects = [
      {label:"Designs", title:"Sock concepts", deckLabel:"Sock designs", paras:["Six sheets cover each concept from the side, front and back, from the Asiana Cargo ankle socks to the DFW Cargo Community crew socks."], deck:[{src:"assets/7effd8194b3d.webp",w:3000,h:2250,alt:"Asiana Cargo sock concepts: two sheets of three designs each, shown from the side, front and back, in yellow, orange, grey, navy and white with Korea maps, planes, trucks and ICN - DFW - ICN lettering."},{src:"assets/184a5a7981bc.webp",w:3000,h:2250,alt:"DFW Cargo Community sock in white with orange planes, a control tower and yellow chevrons, shown front, back and side, with the Persimmon, Bleach, Onyx and Sunflower palette."},{src:"assets/c8368ffab391.webp",w:3000,h:2250,alt:"DFW Cargo Community sock in persimmon orange with a pattern of white trucks and crates and an Onyx grey cuff, heel and toe, shown front, back and side."},{src:"assets/2176861ccbb6.webp",w:3000,h:2250,alt:"DFW Cargo Community sock in light grey and white with a Concrete grey chevron, an orange truck and plane and orange cuff, shown front, back and side."},{src:"assets/b2ceea1e8484.webp",w:3000,h:2250,alt:"DFW Cargo Community sock in Peacock blue with a pattern of orange circles holding a warehouse and truck icon, shown front, back and side."},{src:"assets/0ee1448ef6cf.webp",w:3000,h:2250,alt:"DFW Cargo Community sock in Onyx grey with a scatter of colorful trucks and forklifts and a cream cuff with orange and yellow stripes, shown front, back and side."}]},
      {label:"Mockups", title:"On the shelf and on the foot", paras:["A few of the designs, mocked up on real socks."], gallery:[{src:"assets/d70b40f932df.webp",w:2000,h:1333,size:"half",alt:"A pair of navy crew socks with white Korea map and plane pattern and orange Asiana Cargo cuffs, on a beige background."},{src:"assets/fd67826b75a4.webp",w:2000,h:1333,size:"half",alt:"A pair of yellow ankle socks with a white Korea map, a navy plane and grey DFW toes, on a mauve background."},{src:"assets/3a588bd06ebd.webp",w:2000,h:1333,size:"full",alt:"A person wearing white crew socks printed with colorful trucks and forklifts and a DFW cuff, on a pink background."}]}
     ]}},
-  {name:"DPS and CDO", image:"assets/dd60b0dc78f1.webp", tags:["Visual Design","Promotional Material"], desc:"", back:"graphic", caseStudy:{
+  {name:"DPS and CDO", image:"assets/dd60b0dc78f1.webp", tags:["Visual Design","Promotional Material"], desc:"Recruitment material for police departments", back:"graphic", caseStudy:{
     lede:"Recruitment material for two police departments, with square trifolds and a gritty look drawn from their uniforms.", source: IH + "dps-and-cdo",
     heroImage:"assets/866f46ff31d5.webp", heroAlt:"The DPS recruitment trifold opening at an angle: the Are You Ready? cover with a police SUV and departing plane, beside About Us, the Police Services mission, and police incentives and benefits.",
     facts:[["Category","Visual design / Promotional material"],["Industry","Aviation"],["Year","2022"]],
@@ -439,7 +437,7 @@ const otherProjects = [
       posters:[{src:"assets/f15d4cb330b0.webp",w:1400,h:1812,name:"Vertical poster",alt:"Vertical recruiting poster: Are You Ready? Join the Dallas Fort Worth Airport Police Department over a police SUV and a departing plane, with About Us, specialized divisions, incentives and benefits, a pay scale and eight unit photos."},{src:"assets/88e0e477e626.webp",w:2000,h:1546,name:"Horizontal poster",alt:"Horizontal recruiting poster: Are You Ready? over a police SUV and a departing plane, eight unit photos along the bottom, and a right column with About Us, specialized divisions, incentives and benefits, pay scale and contact details."},{src:"assets/ea2a5c6c1d83.webp",back:"assets/be37eb08f404.webp",w:1120,h:1594,name:"Handout card",alt:"Handout card front: Are You Ready? Join the Dallas Fort Worth Airport Police Department over a police SUV and a departing plane, with a QR code, phone, email and website, and lines for Referred by and E-mail.",backAlt:"Handout card back: the application process, minimum requirements, benefits and incentives, and salary for police recruits and commissioned officers."}]},
      {label:"Mockups", title:"On the table", paras:["The finished brochures, mocked up flat."], gallery:[{src:"assets/e80f05cd5853.webp",w:1186,h:856,size:"full",alt:"DPS police recruitment trifold opened flat, showing Specialized Divisions and Units, Minimum Requirements, and Lateral Transfers with a pay scale."},{src:"assets/92fce0246f1d.webp",w:1186,h:856,size:"half",alt:"CDO civilian detention officer brochure with the Join Now cover opening beside the Pay Scale panel."},{src:"assets/483897dba0fe.webp",w:1186,h:856,size:"half",alt:"CDO brochure opened flat: Incentives and Benefits, Minimum and Special Requirements, and Pay Scale."}]}
     ]}},
-  {name:"Oasis Botanicals", image:"assets/2d4f3b52ed2b.webp", tags:["Design + AI","Beauty / Wellness"], desc:"", back:"graphic", caseStudy:{
+  {name:"Oasis Botanicals", image:"assets/2d4f3b52ed2b.webp", tags:["Design + AI","Beauty / Wellness"], desc:"Luxury skincare visuals, designed with AI", back:"graphic", caseStudy:{
     lede:"A luxury skincare brand brought to life through thoughtful, AI-assisted visual design.", source: AI + "oasis-botanicals",
     heroImage:"assets/7b370bdee1d4.webp", heroPos:"50% 41%", heroAlt:"A woman in a golden robe applies facial oil with a dropper while her face is reflected in an antique mirror, in a desert at golden hour.",
     facts:[["Category","Design + AI / Beauty and wellness"],["Client","Oasis Botanicals"],["Year","2026"]],
@@ -449,7 +447,7 @@ const otherProjects = [
      {label:"Visuals", title:"Hero, product and lifestyle imagery", paras:["The final assets: one hero image, product close ups, lifestyle scenes and brand patterns."], gallery:[{src:"assets/7b370bdee1d4.webp",w:1584,h:672,size:"full",alt:"Hero image: the Golden Trio skincare products on desert rocks at golden hour."},{src:"assets/8fc6d07f24b3.webp",w:1024,h:1024,size:"third",alt:"Product shot: a hand holding the Golden Glow Serum in the desert."},{src:"assets/de4af21c5d10.webp",w:928,h:928,size:"third",alt:"Product shot: a hand holding the Golden Trio facial oil."},{src:"assets/3932f3af5d78.webp",w:1024,h:1024,size:"third",alt:"Product shot: the night renewal cream resting in rippled sand."},{src:"assets/4c79ad3af18c.webp",w:864,h:1152,size:"third",alt:"Lifestyle: a woman applying cream in a golden silk robe."},{src:"assets/bdb599487944.webp",w:896,h:1200,size:"third",alt:"Lifestyle: a woman holding the facial oil against the dunes."},{src:"assets/9ec8763dd0b9.webp",w:896,h:1200,size:"third",alt:"Lifestyle: a woman applying serum beside an antique mirror."},{src:"assets/dc76e9c8835a.webp",w:1024,h:1024,size:"third",alt:"Pattern: gold lotus line art on sangria paper."},{src:"assets/90c3e248bce1.webp",w:1280,h:720,size:"third",alt:"Pattern: repeating gold lotus on brown."},{src:"assets/66dabee1d2e3.webp",w:1024,h:1024,size:"third",alt:"Pattern: gold lotus pond on dune beige."}]},
      {label:"Result", title:"A campaign directed with AI creative tools", paras:["I directed and produced a luxury skincare campaign using AI creative tools. The process involved iterative prompting, reference-based art direction and visual system development, resulting in hero imagery, product photography, branding elements and lifestyle content."]}
     ]}},
-  {name:"Altitude Coffee Roasters", image:"assets/be32c97a2fe3.jpg", tags:["Design + AI","Specialty Coffee"], desc:"", back:"graphic", caseStudy:{
+  {name:"Altitude Coffee Roasters", image:"assets/be32c97a2fe3.jpg", tags:["Design + AI","Specialty Coffee"], desc:"Mountain-grown coffee, brought to life with AI", back:"graphic", caseStudy:{
     lede:"Mountain-grown coffee brought to life through thoughtful, AI-assisted visual design.", source: AI + "altitude-coffee-roasters",
     heroPhone:{webm:"assets/9217f2e118b5.webm",poster:"assets/ac676a6c2359.webp",frames:"assets/6f737dc17662.bin",audio:"assets/91d4c869e096.m4a",audio2:"assets/abb05a91d2f8.webm",alt:"Altitude Coffee Roasters promotional video, shown in a phone."},
     facts:[["Category","Design + AI / Specialty coffee"],["Client","Altitude Coffee Roasters"],["Year","2026"]],
@@ -459,7 +457,7 @@ const otherProjects = [
      {label:"Visuals", title:"Brand, keyframes and workflow", paras:["Selected imagery from the campaign: the misty origin hillside, the barista, the product bag, the logo and the Flora workflow that tied it together."], gallery:[{src:"assets/78565172c061.webp",w:1584,h:672,size:"full",alt:"A terraced coffee hillside above the mist at golden hour."},{src:"assets/257ffe606712.webp",w:1376,h:768,size:"half",alt:"A barista pulling an espresso shot in a sunlit cafe."},{src:"assets/a487a4937830.webp",w:1376,h:768,size:"half",alt:"The Altitude Coffee Roasters bag in a shaft of golden light, surrounded by beans."},{src:"assets/ff406a3fa14e.webp",w:1152,h:928,size:"half",alt:"The Altitude Coffee Roasters stacked logo: a sunrise over mountains with a coffee bean and cup."},{src:"assets/ca2da1d9b642.webp",w:1600,h:1460,size:"half",alt:"The Flora workflow board, from reference images to keyframes and video clips."}]},
      {label:"Result", title:"Introducing Altitude Coffee Roasters through a verdant brand identity and cinematic video campaign", paras:["I generated an integrated brand campaign for Altitude Coffee Roasters using AI-powered creative tools through Flora. The process involved iterative prompting, reference-based mood boards and visual system development, resulting in branding assets, keyframe imagery and a promotional video campaign that kept storytelling, character design and visual identity consistent."]}
     ]}},
-  {name:"Ava", image:"assets/27501a9444bc.webp", tags:["Branding Identity","Apparel"], desc:"", back:"graphic", caseStudy:{
+  {name:"Ava", image:"assets/27501a9444bc.webp", imagePos:"50% 18%", tags:["Branding Identity","Apparel"], desc:"A playful identity for a young volleyball player", back:"graphic", caseStudy:{
     lede:"A playful identity for a young volleyball player, with logos and apparel mockups.", source: IH + "ava",
     heroImage:"assets/27501a9444bc.webp", heroFit:true, heroBg:"#e8e7e2", heroAlt:"A volleyball player in a double exposure, mid-jump as she tosses the ball above her.",
     facts:[["Category","Visual design / Apparel"],["Type","Freelance work"],["Year","2024"]],
@@ -469,7 +467,7 @@ const otherProjects = [
      {label:"Photos", title:"On the court", paras:["Game-day photos of the player the identity was made for."], gallery:[{src:"assets/42e2c9cb85e7.webp",w:1600,h:1067,size:"full",alt:"Two players in pink jerseys crouched and ready at the net during a tournament match."},{src:"assets/97f7deeb907b.webp",w:1000,h:1499,size:"half",alt:"A player seen from behind in a black PEAK number 7 jersey, hair in a bun, standing on a blue court."},{src:"assets/b6bc240b740d.webp",w:1000,h:1499,size:"half",alt:"A player in a black PEAK number 7 jersey mid-jump as she serves, with the ball above her."}]},
      {label:"Moodboard", title:"Brand inspo", paras:["The direction behind the identity: bubbly, friendly, humble and rooted, in a blue, pink and lavender palette with blocky, trendy type."], board:[{src:"assets/b2f3ae0feb85.webp",w:1800,h:1440,alt:"Barn Girl Volleyball brand inspiration moodboard with vibrant tone words, a colour palette and photos of pastel and bold athletic apparel.",d:{x:2,y:4,w:58,r:-2},m:{x:3,y:2,w:90,r:-2}},{src:"assets/021ed575ebbb.webp",w:656,h:656,alt:"Barn Girl Volleyball logo, a pink barn with a volleyball net and a blue ball, above a five-colour palette.",d:{x:63,y:5,w:33,r:3},m:{x:44,y:42,w:52,r:3}},{src:"assets/00fb58232293.webp",w:1800,h:877,alt:"Repeating pattern of the Barn Girl Volleyball logo in pink and blue on white.",d:{x:46,y:64,w:48,r:-3},m:{x:5,y:74,w:70,r:-3}}]}
     ]}},
-  {name:"UNT Intern", image:"assets/09d077f8c7b3.webp", imagePos:"50% 12%", tags:["Visual Design","Promotional Material"], desc:"", back:"graphic", caseStudy:{
+  {name:"UNT Intern", image:"assets/09d077f8c7b3.webp", imagePos:"50% 8%", tags:["Visual Design","Promotional Material"], desc:"Movie parodies that promoted campus events", back:"graphic", caseStudy:{
     lede:"In-house parodies of popular media that promoted events and helped students keep track of college schedules.", source: IH + "unt",
     heroImage:"assets/09d077f8c7b3.webp", heroFit:true, heroBg:"#1d1612", heroAlt:"Poster parody: the mascot eagle in a spider-print shirt, leaping between brick buildings with a backpack, above the line Swing into your summer schedule.",
     facts:[["Category","Visual design / Promotional material (digital and print media)"],["Industry","Education"],["Year","2019"]],
@@ -478,7 +476,7 @@ const otherProjects = [
      {label:"Registration", title:"Registration campaign", paras:["The parody pieces shown as framed mockups. Hover to see them lean out, or click one to see it full size."], posters:[{src:"assets/53d5852820d8.webp",w:1150,h:1725,name:"Registration poster",alt:"Spring registration poster: three stern mascot eagles above a speeding green sports car, with the line Get ready and go register."},{src:"assets/09d077f8c7b3.webp",w:1210,h:1870,name:"Summer schedule poster",alt:"Poster parody: the mascot eagle in a spider-print shirt, leaping between brick buildings with a backpack, above the line Swing into your summer schedule."},{src:"assets/224edf002ceb.webp",w:1800,h:1200,name:"Winter session ad",alt:"Digital display ad: the mascot dressed as an elf beside the line Register for Winter Session today, on a snowy light-blue background."}]},
      {label:"Message board", title:"The rest of the work", paras:["Brochures, posters, banners and postcards made for the university. Drag the pieces around the board, or click one to see it full size."], board:[{src:"assets/4e8e75acdb25.webp",w:1800,h:1016,name:"Moving Forward Together",alt:"Moving Forward Together presentation slide with three diamond-cropped photos of smiling students."},{src:"assets/2294e4454618.webp",w:1076,h:1672,name:"Diverse Campus, United Purpose",alt:"Green poster headed Diverse Campus, United Purpose with four campus photos."},{src:"assets/a4a44c294a0c.webp",w:1374,h:1676,name:"Impacting Communities",alt:"Research ad over an aerial photo of flooded streets, with a portrait of a logistics professor."},{src:"assets/16029579dc20.webp",w:1374,h:1676,name:"Fostering Innovation",alt:"Green research ad headed Fostering Innovation with a photo from an additive manufacturing lab."},{src:"assets/179f31ff23d1.webp",w:1162,h:1580,name:"UNT Live",alt:"Black event poster with a neon UNT Live sign and a list of five North Texas event dates."},{src:"assets/9b0a766dbeaa.webp",w:1246,h:1610,name:"Remember & Honor",alt:"Green veterans ad headed Remember and Honor, with a photo of a visitor reading memorial plaques."},{src:"assets/b9706300ed2a.webp",w:1094,h:640,name:"We can't wait to see you",alt:"Preview-day banner with students and the mascot, reading We can't wait to see you on campus."},{src:"assets/246fd6bb8eef.webp",w:796,h:640,name:"Apply Today banner ads",alt:"Set of green Apply Today web banner ads in five sizes."},{src:"assets/2287de755dcd.webp",w:1800,h:1026,name:"Trifold brochure, outside",alt:"Outside of a trifold brochure with admissions steps, a campus building photo and the clock tower."},{src:"assets/6eafe0938983.webp",w:1800,h:1025,name:"Trifold brochure, inside",alt:"Inside of the trifold brochure with biomedical engineering program information and a bronze eagle statue."},{src:"assets/bf4e43e3fcc8.webp",w:1522,h:1684,name:"The Best in North Texas",alt:"Green watercolor ad headed The Best in North Texas with four facts about the university."},{src:"assets/db263927e596.webp",back:"assets/554dd06c949f.webp",w:1430,h:776,name:"Sophomore postcard",alt:"Postcard front reading You'll love all that UNT has to offer, with circular photos of students and the mascot.",backAlt:"Postcard back with a welcome letter to prospective students and the mailing panel."},{src:"assets/06cf511c9a7f.webp",back:"assets/65778eca9017.webp",w:1500,h:802,name:"College of Science announcement postcard",alt:"Postcard front announcing Dr. Pamela Padilla as the new dean of the College of Science, with her portrait in a lab.",backAlt:"Postcard back headed Moving UNT's College of Science forward, with a paragraph about the college and the mailing panel."},{src:"assets/cc66765762bf.webp",w:600,h:560,name:"North Texan readership survey",alt:"Three issues of the North Texan magazine above the line Take the North Texan readership survey."},{src:"assets/201a9c5740c6.webp",w:750,h:286,name:"Register for Spring ticket banner",alt:"Web banner with a popcorn bucket and two admit-one tickets reading Reserve the courses you need, and secure your ticket to next semester."}], boardKind:"cork"}
     ]}},
-  {name:"Westmoor Brands", image:"assets/17d2292ff9c5.webp", imagePos:"50% 35%", tags:["Promotional Material","Apparel"], desc:"", back:"graphic", caseStudy:{
+  {name:"Westmoor Brands", image:"assets/17d2292ff9c5.webp", imagePos:"50% 8%", tags:["Promotional Material","Apparel"], desc:"Western wear marketing for two audiences", back:"graphic", caseStudy:{
     lede:"Marketing materials that speak to two western-wear customer groups.", source: IH + "western-wear",
     heroImage:"assets/213f401b7614.webp", heroPos:"50% 4%", heroAlt:"A rider in a denim western shirt, straw cowboy hat and leather chaps on a chestnut horse, with green hills behind.",
     facts:[["Category","Promotional material / Apparel"],["Industry","Western Wear / Apparel"],["Year","2025"]],
@@ -487,7 +485,7 @@ const otherProjects = [
      {label:"Web banners", title:"Slim banners on the page", paras:["Tall banners sit in the side rail of a shop page, shown inside a browser window. Switch the banner between the left and right side, let the page scroll itself once, then scroll it yourself. Click a banner to see the whole picture."], webbanners:[{"src": "assets/a9d2e3d7a576.webp", "w": 640, "h": 2400, "name": "New this season", "alt": "Tall web banner: a model in an embroidered western shirt dress, a trio of sleeveless styles and a blue embroidered blouse under the lines New this season and Hot off the rack.", "brand": "Panhandle Slim"}, {"src": "assets/020d0f0d738f.webp", "w": 640, "h": 2400, "name": "Vintage appeal", "alt": "Tall web banner: a man in a floral shirt beside a palomino horse under the line Vintage appeal, with a rider in a denim shirt and a Shop now button.", "brand": "Panhandle Slim"}, {"src": "assets/47a061376d81.webp", "w": 640, "h": 2400, "name": "It all starts here", "alt": "Tall web banner: a rider on a chestnut horse, a brand story panel and a snap shirt with callouts for snap buttons, mid rise and regular fit.", "brand": "Panhandle Slim"}, {"src": "assets/7e539cb95449.webp", "w": 800, "h": 3000, "name": "Must haves for spring", "alt": "Tall web banner: denim jeans with callouts for mid rise, ivory stitch back pockets, slim fit and medium wash, under the line Must haves for Spring.", "brand": "Rock & Roll Denim"}, {"src": "assets/855142296e50.webp", "w": 800, "h": 3000, "name": "New arrivals", "alt": "Tall web banner: a woman in a red cactus-print dress under New arrivals, then Spring refresh, Light and airy styles and a best-sellers spotlight.", "brand": "Rock & Roll Denim"}, {"src": "assets/e02a3f38cfa5.webp", "w": 800, "h": 3000, "name": "Spring break ready?", "alt": "Tall web banner: friends in hats at a fair under the line Spring break ready, with a Shop now button.", "brand": "Rock & Roll Denim"}]},
      {label:"Newsletters", title:"In the inbox", paras:["Full-length newsletters in a mail-app mockup. Pick a message from the list, scroll the email, or click the email to open it full size."], newsletters:[{"src": "assets/3471066f86ef.webp", "w": 1414, "h": 2000, "name": "Flash sale", "alt": "Newsletter: a blue Flash Sale panel promising up to 15 percent off, with three circular product photos and a Shop now button.", "brand": "Panhandle Slim", "subject": "Flash Sale: get up to 15% off", "preview": "Upgrade your look without the splurge. Our deals are here for a limited time.", "time": "9:41 AM"}, {"src": "assets/be6e33203ad8.webp", "w": 1414, "h": 2000, "name": "Cap collection", "alt": "Newsletter showing four trucker and dad caps with names, a free shipping strip and a Shop now button.", "brand": "Panhandle Slim", "subject": "Discover our new cap collection", "preview": "Every order ships free. Buy now, pay later.", "time": "Yesterday"}, {"src": "assets/eb8b3f567227.webp", "w": 1414, "h": 2000, "name": "New spring collection", "alt": "Newsletter: a man in a patterned shirt holding a rope in a barn, above New Spring Collection and a Shop now button.", "brand": "Panhandle Slim", "subject": "New spring collection is here", "preview": "Ready for warmer weather? Visit our store and check out our new spring collection.", "time": "Mon"}, {"src": "assets/2ffda93cff8d.webp", "w": 1414, "h": 2000, "name": "Don’t miss out", "alt": "Newsletter with a black background and a huge Don’t miss out headline, two festival photos and a Let’s connect button.", "brand": "Rock & Roll Denim", "subject": "Don’t miss out: these deals won’t last long", "preview": "Check out these exclusive deals to refresh your wardrobe.", "time": "Sun"}, {"src": "assets/55fb9000278a.webp", "w": 1414, "h": 2000, "name": "Your discount is here", "alt": "Newsletter with a duotone group photo under Your discount is here, then three new-arrival products with name tags.", "brand": "Rock & Roll Denim", "subject": "Your discount is here", "preview": "Stay ahead of the herd! Don’t miss out on the latest arrivals.", "time": "Oct 9"}, {"src": "assets/a2a2828cf5bb.webp", "w": 1414, "h": 2000, "name": "Western charm", "alt": "Newsletter on a leather texture: Western charm with all-day durability, jackets, dresses and tops, and up to 15 percent off sitewide.", "brand": "Rock & Roll Denim", "subject": "Western charm with all-day durability", "preview": "Get up to 15% off sitewide! Be on the lookout for seasonal deals.", "time": "Oct 2"}]}
     ]}},
-  {name:"Lunar Shades", image:"assets/6089dde8b893.webp", tags:["Branding Identity","Logo Design"], desc:"", back:"graphic", caseStudy:{
+  {name:"Lunar Shades", image:"assets/6089dde8b893.webp", tags:["Branding Identity","Logo Design"], desc:"A moon-inspired logo for window tinting", back:"graphic", caseStudy:{
     lede:"A moon and eclipse inspired logo identity for a window tinting business.", source: IH + "lunar-shades",
     heroImage:"assets/6089dde8b893.webp", heroFit:true, heroBg:"#000", heroAlt:"The Lunar Shades logo: gold lettering curved over a white crescent moon and a gold squeegee inside a circle of stars, on black.",
     facts:[["Category","Branding / Logo identity"],["Client","Lunar Shades"],["Year","2025"]],
@@ -1431,46 +1429,77 @@ function initVenn() {
   show(null);
 }
 
-// ---- Interactive user flow: step through a FigJam flow one node at a time; choices branch, Back retraces, Reset starts over ----
+// ---- User flow tree: plays example paths on its own until someone clicks a box, which traces how a person ends up there ----
 let flowData = null;
-const FLOW_KIND = {start:"Start", end:"End", step:"Step", choice:"Decision", options:"Choose one", input:"Input"};
-const flowHtml = f => (flowData = f, `<div class="uf" role="group" aria-label="Interactive user flow">
-  <ol class="uf-phases" aria-label="Stages">${f.phases.map((p, i) => `<li data-ph="${i}">${esc(p)}</li>`).join("")}</ol>
-  <div class="uf-stage">
-    <div class="uf-node" aria-live="polite"><span class="uf-kind"></span><div class="uf-shape"><span class="uf-text"></span></div></div>
-    <div class="uf-actions"></div>
-  </div>
-  <div class="uf-trailwrap"><span class="uf-trail-label">Your path</span><ol class="uf-trail"></ol></div>
-  <div class="uf-bar"><button type="button" class="uf-back">&#8249; Back</button><span class="uf-count"></span><button type="button" class="uf-map">See the full flow</button><button type="button" class="uf-reset">Reset</button></div>
+const flowHtml = f => (flowData = f, `<div class="cf" role="group" aria-label="Interactive user flow">
+  <p class="cf-cap"></p>
+  <div class="cf-view"></div>
+  <div class="cf-bar"><button type="button" class="cf-play" hidden>Play it again</button><button type="button" class="cf-map">See the full flow</button></div>
 </div>`);
 function initFlow() {
-  const root = caseView.querySelector(".uf"); if (!root || !flowData) return;
-  const f = flowData, N = f.nodes, $ = s => root.querySelector(s);
-  const node = $(".uf-node"), kind = $(".uf-kind"), text = $(".uf-text"), acts = $(".uf-actions"), trail = $(".uf-trail"), count = $(".uf-count"), back = $(".uf-back");
-  const phases = [...root.querySelectorAll(".uf-phases li")];
-  let path = [];   // [{id, via}] where via is the answer or option that led onward
-  const btn = (label, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "uf-go " + cls; b.innerHTML = label; b.addEventListener("click", fn); acts.appendChild(b); };
-  const go = (to, via) => { path[path.length - 1].via = via; path.push({id: to}); draw(true); };
-  function draw(moved) {
-    const cur = path[path.length - 1], n = N[cur.id];
-    node.dataset.kind = n.kind; kind.textContent = FLOW_KIND[n.kind]; text.textContent = n.t;
-    phases.forEach((li, i) => { li.classList.toggle("on", i === n.ph); li.classList.toggle("done", i < n.ph); });
-    acts.innerHTML = "";
-    if (n.kind === "choice") { btn("Yes", "yes", () => go(n.yes, "Yes")); btn("No", "no", () => go(n.no, "No")); }
-    else if (n.kind === "options") n.pick.forEach(([label, to]) => btn(esc(label), "opt", () => go(to, label)));
-    else if (n.kind === "end") btn("Start over", "again", reset);
-    else btn("Next &rarr;", "next", () => go(n.next, ""));
-    trail.innerHTML = path.map((p, i) => `<li class="k-${N[p.id].kind}${i === path.length - 1 ? " cur" : ""}">${esc(N[p.id].t)}${p.via ? `<em>${esc(p.via)}</em>` : ""}</li>`).join("");
-    trail.scrollLeft = trail.scrollWidth;
-    count.textContent = n.kind === "end" ? `Flow complete in ${path.length} steps` : `Step ${path.length}`;
-    back.disabled = path.length < 2;
-    if (moved) { node.classList.remove("pop"); void node.offsetWidth; node.classList.add("pop"); }
-  }
-  function reset() { path = [{id: f.start}]; draw(true); }
-  back.addEventListener("click", () => { if (path.length < 2) return; path.pop(); delete path[path.length - 1].via; draw(true); });
-  $(".uf-reset").addEventListener("click", reset);
-  $(".uf-map").addEventListener("click", () => openPiece([{src: f.image, name: "Pet Tracking: Escaped Pet user flow", alt: "The full Escaped Pet user flow from the FigJam board, from the real-time alert to the dashboard.", w: f.w, h: f.h}], 0));
-  path = [{id: f.start}]; draw(false);
+  const root = caseView.querySelector(".cf"); if (!root || !flowData) return;
+  const f = flowData, N = f.nodes, view = root.querySelector(".cf-view"), cap = root.querySelector(".cf-cap"), play = root.querySelector(".cf-play");
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tours = f.tours.map(t => ({cap: t.cap, path: t.path.split(" ")}));
+  let trail = [], width = 0, timer = 0, stopped = still, visible = false;
+  // shortest way to a box, ignoring the dashed returns
+  const route = to => {
+    const from = {[f.start]: null}, q = [f.start];
+    while (q.length) { const a = q.shift(); if (a === to) break;
+      for (const [x, y, , kind] of f.edges) if (x === a && kind !== "loop" && kind !== "back" && !(y in from)) { from[y] = a; q.push(y); } }
+    const out = []; for (let a = to; a; a = from[a]) out.unshift(a); return out;
+  };
+  const light = () => {
+    const pairs = new Set(trail.slice(1).map((b, i) => trail[i] + ">" + b));
+    view.querySelectorAll(".cf-e").forEach(e => { const on = pairs.has(e.dataset.e); e.classList.toggle("on", on); if (on) e.parentNode.appendChild(e); });
+    view.querySelectorAll(".cf-n").forEach(n => { n.classList.toggle("on", trail.includes(n.dataset.id)); n.classList.toggle("cur", trail[trail.length - 1] === n.dataset.id); });
+  };
+  const wrap = (t, max) => { const out = [""]; for (const w of t.split(" ")) { const l = out[out.length - 1]; if (l && (l + " " + w).length > max) out.push(w); else out[out.length - 1] = l ? l + " " + w : w; } return out; };
+  const draw = () => {
+    const W = view.clientWidth; if (!W) return; width = W;
+    const wide = W >= 620, fs = wide ? 13.5 : 11, lh = fs * 1.3, side = wide ? 34 : 18, right = wide ? 34 : 34, gap = wide ? 90 : 28;
+    const bw = Math.min(wide ? 250 : 200, (W - side - right - gap) / 2), rowH = wide ? 60 : 72, top = 8;
+    const X = wide ? (W - bw * 2 - gap - side * 2) / 2 + side : side, x1 = c => X + c * (bw + gap);
+    const box = {}, nodes = Object.entries(N).map(([id, n]) => {
+      const lines = wrap(n.t, Math.floor((bw - 20) / (fs * .54))), h = Math.max(36, lines.length * lh + 16), x = x1(n.c), cy = top + n.r * rowH + rowH / 2;
+      box[id] = {x, cx: x + bw / 2, y: cy - h / 2, cy, h, b: cy + h / 2, r: x + bw};
+      return `<g class="cf-n cf-${n.k || "step"}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(n.t)}. Trace how someone gets here."><rect x="${x}" y="${cy - h / 2}" width="${bw}" height="${h}" rx="${n.k === "end" ? h / 2 : 10}"/><text y="${cy - (lines.length - 1) * lh / 2 + fs * .35}" style="font-size:${fs}px">${lines.map((l, i) => `<tspan x="${x + bw / 2}" dy="${i ? lh : 0}" text-anchor="middle">${esc(l)}</tspan>`).join("")}</text></g>`;
+    }).join("");
+    const edges = f.edges.map(([a, b, label, kind]) => {
+      const A = box[a], B = box[b]; let d, lx, ly, cls = "";
+      if (kind === "loop") { const o = A.r + (wide ? 16 : 9); d = `M${A.r} ${A.cy}H${o}V${B.cy}H${B.r}`; lx = o + 3; ly = (A.cy + B.cy) / 2 + 3; cls = " dash"; }
+      else if (kind === "back") { const o = A.x - (wide ? 18 : 9); d = `M${A.x} ${A.cy}H${o}V${B.cy}H${B.x}`; cls = " dash"; }
+      else if (kind === "merge") { const y = B.y - 11; d = `M${A.cx} ${A.b}V${y}H${B.cx}V${B.y}`; lx = A.cx + 5; ly = A.b + 12; }
+      else if (kind === "join") { d = `M${A.x} ${A.cy}H${B.cx}V${B.y}`; lx = A.x - 16; ly = A.cy - 5; }
+      else if (N[a].c !== N[b].c) { d = `M${A.r} ${A.cy}H${B.x}`; lx = A.r + 5; ly = A.cy - 5; }
+      else { d = `M${A.cx} ${A.b}V${B.y}`; lx = A.cx + 5; ly = A.b + 12; }
+      const tag = label && kind !== "back" ? `<text class="cf-l" x="${lx}" y="${ly}">${esc(label)}</text>` : kind === "back" ? `<text class="cf-l" transform="translate(${A.x - (wide ? 23 : 12)} ${(A.cy + B.cy) / 2}) rotate(-90)" text-anchor="middle">${esc(label)}</text>` : "";
+      return `<g class="cf-e${cls}" data-e="${a}>${b}"><path d="${d}"/>${tag}</g>`;
+    }).join("");
+    const H = top * 2 + 19 * rowH;
+    view.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-label="Escaped pet user flow">${`<g class="cf-es">${edges}</g>`}${nodes}</svg>`;
+    light();
+  };
+  const tick = (t, i) => {
+    if (stopped || !root.isConnected) return;
+    if (!visible) { timer = setTimeout(() => tick(t, i), 400); return; }
+    const tour = tours[t];
+    if (i === 0) cap.textContent = tour.cap;
+    trail = tour.path.slice(0, i + 1); light();
+    timer = i < tour.path.length - 1 ? setTimeout(() => tick(t, i + 1), 340) : setTimeout(() => tick((t + 1) % tours.length, 0), 2800);
+  };
+  const pick = id => {
+    stopped = true; clearTimeout(timer); play.hidden = false;
+    trail = route(id); cap.setAttribute("aria-live", "polite"); cap.textContent = N[id].cap; light();
+  };
+  view.addEventListener("click", e => { const n = e.target.closest(".cf-n"); if (n) pick(n.dataset.id); });
+  view.addEventListener("keydown", e => { const n = e.target.closest(".cf-n"); if (n && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pick(n.dataset.id); } });
+  play.addEventListener("click", () => { stopped = false; play.hidden = true; cap.removeAttribute("aria-live"); tick(0, 0); });
+  root.querySelector(".cf-map").addEventListener("click", () => openPiece([{src: f.image, name: "Pet Tracking: Escaped Pet user flow", alt: "The full Escaped Pet user flow from the FigJam board, from the real-time alert to the dashboard.", w: f.w, h: f.h}], 0));
+  draw();
+  new ResizeObserver(() => requestAnimationFrame(() => { if (root.isConnected && view.clientWidth !== width) draw(); })).observe(view);
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(view);
+  if (still) { trail = tours[0].path; cap.textContent = tours[0].cap; light(); play.hidden = true; } else tick(0, 0);
 }
 
 // ---- Rotating mockups: a ring of pictures you can drag around, spin on its own, or step through ----
