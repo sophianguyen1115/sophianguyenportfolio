@@ -1911,6 +1911,15 @@ function initAnn() {
   });
 }
 
+// ---- Previous / next project at the end of a case study, within its own group (UI/UX or Design Work), skipping unfinished ones and wrapping around ----
+function pagerHtml(p) {
+  const list = (p.back ? otherProjects : projects).filter(x => !x.soon), i = list.indexOf(p); if (i < 0 || list.length < 2) return "";
+  const card = (q, dir) => {
+    const cat = (q.caseStudy.facts.find(f => f[0] === "Category") || [])[1] || "";
+    return `<button type="button" class="pn-card pn-${dir}" data-goto="${esc(q.name)}"><span class="pn-pic"><img src="${esc(q.image)}"${q.imagePos ? ` style="object-position:${esc(q.imagePos)}"` : ""} alt="" loading="lazy" decoding="async" draggable="false"></span><span class="pn-dir">${dir === "prev" ? "&larr; Previous project" : "Next project &rarr;"}</span><span class="pn-name">${esc(q.name)}</span><span class="pn-cat">${esc(cat)}</span></button>`;
+  };
+  return `<nav class="pn" aria-label="${p.back ? "More design work" : "More case studies"}">${card(list[(i - 1 + list.length) % list.length], "prev")}${card(list[(i + 1) % list.length], "next")}</nav>`;
+}
 function renderCase(p) {
   const c = p.caseStudy, n = esc(p.name);
   let hero;
@@ -1957,7 +1966,7 @@ function renderCase(p) {
       <p class="kicker">${p.back === "graphic" ? "In-House Design" : "Case study"}</p><p class="ptitle">${n}</p><ol class="toc" id="toc"></ol>
     </aside>
     <main><section class="chero"><h1>${n}</h1><p class="lede">${esc(c.lede)}</p>
-      <dl class="facts">${c.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>${hero}</section>${sections}</main>
+      <dl class="facts">${c.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>${hero}</section>${sections}${pagerHtml(p)}</main>
   </div>
   <footer><span>&copy; Sophia Nguyen</span><a class="fc" href="#" data-action="contact">Contact</a><a class="li" href="https://www.linkedin.com/in/sophia-c-nguyen" target="_blank" rel="noopener noreferrer" aria-label="Sophia Nguyen on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></footer>`;
   demo = caseView.querySelector(".demo");
@@ -2037,6 +2046,8 @@ function showHome(target) {
 caseView.addEventListener("click", e => {
   const a = e.target.closest("[data-home]");
   if (a) { e.preventDefault(); if (a.dataset.home === "graphic") setView("graphic"); else showHome(a.dataset.home); }
+  const g = e.target.closest("[data-goto]");
+  if (g) { const q = [...projects, ...otherProjects].find(x => x.name === g.dataset.goto); if (q) openProject(q); }
 });
 
 // ---- Side nav: built from each section's <h2>, so every case study gets it automatically ----
