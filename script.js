@@ -1523,7 +1523,8 @@ function openPiece(list, start) {
   let cur = start;
   // Size the image in pixels to fit the screen; left to flex layout, some browsers (Safari) shrink it to a thumbnail
   const fit = () => {
-    const w = img.naturalWidth, h = img.naturalHeight; if (!w || !h) return;
+    // prefer the size we were given; Safari can report a cached image's size late or from the previous picture
+    const p = list[cur] || {}, w = +p.w || img.naturalWidth, h = +p.h || img.naturalHeight; if (!w || !h) return;
     const k = Math.min(1, Math.min(innerWidth * .92, 1400) / w, innerHeight * .84 / h);
     img.style.width = Math.round(w * k) + "px"; img.style.height = Math.round(h * k) + "px";
   };
@@ -2130,7 +2131,7 @@ document.addEventListener("click", e => {
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-cert]"); if (!b) return;
   const all = [...document.querySelectorAll("[data-cert]")];
-  openPiece(all.map(x => { const im = x.querySelector("img"); return { src: x.dataset.src, name: x.dataset.name, alt: im.alt, w: im.width, h: im.height }; }), all.indexOf(b));
+  openPiece(all.map(x => { const im = x.querySelector("img"); return { src: x.dataset.src, name: x.dataset.name, alt: im.alt, w: +im.getAttribute("width"), h: +im.getAttribute("height") }; }), all.indexOf(b));
 });
 
 // ---- Home toolkit: the lid opens the case; a tool shows its note on hover, focus or tap ----
