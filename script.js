@@ -218,6 +218,12 @@ const VB_STORY = {who:"Mika", figure:"mika", theme:"vb", head:"Seven screens, in
   {src:"assets/461a9ab73ce3.webp", name:"Profile", phase:"Finding her people", face:"smile", say:"Now I can find who's going too.",
    text:"Her concert persona (selfies, shows attended, saved artists) personalizes the app and turns it into a community, so the next show is one she plans with other fans.", note:"Verified fans, not strangers in a group chat.",
    alt:"Profile screen: a user name over a photo, with 120 photos, 50K followers, 402 following, and Follow and Message buttons."}]};
+// Michael Waltrip Brewing tap handles in 3D: each beer's knob and its two side panels, cut from the flat print files
+const MWB_TAPS = [
+  {name:"Bristol Sunshine", style:"Tangerine Ale", ways:[["Cream", {knob:"assets/add282313a15.webp", front:"assets/74a72f91254d.webp", side:"assets/a01d773d9c05.webp", bg:"#fcfaf1"}], ["Black", {knob:"assets/87a1a690cd55.webp", front:"assets/c021bed81af9.webp", side:"assets/f403b1012220.webp", bg:"#000000"}], ["Blue", {knob:"assets/6dec9f74fd66.webp", front:"assets/939a55e44ab3.webp", side:"assets/dbaa1df59fdf.webp", bg:"#2e99cd"}]]},
+  {name:"High Banx", style:"Hazy IPA", ways:[["", {knob:"assets/3cd118176315.webp", front:"assets/9820777993a2.webp", side:"assets/b156e49db164.webp", bg:"#fcb041"}]]},
+  {name:"Slide Job", style:"West Coast IPA", ways:[["", {knob:"assets/172f5035ff30.webp", front:"assets/5f3d0dfebcfb.webp", side:"assets/75edff0c7a15.webp", bg:"#c39b6d"}]]},
+  {name:"Tupelo Honey", style:"Blonde Ale", ways:[["", {knob:"assets/5065f5808052.webp", front:"assets/2f0d63e5ccb0.webp", side:"assets/9d93f29b6f60.webp", bg:"#fdbe42"}]]}];
 // VibeBook storyboards as two moving filmstrips: the big picture drifts left, the close up drifts right
 const VB_BOARDS = [
   {label:"Big picture", dir:"l", items:[
@@ -392,6 +398,18 @@ projects.forEach((p, i) => grid.appendChild(makeRow(p, i)));
 const IH = "https://sophiacnguyen.framer.website/in-house-work/", AI = "https://sophiacnguyen.framer.website/design-and-ai/";
 const TBD = "[Add a one-line summary of this project.]";
 const otherProjects = [
+  {name:"Michael Waltrip Brewing", image:"assets/6914693d3511.webp", tags:["Packaging","Social Media"], desc:"Tap handles, cans and social for a brewery", back:"graphic", caseStudy:{
+    lede:"Design for the brewery of two-time Daytona 500 champion Michael Waltrip, from the taproom to retail shelves.",
+    heroImage:"assets/6914693d3511.webp", heroFit:true, heroBg:"#f4f0e8", heroAlt:"The Michael Waltrip Brewing Co. badge logo, a blue checkered shield.",
+    facts:[["Category","Packaging / Social media / Brand design"],["Role","Design Intern"],["Industry","Craft beer / Motorsports"],["Year","2026"]],
+    sections:[
+     {label:"Overview", title:"From the taproom to retail shelves", paras:["As a design intern at Michael Waltrip Brewing, I work across the brand: redesigning the brewery's beer tap handles and product packaging, creating digital promotions and apparel mockups for Michael Waltrip Brewing and its sister brand, Waltrip Burger, and designing large-scale murals that tell the story of Michael Waltrip, on and off the track.","I also produce social content for Instagram, YouTube Shorts and more that has helped grow the brand's following. Some of these designs were AI assisted, but not all."]},
+     {label:"Tap handles", title:"A redesigned tap lineup", paras:["Each beer gets its own color while the handles share one system: a round Michael Waltrip Brewing knob, racing stripes and the beer's name running down the side.","Drag any handle to spin the lineup, or use the arrow keys. Bristol Sunshine comes in three colorways."], taps3d:MWB_TAPS},
+     {label:"Packaging", title:"Victory Lap Golden Ale", paras:["A 16 oz co-brand can for the Winston-Salem Dash baseball team: a gold field stitched like a baseball, the WS Champions crest, and the purple Michael Waltrip Brewing band wrapping the base.","Drag the can to spin it, or use the arrow keys. Beside it is the finished can."], can3d:{label:"assets/9cbd146512f4.webp", w:2200, h:1383, photo:"assets/735f10522584.webp", pw:585, ph:1500, name:"Victory Lap Golden Ale label", alt:"Flat label for Victory Lap Golden Ale: gold background with baseball stitching, the WS Champions crest, a toast to the champs, and a purple Michael Waltrip Brewing band."}},
+     {label:"Talladega Light", title:"What cold beer tastes like", paras:["Social posts for Talladega Light that lean on ice, condensation and blue skies, with bold headlines and the Michael Waltrip Brewing wordmark in every frame."], gallery:[{src:"assets/32006def8d82.webp",w:1100,h:1100,size:"third",alt:"Talladega Light social post: What cold beer tastes like, over cans of Talladega Light on ice."},{src:"assets/b587b1c06fb1.webp",w:1100,h:1100,size:"third",alt:"Talladega Light social post: What cold beer tastes like, in brush lettering over two foaming cans being toasted."},{src:"assets/4c6c517f860f.webp",w:1100,h:1100,size:"third",alt:"Talladega Light social post: What cold beer tastes like, as a hand pulls a can from a cooler full of ice."},{src:"assets/9b92bab190e5.webp",w:1100,h:1100,size:"third",alt:"Talladega Light social post: What cold beer tastes like, beside a can on ice and a frosty branded pint on navy."},{src:"assets/c6094c15c8ab.webp",w:1100,h:1100,size:"third",alt:"Talladega Light social post: Keep it light, with a hand holding a can up against a blue sky."},{src:"assets/5db3e42a5e47.webp",w:1100,h:1100,size:"third",alt:"Talladega Light social post: Drink Dega, with a can and a branded pint clinking and splashing against the sky."}]},
+     {label:"Bristol Sunshine", title:"Sip some sunshine", paras:["Social posts for Bristol Sunshine Tangerine Ale in warm sunset and bar light, pairing the script Sunshine logo with short, upbeat lines."], gallery:[{src:"assets/b0526d621c9e.webp",w:1100,h:1100,size:"third",alt:"Bristol Sunshine social post: Sip some sunshine, with a can and a pint clinking in a warm bar."},{src:"assets/73340fd907af.webp",w:1100,h:1100,size:"third",alt:"Bristol Sunshine social post: Sunshine all day, with a can and a full pint on a wooden bar."},{src:"assets/730207cff107.webp",w:1100,h:1100,size:"third",alt:"Bristol Sunshine social post: Sunshine on tap, with a can and two pints raised over a wooden table."},{src:"assets/f985943c8230.webp",w:1100,h:1100,size:"third",alt:"Bristol Sunshine social post: Good times need sunshine, as a hand pours a can at golden hour."},{src:"assets/a01c83b814b6.webp",w:1100,h:1100,size:"third",alt:"Bristol Sunshine social post: Share the sunshine, with a can held up against a mountain sunset."},{src:"assets/aa000dc0b337.webp",w:1100,h:1100,size:"third",alt:"Bristol Sunshine social post: Sunshine served cold, with a can and a frosty pint at sunset."}]},
+     {label:"Logo concepts", title:"Octane Nights", paras:["Logo directions for Octane Nights, a car event with the tagline Ride Em or Drive Em: four concepts built in the client's red and cream palette, alongside my own designer ideas."], gallery:[{src:"assets/d2e4a01398fe.webp",w:2200,h:1296,size:"full",alt:"Octane Nights logo concepts on black: four client choices in red and cream, and three designer ideas, each with the tagline Ride Em or Drive Em."}]}
+    ]}},
   {name:"Blend Supply", image:"assets/20950abf89a2.webp", tags:["Visual Design","Promotional Material"], desc:"In-house marketing for aerospace and industry", back:"graphic", caseStudy:{
     lede:"In-house aerospace and industrial marketing: campaigns, customer collaborations and promotional material.", source: IH + "blend-supply",
     heroImage:"assets/20950abf89a2.webp",
@@ -1737,6 +1755,81 @@ function initLunarWindow() {
   const set = () => { r.style.setProperty("--tint", rg.value / 100); out.textContent = rg.value + "%"; }; rg.addEventListener("input", set); set();
 }
 const LL_OPTS = [["eclipse", "Eclipse reveal"], ["squeegee", "Squeegee wipe"], ["moonlight", "Moonlight fill"], ["shimmer", "Shimmer pulse"]];
+// ---- 3D can: the flat label wrapped round a cylinder of thin strips; drag (or arrow keys) to spin it, and it drifts on its own until touched ----
+let can3dData = null;
+const CN_N = 48;
+const can3dHtml = c => (can3dData = c, `<div class="cn3">
+  <figure class="cn3-stage">
+    <div class="cn3-view" tabindex="0" role="img" aria-label="A 3D Victory Lap Golden Ale can you can spin. ${esc(c.alt)}">
+      <div class="cn3-can">${Array.from({length: CN_N}, (_, i) => `<i style="--i:${i}"></i>`).join("")}</div>
+      <span class="cn3-shade" aria-hidden="true"></span>
+    </div>
+    <figcaption><span>Drag to spin</span><button type="button" class="cn3-flat">See the flat label</button></figcaption>
+  </figure>
+  <figure class="cn3-photo"><img src="${esc(c.photo)}" width="${c.pw}" height="${c.ph}" alt="The printed Victory Lap Golden Ale can." loading="lazy" decoding="async"><figcaption>The finished can</figcaption></figure>
+</div>`);
+function initCan3d() {
+  const root = caseView.querySelector(".cn3"); if (!root || !can3dData) return;
+  const c = can3dData, view = root.querySelector(".cn3-view"), can = root.querySelector(".cn3-can"), strips = [...can.children];
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let angle = 0, vel = still ? 0 : .18, drag = null, raf = 0, idle = !still;
+  const layout = () => {
+    const r = Math.min(120, view.clientWidth * .3), C = 2 * Math.PI * r, sw = C / CN_N, lh = C * c.h / c.w;
+    view.style.setProperty("--r", r + "px"); view.style.setProperty("--sw", sw + 0.6 + "px"); view.style.setProperty("--lh", lh + "px"); view.style.setProperty("--C", C + "px");
+    strips.forEach((s, i) => { const x = ((C / 2 - sw / 2 + i * sw) % C + C) % C; s.style.background = `linear-gradient(#a9a9a9,#ececec 30%,#cfcfcf 70%,#b9b9b9) top / 100% 35px no-repeat, linear-gradient(#bdbdbd,#e2e2e2 40%,#a3a3a3) bottom / 100% 35px no-repeat, url("${c.label}") ${-x}px 50% / ${C}px ${lh}px no-repeat #c9c9c9`; });
+  };
+  const paint = () => { can.style.transform = `rotateY(${-angle}deg)`; };
+  const tick = () => { if (!drag) { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } paint(); raf = root.isConnected && (drag || vel) ? requestAnimationFrame(tick) : 0; };
+  const go = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  view.addEventListener("pointerdown", e => { idle = false; view.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; view.classList.add("drag"); go(); });
+  view.addEventListener("pointermove", e => { if (!drag) return; const now = performance.now(); vel = (drag.lx - e.clientX) * .5 / Math.max(16, now - drag.t) * 16; drag.lx = e.clientX; drag.t = now; angle = drag.a + (drag.x - e.clientX) * .5; });
+  ["pointerup", "pointercancel"].forEach(t => view.addEventListener(t, () => { drag = null; view.classList.remove("drag"); go(); }));
+  view.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; angle += e.key === "ArrowRight" ? 20 : -20; can.classList.add("ease"); paint(); setTimeout(() => can.classList.remove("ease"), 400); } });
+  root.querySelector(".cn3-flat").addEventListener("click", () => openPiece([{src: c.label, name: c.name, alt: c.alt, w: c.w, h: c.h}], 0));
+  layout(); new ResizeObserver(() => requestAnimationFrame(() => { if (root.isConnected) layout(); })).observe(view); paint(); go();
+}
+// ---- 3D tap handles: a thick round knob on a four-sided body; dragging any handle spins the whole lineup ----
+let tapsData = null;
+const TP_RIM = 24;
+// shading is a dark layer over each face's art (a CSS filter here would flatten the 3D in Safari and show the backs)
+const tapFaces = w => `${[w.front, w.side, w.front, w.side].map((u, i) => `<span class="tp-f f${i}" data-u="${u}"></span>`).join("")}
+  <span class="tp-k front" data-u="${w.knob}"></span><span class="tp-k back" data-u="${w.knob}"></span>${Array.from({length: TP_RIM}, (_, i) => `<span class="tp-rim" style="--i:${i}"></span>`).join("")}`;
+const tapsHtml = list => (tapsData = list, `<div class="tp" tabindex="0" role="group" aria-label="Four 3D tap handles you can spin: ${list.map(t => t.name + " " + t.style).join(", ")}">
+  ${list.map((t, n) => `<figure class="tp-one" data-n="${n}"><div class="tp-view"><div class="tp-rig">${tapFaces(t.ways[0][1])}</div><span class="tp-fer" aria-hidden="true"></span></div>
+    <figcaption><b>${esc(t.name)}</b><span>${esc(t.style)}</span>${t.ways.length > 1 ? `<span class="tp-ways" role="group" aria-label="${esc(t.name)} colorway">${t.ways.map(([k, w], i) => `<button type="button" data-way="${i}" aria-pressed="${!i}" aria-label="${esc(k)}" style="--c:${w.bg}"></button>`).join("")}</span>` : ""}</figcaption></figure>`).join("")}
+</div>`);
+function initTaps() {
+  const root = caseView.querySelector(".tp"); if (!root || !tapsData) return;
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches, rigs = [...root.querySelectorAll(".tp-rig")];
+  let angle = -28, vel = still ? 0 : .22, drag = null, raf = 0, idle = !still;
+  const layout = () => {
+    const col = root.querySelector(".tp-view").clientWidth, D = Math.min(col * .86, 200), F = D / 3.4, Hb = F * 5.58, t = F * .42;
+    root.style.setProperty("--D", D + "px"); root.style.setProperty("--F", F + "px"); root.style.setProperty("--Hb", Hb + "px"); root.style.setProperty("--t", t + "px"); root.style.setProperty("--rw", Math.PI * D / TP_RIM + 1 + "px");
+  };
+  const paint = () => {
+    rigs.forEach(r => {
+      r.style.transform = `rotateX(-8deg) rotateY(${angle}deg)`;
+      const shade = (el, d) => { el.style.backgroundImage = `linear-gradient(rgba(0,0,0,${d.toFixed(3)}),rgba(0,0,0,${d.toFixed(3)})),url("${el.dataset.u}")`; };
+      r.querySelectorAll(".tp-f").forEach((f, i) => shade(f, .45 * (1 - Math.max(0, Math.cos((angle + i * 90) * Math.PI / 180)))));
+      const k = Math.abs(Math.cos(angle * Math.PI / 180)); r.querySelectorAll(".tp-k").forEach(f => shade(f, .3 * (1 - k)));
+    });
+  };
+  const tick = () => { if (!drag) { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } paint(); raf = root.isConnected && (drag || vel) ? requestAnimationFrame(tick) : 0; };
+  const go = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  root.querySelectorAll(".tp-view").forEach(v => {
+    v.addEventListener("pointerdown", e => { idle = false; v.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; root.classList.add("drag"); go(); });
+    v.addEventListener("pointermove", e => { if (!drag) return; const now = performance.now(); vel = (e.clientX - drag.lx) * .6 / Math.max(16, now - drag.t) * 16; drag.lx = e.clientX; drag.t = now; angle = drag.a + (e.clientX - drag.x) * .6; });
+    ["pointerup", "pointercancel"].forEach(ty => v.addEventListener(ty, () => { drag = null; root.classList.remove("drag"); go(); }));
+  });
+  root.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; angle += e.key === "ArrowRight" ? 22 : -22; paint(); } });
+  root.addEventListener("click", e => {
+    const b = e.target.closest("[data-way]"); if (!b) return;
+    const fig = b.closest(".tp-one"), t = tapsData[+fig.dataset.n], w = t.ways[+b.dataset.way][1];
+    fig.querySelectorAll("[data-way]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    fig.querySelector(".tp-rig").innerHTML = tapFaces(w); paint();
+  });
+  layout(); new ResizeObserver(() => requestAnimationFrame(() => { if (root.isConnected) layout(); })).observe(root); paint(); go();
+}
 const lunarLoaderHtml = () => `<div class="ll"><div class="ll-tabs" role="tablist" aria-label="Loading animation option">${LL_OPTS.map((o, i) => `<button type="button" role="tab" class="ll-tab" data-v="${o[0]}" aria-selected="${i === 0}"><b>${i + 1}</b>${o[1]}</button>`).join("")}</div>
   <div class="ll-phone"><div class="ll-notch" aria-hidden="true"></div><div class="ll-screen" data-v="eclipse" role="img" aria-label="Phone loading screen showing the Lunar Shades logo animation">
     <div class="ll-stars" aria-hidden="true"></div>
@@ -1952,6 +2045,8 @@ function renderCase(p) {
     ${s.screens ? screensHtml(s.screens) : ""}
     ${s.board ? boardHtml(s.board, s.boardKind) : ""}
     ${s.lunarWindow ? lunarWindowHtml() : ""}
+    ${s.can3d ? can3dHtml(s.can3d) : ""}
+    ${s.taps3d ? tapsHtml(s.taps3d) : ""}
     ${s.lunarLoader ? lunarLoaderHtml() : ""}
     ${s.webbanners ? wbHtml(s.webbanners) : ""}
     ${s.newsletters ? mailHtml(s.newsletters) : ""}
@@ -1991,7 +2086,7 @@ function renderCase(p) {
   initScreens();
   initBoard();
   initLunarWindow();
-  initLunarLoader();
+  initLunarLoader(); initCan3d(); initTaps();
   initWeb();
   initMail();
   animateCase();
