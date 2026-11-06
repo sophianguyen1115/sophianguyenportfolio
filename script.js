@@ -366,12 +366,16 @@ const projects = [
   {name:"NEST", image:"assets/f42ad47c5b77.webp", imageFit:true, tags:["UI/UX Design","App Design"], desc:"More to come!", soon:true, caseStudy:placeholderCase("NEST","nest","Roost. Rest. Roam. Temporary living made easy.")}
 ];
 
-// Pictures that haven't arrived yet stay hidden over their empty card, then fade in once, instead of blinking in
+// Pictures fade in softly instead of popping: ones still downloading wait hidden over their empty card, and on first load
+// the ones already there fade in too (one after another), so every picture arrives the same way
 const SOFT_IMGS = ".card .thumb img, .abh-p img, .polaroid img, .mw-cards img";
-function softImgs(root) {
+function softImgs(root, firstLoad) {
+  let n = 0;
   root.querySelectorAll(SOFT_IMGS).forEach(img => {
-    if (img.complete || img.dataset.soft) return;
-    img.dataset.soft = "1"; img.classList.add("ld");
+    if (img.dataset.soft) return;
+    img.dataset.soft = "1";
+    if (img.complete) { if (firstLoad) { img.style.setProperty("--imd", Math.min(n++, 8) * 70 + "ms"); img.classList.add("ldin"); } return; }
+    img.classList.add("ld");
     const done = () => { img.classList.remove("ld"); img.classList.add("ldin"); };
     img.addEventListener("load", done, {once: true}); img.addEventListener("error", done, {once: true});
   });
@@ -2585,4 +2589,4 @@ document.querySelectorAll("[data-tilt]").forEach(el => {
   }));
 })();
 addEventListener("pagehide", () => { try { sessionStorage.setItem("scroll", JSON.stringify({url: location.search, y: scrollY})); } catch (e) {} });
-softImgs(document);
+softImgs(document, true);
