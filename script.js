@@ -1847,9 +1847,9 @@ function initCan3d() {
 // ---- 3D tap handles: a thick round knob on a four-sided body; dragging any handle spins the whole lineup ----
 let tapsData = null;
 const TP_RIM = 24;
-// shading is a dark layer over each face's art (a CSS filter here would flatten the 3D in Safari and show the backs)
-const tapFaces = w => `${[w.front, w.side, w.front, w.side].map((u, i) => `<span class="tp-f f${i}" data-u="${u}"></span>`).join("")}
-  <span class="tp-k front" data-u="${w.knob}"></span><span class="tp-k back" data-u="${w.knob}"></span>${Array.from({length: TP_RIM}, (_, i) => `<span class="tp-rim" style="--i:${i}"></span>`).join("")}`;
+// shading is a separate dark layer over each face's art (a CSS filter here would flatten the 3D in Safari and show the backs)
+const tapFaces = w => `${[w.front, w.side, w.front, w.side].map((u, i) => `<span class="tp-f f${i}" style="background-image:url('${u}')"><i class="tp-sh"></i></span>`).join("")}
+  <span class="tp-k front" style="background-image:url('${w.knob}')"><i class="tp-sh"></i></span><span class="tp-k back" style="background-image:url('${w.knob}')"><i class="tp-sh"></i></span>${Array.from({length: TP_RIM}, (_, i) => `<span class="tp-rim" style="--i:${i}"></span>`).join("")}`;
 const tapsHtml = list => (tapsData = list, `<div class="tp" tabindex="0" role="group" aria-label="Four 3D tap handles you can spin: ${list.map(t => t.name + " " + t.style).join(", ")}">
   ${list.map((t, n) => `<figure class="tp-one" data-n="${n}"><div class="tp-view"><div class="tp-rig">${tapFaces(t.ways[0][1])}</div><span class="tp-fer" aria-hidden="true"></span></div>
     <figcaption><b>${esc(t.name)}</b><span>${esc(t.style)}</span>${t.ways.length > 1 ? `<span class="tp-ways" role="group" aria-label="${esc(t.name)} colorway">${t.ways.map(([k, w], i) => `<button type="button" data-way="${i}" aria-pressed="${!i}" aria-label="${esc(k)}" style="--c:${w.bg}"></button>`).join("")}</span>` : ""}</figcaption></figure>`).join("")}
@@ -1865,7 +1865,8 @@ function initTaps() {
   const paint = () => {
     rigs.forEach(r => {
       r.style.transform = `rotateX(-8deg) rotateY(${angle}deg)`;
-      const shade = (el, d) => { el.style.backgroundImage = `linear-gradient(rgba(0,0,0,${d.toFixed(3)}),rgba(0,0,0,${d.toFixed(3)})),url("${el.dataset.u}")`; };
+      // only the dark layer's opacity changes as it turns, so the artwork is never redrawn (redrawing it every frame made it flicker)
+      const shade = (el, d) => { el.firstChild.style.opacity = d.toFixed(3); };
       r.querySelectorAll(".tp-f").forEach((f, i) => shade(f, .45 * (1 - Math.max(0, Math.cos((angle + i * 90) * Math.PI / 180)))));
       const k = Math.abs(Math.cos(angle * Math.PI / 180)); r.querySelectorAll(".tp-k").forEach(f => shade(f, .3 * (1 - k)));
     });

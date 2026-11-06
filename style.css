@@ -2174,6 +2174,7 @@ button.abh-p{cursor:pointer}
 .tp-f.f2{transform:rotateY(180deg) translateZ(calc(var(--F) / 2))}
 .tp-f.f3{transform:rotateY(-90deg) translateZ(calc(var(--F) / 2))}
 .tp-k{position:absolute;left:0;top:0;width:var(--D);height:var(--D);border-radius:50%;background-size:100% 100%;background-color:#fff;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.tp-sh{position:absolute;inset:0;border-radius:inherit;background:#000;opacity:0;pointer-events:none}
 .tp-k.front{transform:translateZ(calc(var(--t) / 2))}
 .tp-k.back{transform:rotateY(180deg) translateZ(calc(var(--t) / 2))}
 .tp-rim{position:absolute;left:calc((var(--D) - var(--rw)) / 2);top:calc((var(--D) - var(--t)) / 2);width:var(--rw);height:var(--t);background:linear-gradient(90deg,#d9d9d9,#fafafa 50%,#d4d4d4);transform:rotateZ(calc(var(--i) * 15deg)) translateY(calc(var(--D) / -2)) rotateX(90deg)}
