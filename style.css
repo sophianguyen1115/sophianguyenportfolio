@@ -1,6 +1,10 @@
 @font-face{font-family:"Hanken Grotesk";font-style:normal;font-weight:100 900;font-display:swap;src:url("assets/38c3847fadc8.woff2") format("woff2")}
 @font-face{font-family:"Hanken Grotesk";font-style:italic;font-weight:600 700;font-display:swap;src:url("assets/6e8134c9e87d.woff2") format("woff2")}
 html.restoring body{visibility:hidden}
+img.ld{opacity:0}
+img.ldin{animation:imgin .4s ease both}
+@keyframes imgin{from{opacity:0}}
+@media(prefers-reduced-motion:reduce){img.ldin{animation:none}}
 :root{--font:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 :root{--bg:#fcfbf7;--ink:#3e3d3d;--muted:#7a746b;--water:#bfd6d8;--card:#f3f1ec;--line:#e2dcd2;--accent:#ba8b5a}
 *{box-sizing:border-box}

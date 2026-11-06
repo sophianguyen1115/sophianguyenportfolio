@@ -366,6 +366,16 @@ const projects = [
   {name:"NEST", image:"assets/f42ad47c5b77.webp", imageFit:true, tags:["UI/UX Design","App Design"], desc:"More to come!", soon:true, caseStudy:placeholderCase("NEST","nest","Roost. Rest. Roam. Temporary living made easy.")}
 ];
 
+// Pictures that haven't arrived yet stay hidden over their empty card, then fade in once, instead of blinking in
+const SOFT_IMGS = ".card .thumb img, .abh-p img, .polaroid img, .mw-cards img";
+function softImgs(root) {
+  root.querySelectorAll(SOFT_IMGS).forEach(img => {
+    if (img.complete || img.dataset.soft) return;
+    img.dataset.soft = "1"; img.classList.add("ld");
+    const done = () => { img.classList.remove("ld"); img.classList.add("ldin"); };
+    img.addEventListener("load", done, {once: true}); img.addEventListener("error", done, {once: true});
+  });
+}
 function makeCard(p) {
   const el = document.createElement("button");
   el.className = p.soon ? "card soon" : "card"; el.type = "button";
@@ -373,6 +383,7 @@ function makeCard(p) {
   if (!p.soon) el.addEventListener("click", () => openProject(p));
   el.innerHTML = `<div class="thumb" aria-hidden="true">${p.image ? `<span class="zoom${p.imageFit ? " fit" : ""}" style="position:absolute;inset:0;display:block;overflow:hidden;border-radius:18px"><img src="${p.image}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0;box-shadow:none${p.imagePos ? `;object-position:${esc(p.imagePos)}` : ""}" decoding="async" draggable="false"></span>` : `<span class="letter">${esc(p.name[0])}</span>`}</div>
     <div class="body"><div class="head"><h3><span class="t"></span></h3></div><p class="desc"></p></div>`;
+  softImgs(el);
   el.querySelector("h3 .t").textContent = p.name;
   el.querySelector(".desc").textContent = p.desc;
   return el;
@@ -535,6 +546,11 @@ function loadMoreOther() {
       setTimeout(() => { const c = makeCard(p); c.classList.add("rise"); k.replaceWith(c); if (i === rest.length - 1) { loader.classList.add("done"); setTimeout(() => loader.remove(), 700); } }, 260);
     }, i * 170));
   }, 900);
+}
+function loadAllOtherNow() {
+  if (!loader || !loader.isConnected || loader.dataset.busy) return;
+  loader.dataset.busy = "1"; clearTimeout(autoTimer);
+  otherProjects.slice(FIRST_BATCH).forEach(p => otherGrid.appendChild(makeCard(p))); loader.remove();
 }
 let autoTimer = 0;
 if (loader) {
@@ -2562,9 +2578,11 @@ document.querySelectorAll("[data-tilt]").forEach(el => {
   let saved = null; try { saved = JSON.parse(sessionStorage.getItem("scroll") || "null"); } catch (e) {}
   // reveal once the site font is in, so the side navigation never redraws in a fallback font
   const fonts = document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve();
+  if (page === "graphic" && saved && saved.url === location.search && saved.y > 0) loadAllOtherNow();
   fonts.then(() => requestAnimationFrame(() => {
     if (saved && saved.url === location.search) scrollTo({top: saved.y, behavior: "instant"});
     show();
   }));
 })();
 addEventListener("pagehide", () => { try { sessionStorage.setItem("scroll", JSON.stringify({url: location.search, y: scrollY})); } catch (e) {} });
+softImgs(document);
