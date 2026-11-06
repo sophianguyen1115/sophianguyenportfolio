@@ -1783,15 +1783,14 @@ function initLunarWindow() {
   const set = () => { r.style.setProperty("--tint", rg.value / 100); out.textContent = rg.value + "%"; }; rg.addEventListener("input", set); set();
 }
 const LL_OPTS = [["eclipse", "Eclipse reveal"], ["squeegee", "Squeegee wipe"], ["moonlight", "Moonlight fill"], ["shimmer", "Shimmer pulse"]];
-// ---- 3D cans: each flat label wraps a body of thin strips, with a silver shoulder, neck and base built from tilted rings (the shape of a real can);
-// drag (or arrow keys) to spin one, and they drift on their own until touched ----
+// ---- 3D cans: each flat label is wrapped round a can drawn on a canvas, column by column, with a silver shoulder, neck and base
+// shaped like a real can. A flat canvas keeps scrolling smooth (thousands of 3D pieces made it lag) and draws the same in every browser.
+// Drag (or arrow keys) to spin one; they drift on their own until touched, and only while on screen ----
 let can3dList = [];
-const CN_N = 40;
-// the silver ends, top down, in units of the can's radius: [height, radius at top, radius at bottom, metal]
-const CN_TOP = [[.06, .84, .84, "lip"], [.07, .8, .8, "neck"], [.18, .8, .92, "sh"], [.2, .92, 1, "sh2"], [.05, 1, 1, "band"]];
-const CN_BOT = [[.06, 1, 1, "band"], [.16, 1, .9, "base"], [.12, .9, .78, "foot"]];
-const CN_METAL = {lip: "linear-gradient(#7a7a7a,#e4e4e4 45%,#8a8a8a)", neck: "linear-gradient(#9c9c9c,#c2c2c2)", sh: "linear-gradient(#cdcdcd,#a9a9a9)", sh2: "linear-gradient(#b4b4b4,#dadada 60%,#bdbdbd)", band: "linear-gradient(#b9b9b9,#d6d6d6)", base: "linear-gradient(#c9c9c9,#959595)", foot: "linear-gradient(#8c8c8c,#666)"};
-const cn3View = c => { can3dList.push(c); return `<div class="cn3-view" tabindex="0" role="img" aria-label="A 3D ${esc(c.title)} can you can spin. ${esc(c.alt)}"><div class="cn3-can"></div><span class="cn3-shade" aria-hidden="true"></span></div>`; };
+// the silver ends, top down, in units of the can's radius: [height, radius at top, radius at bottom, light, dark]
+const CN_TOP = [[.06, .84, .84, "#e4e4e4", "#7a7a7a"], [.07, .8, .8, "#c2c2c2", "#9c9c9c"], [.18, .8, .92, "#cdcdcd", "#a9a9a9"], [.2, .92, 1, "#dadada", "#b4b4b4"], [.05, 1, 1, "#d6d6d6", "#b9b9b9"]];
+const CN_BOT = [[.06, 1, 1, "#d6d6d6", "#b9b9b9"], [.16, 1, .9, "#c9c9c9", "#959595"], [.12, .9, .78, "#8c8c8c", "#666"]];
+const cn3View = c => { can3dList.push(c); return `<div class="cn3-view" tabindex="0" role="img" aria-label="A 3D ${esc(c.title)} can you can spin. ${esc(c.alt)}"><canvas class="cn3-cv"></canvas></div>`; };
 const can3dHtml = c => `<div class="cn3">
   <figure class="cn3-stage">${cn3View(c)}
     <figcaption><span>Drag to spin</span><button type="button" class="cn3-flat">See the flat label</button></figcaption>
@@ -1802,42 +1801,59 @@ const cans3dHtml = list => `<div class="cn3 cn3-row"><figure class="cn3-stage">
   <div class="cn3-line" style="--n:${list.length}">${list.map(c => `<div class="cn3-one">${cn3View(c)}<b>${esc(c.size)}</b></div>`).join("")}</div>
   <figcaption><span>Drag any can to spin it</span><button type="button" class="cn3-flat">See the flat labels</button></figcaption>
 </figure></div>`;
-function buildCan(view, c) {
-  const can = view.querySelector(".cn3-can"), shade = view.querySelector(".cn3-shade"), row = view.closest(".cn3-row");
+// lays out one can for its current size; returns draw(angle) that paints it
+function canPainter(view, c, img) {
+  const cv = view.querySelector("canvas"), ctx = cv.getContext("2d"), row = view.closest(".cn3-row");
   const r = row ? Math.min(66, view.clientWidth * .4) : Math.min(110, view.clientWidth * .3), C = 2 * Math.PI * r, lh = C * c.h / c.w;
-  const rings = [...CN_TOP.map(([h, a, b, m]) => [h * r, a * r, b * r, m]), [lh, r, r, "label"], ...CN_BOT.map(([h, a, b, m]) => [h * r, a * r, b * r, m])];
-  const H = rings.reduce((t, x) => t + x[0], 0), step = 360 / CN_N;
-  view.style.height = H + (row ? 24 : 50) + "px"; can.style.width = 2 * r + "px"; can.style.height = H + "px";
-  let y = 0, html = "", pts = [];
-  rings.forEach(([h, ra, rb, m]) => {
-    const max = Math.max(ra, rb), w = 2 * Math.PI * max / CN_N + .8, slant = Math.hypot(h, rb - ra), tilt = Math.atan2(rb - ra, h) * 180 / Math.PI;
-    const inA = (1 - ra / max) * 50, inB = (1 - rb / max) * 50, clip = ra === rb ? "" : `clip-path:polygon(${inA}% 0,${100 - inA}% 0,${100 - inB}% 100%,${inB}% 100%);`;
-    for (let i = 0; i < CN_N; i++) {
-      const bg = m === "label" ? `url('${c.label}') ${-(((C / 2 - w / 2 + i * C / CN_N) % C + C) % C)}px 0 / ${C}px ${lh}px repeat-x #111` : CN_METAL[m];
-      html += `<i style="left:${r - w / 2}px;top:${y + h / 2 - slant / 2}px;width:${w}px;height:${slant + .6}px;transform:rotateY(${i * step}deg) translateZ(${(ra + rb) / 2}px) rotateX(${tilt}deg);background:${bg};${clip}"></i>`;
-    }
-    pts.push([ra, y], [rb, y + h]); y += h;
-  });
-  can.innerHTML = html;
-  const L = pts.map(([x, py]) => `${r - x}px ${py}px`), R = pts.map(([x, py]) => `${r + x}px ${py}px`).reverse();
-  shade.style.cssText = `width:${2 * r}px;height:${H}px;clip-path:polygon(${[...L, ...R].join(",")})`;
+  const top = CN_TOP.reduce((t, x) => t + x[0] * r, 0), H = top + lh + CN_BOT.reduce((t, x) => t + x[0] * r, 0);
+  const k = Math.min(2, devicePixelRatio || 1), W = Math.round(2 * r * k), Hp = Math.round(H * k);
+  view.style.height = H + (row ? 24 : 50) + "px"; cv.width = W; cv.height = Hp; cv.style.width = 2 * r + "px"; cv.style.height = H + "px";
+  const mk = () => { const o = document.createElement("canvas"); o.width = W; o.height = Hp; return o; };
+  // silhouette, silver parts and the round shading are drawn once; only the label is redrawn as it turns
+  const outline = g => { const pts = []; let y = 0; [...CN_TOP.map(x => [x[0] * r, x[1] * r, x[2] * r]), [lh, r, r], ...CN_BOT.map(x => [x[0] * r, x[1] * r, x[2] * r])].forEach(([h, a, b]) => { pts.push([a, y], [b, y + h]); y += h; });
+    g.beginPath(); pts.forEach(([x, py], i) => g[i ? "lineTo" : "moveTo"]((r - x) * k, py * k)); pts.slice().reverse().forEach(([x, py]) => g.lineTo((r + x) * k, py * k)); g.closePath(); };
+  const metal = mk(), mg = metal.getContext("2d"); let y = 0;
+  const part = ([h, a, b, lo, hi]) => { const g = mg.createLinearGradient(0, y * k, 0, (y + h * r) * k); g.addColorStop(0, hi); g.addColorStop(.5, lo); g.addColorStop(1, hi); mg.fillStyle = g;
+    mg.beginPath(); mg.moveTo((r - a * r) * k, y * k); mg.lineTo((r + a * r) * k, y * k); mg.lineTo((r + b * r) * k, (y + h * r) * k + .5); mg.lineTo((r - b * r) * k, (y + h * r) * k + .5); mg.fill(); y += h * r; };
+  CN_TOP.forEach(part); y += lh; CN_BOT.forEach(part);
+  const shade = mk(), sg = shade.getContext("2d"), gr = sg.createLinearGradient(0, 0, W, 0);
+  [[0, "rgba(10,8,5,.6)"], [.12, "rgba(10,8,5,.18)"], [.24, "rgba(255,255,255,.04)"], [.32, "rgba(255,255,255,.34)"], [.4, "rgba(255,255,255,.06)"], [.58, "rgba(10,8,5,0)"], [.76, "rgba(10,8,5,.14)"], [1, "rgba(10,8,5,.58)"]].forEach(([o, col]) => gr.addColorStop(o, col));
+  outline(sg); sg.fillStyle = gr; sg.fill();
+  // the label at the size it's drawn, and for each pixel column across the can, where on the label it looks
+  let tex = null; const ly = Math.round(top * k), lH = Math.round(lh * k), TW = Math.round(C * k), cols = [];
+  for (let x = 0; x < W; x++) { const a0 = Math.asin(Math.max(-1, x / W * 2 - 1)), a1 = Math.asin(Math.min(1, (x + 1) / W * 2 - 1)); cols.push([a0, Math.max(1, (a1 - a0) / (2 * Math.PI) * TW)]); }
+  const makeTex = () => { if (!img.complete || !img.naturalWidth) return; tex = document.createElement("canvas"); tex.width = TW; tex.height = lH; tex.getContext("2d").drawImage(img, 0, 0, TW, lH); };
+  makeTex();
+  return {ready: () => tex || (makeTex(), tex), draw(angle) {
+    ctx.clearRect(0, 0, W, Hp); ctx.drawImage(metal, 0, 0);
+    if (tex) { const base = angle * Math.PI / 180;
+      for (let x = 0; x < W; x++) { const [a, sw] = cols[x]; let u = ((base + a) / (2 * Math.PI) % 1 + 1) % 1 * TW; if (u + sw > TW) u = TW - sw; ctx.drawImage(tex, u, 0, sw, lH, x, ly, 1, lH); } }
+    else { ctx.fillStyle = "#cfcfcf"; ctx.fillRect(0, ly, W, lH); }
+    ctx.drawImage(shade, 0, 0);
+  }};
 }
 function initCan3d() {
   const views = [...caseView.querySelectorAll(".cn3-view")], list = can3dList; can3dList = [];
   if (!views.length) return;
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   views.forEach((view, n) => {
-    const c = list[n], can = view.querySelector(".cn3-can");
-    let angle = n * -25, vel = still ? 0 : .18, drag = null, raf = 0, idle = !still;
-    const paint = () => { can.style.transform = `rotateY(${-angle}deg)`; };
-    const tick = () => { if (!drag) { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } paint(); raf = view.isConnected && (drag || vel) ? requestAnimationFrame(tick) : 0; };
-    const go = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    view.addEventListener("pointerdown", e => { idle = false; view.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; view.classList.add("drag"); go(); });
+    const c = list[n], img = new Image();
+    let angle = n * -25, vel = still ? 0 : .18, drag = null, raf = 0, idle = !still, tgt = null, seen = false, pt = null, lastW = 0;
+    const paint = () => { if (pt) pt.draw(angle); };
+    const tick = () => {
+      if (!drag) { if (tgt !== null) { angle += (tgt - angle) * .22; if (Math.abs(tgt - angle) < .05) { angle = tgt; tgt = null; } } else { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } }
+      paint(); raf = view.isConnected && seen && (drag || vel || tgt !== null) ? requestAnimationFrame(tick) : 0;
+    };
+    const go = () => { if (!raf && seen) raf = requestAnimationFrame(tick); };
+    view.addEventListener("pointerdown", e => { idle = false; tgt = null; view.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; view.classList.add("drag"); go(); });
     view.addEventListener("pointermove", e => { if (!drag) return; const now = performance.now(); vel = (drag.lx - e.clientX) * .5 / Math.max(16, now - drag.t) * 16; drag.lx = e.clientX; drag.t = now; angle = drag.a + (drag.x - e.clientX) * .5; });
     ["pointerup", "pointercancel"].forEach(t => view.addEventListener(t, () => { drag = null; view.classList.remove("drag"); go(); }));
-    view.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; angle += e.key === "ArrowRight" ? 20 : -20; can.classList.add("ease"); paint(); setTimeout(() => can.classList.remove("ease"), 400); } });
-    let lastW = 0; const layout = () => { if (view.isConnected && view.clientWidth !== lastW) { lastW = view.clientWidth; buildCan(view, c); } };
-    layout(); new ResizeObserver(() => requestAnimationFrame(layout)).observe(view); paint(); go();
+    view.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; tgt = (tgt ?? angle) + (e.key === "ArrowRight" ? 20 : -20); go(); } });
+    const layout = () => { if (view.isConnected && view.clientWidth && view.clientWidth !== lastW) { lastW = view.clientWidth; pt = canPainter(view, c, img); paint(); } };
+    img.onload = () => { if (pt) { pt.ready(); paint(); } }; img.src = c.label;
+    // spin only while the can is on screen
+    if ("IntersectionObserver" in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; if (seen) go(); }, {rootMargin: "100px 0px"}).observe(view); else seen = true;
+    layout(); new ResizeObserver(() => requestAnimationFrame(layout)).observe(view); go();
   });
   caseView.querySelectorAll(".cn3").forEach(root => {
     const mine = list.filter((c, n) => root.contains(views[n]));
@@ -1857,7 +1873,7 @@ const tapsHtml = list => (tapsData = list, `<div class="tp" tabindex="0" role="g
 function initTaps() {
   const root = caseView.querySelector(".tp"); if (!root || !tapsData) return;
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches, rigs = [...root.querySelectorAll(".tp-rig")];
-  let angle = -28, vel = still ? 0 : .22, drag = null, raf = 0, idle = !still;
+  let angle = -28, vel = still ? 0 : .22, drag = null, raf = 0, idle = !still, seen = !("IntersectionObserver" in window);
   const layout = () => {
     const col = root.querySelector(".tp-view").clientWidth, D = Math.min(col * .86, 200), F = D / 3.4, Hb = F * 5.58, t = F * .42;
     root.style.setProperty("--D", D + "px"); root.style.setProperty("--F", F + "px"); root.style.setProperty("--Hb", Hb + "px"); root.style.setProperty("--t", t + "px"); root.style.setProperty("--rw", Math.PI * D / TP_RIM + 1 + "px");
@@ -1871,7 +1887,7 @@ function initTaps() {
       const k = Math.abs(Math.cos(angle * Math.PI / 180)); r.querySelectorAll(".tp-k").forEach(f => shade(f, .3 * (1 - k)));
     });
   };
-  const tick = () => { if (!drag) { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } paint(); raf = root.isConnected && (drag || vel) ? requestAnimationFrame(tick) : 0; };
+  const tick = () => { if (!drag) { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } paint(); raf = root.isConnected && (seen || drag) && (drag || vel) ? requestAnimationFrame(tick) : 0; };
   const go = () => { if (!raf) raf = requestAnimationFrame(tick); };
   root.querySelectorAll(".tp-view").forEach(v => {
     v.addEventListener("pointerdown", e => { idle = false; v.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; root.classList.add("drag"); go(); });
@@ -1885,7 +1901,9 @@ function initTaps() {
     fig.querySelectorAll("[data-way]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
     fig.querySelector(".tp-rig").innerHTML = tapFaces(w); paint();
   });
-  layout(); new ResizeObserver(() => requestAnimationFrame(() => { if (root.isConnected) layout(); })).observe(root); paint(); go();
+  layout(); new ResizeObserver(() => requestAnimationFrame(() => { if (root.isConnected) layout(); })).observe(root); paint();
+  // spin only while the handles are on screen
+  if ("IntersectionObserver" in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; if (seen) go(); }, {rootMargin: "100px 0px"}).observe(root); else go();
 }
 const lunarLoaderHtml = () => `<div class="ll"><div class="ll-tabs" role="tablist" aria-label="Loading animation option">${LL_OPTS.map((o, i) => `<button type="button" role="tab" class="ll-tab" data-v="${o[0]}" aria-selected="${i === 0}"><b>${i + 1}</b>${o[1]}</button>`).join("")}</div>
   <div class="ll-phone"><div class="ll-notch" aria-hidden="true"></div><div class="ll-screen" data-v="eclipse" role="img" aria-label="Phone loading screen showing the Lunar Shades logo animation">
