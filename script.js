@@ -1874,17 +1874,18 @@ function initCan3d() {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   views.forEach((view, n) => {
     const c = list[n], img = new Image();
-    let angle = (c.front ?? .45) * 360 - 12 + (n % 3) * 8, vel = still ? 0 : .18, drag = null, raf = 0, idle = !still, tgt = null, seen = false, pt = null, lastW = 0;
+    let angle = (c.front ?? .45) * 360 - 12 + (n % 3) * 8, vel = still ? 0 : .18, drag = null, raf = 0, dir = 1, tgt = null, seen = false, pt = null, lastW = 0;
     const paint = () => { if (pt) pt.draw(angle); };
     const tick = () => {
-      if (!drag) { if (tgt !== null) { angle += (tgt - angle) * .22; if (Math.abs(tgt - angle) < .05) { angle = tgt; tgt = null; } } else { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } }
+      if (!drag) { if (tgt !== null) { angle += (tgt - angle) * .22; if (Math.abs(tgt - angle) < .05) { angle = tgt; tgt = null; } } else { angle += vel; vel += ((still ? 0 : .18) * dir - vel) * .03; if (still && Math.abs(vel) < .02) vel = 0; } }
       paint(); raf = view.isConnected && seen && (drag || vel || tgt !== null) ? requestAnimationFrame(tick) : 0;
     };
     const go = () => { if (!raf && seen) raf = requestAnimationFrame(tick); };
-    view.addEventListener("pointerdown", e => { idle = false; tgt = null; view.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; view.classList.add("drag"); go(); });
+    view.addEventListener("pointerdown", e => { tgt = null; view.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; view.classList.add("drag"); go(); });
     view.addEventListener("pointermove", e => { if (!drag) return; const now = performance.now(); vel = (drag.lx - e.clientX) * .5 / Math.max(16, now - drag.t) * 16; drag.lx = e.clientX; drag.t = now; angle = drag.a + (drag.x - e.clientX) * .5; });
-    ["pointerup", "pointercancel"].forEach(t => view.addEventListener(t, () => { drag = null; view.classList.remove("drag"); go(); }));
-    view.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; tgt = (tgt ?? angle) + (e.key === "ArrowRight" ? 20 : -20); go(); } });
+    // after letting go it keeps the fling, then settles back to a steady spin in that direction
+    ["pointerup", "pointercancel"].forEach(t => view.addEventListener(t, () => { if (Math.abs(vel) > .05) dir = Math.sign(vel); drag = null; view.classList.remove("drag"); go(); }));
+    view.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); tgt = (tgt ?? angle) + (e.key === "ArrowRight" ? 20 : -20); go(); } });
     const layout = () => { if (view.isConnected && view.clientWidth && view.clientWidth !== lastW) { lastW = view.clientWidth; pt = canPainter(view, c, img); paint(); } };
     img.onload = () => { if (pt) { pt.ready(); paint(); } }; img.onerror = () => { if (!img.dataset.retry) { img.dataset.retry = 1; setTimeout(() => { img.src = c.label + "?r=1"; }, 1500); } }; img.src = c.label;
     // spin only while the can is on screen
@@ -1909,7 +1910,7 @@ const tapsHtml = list => (tapsData = list, `<div class="tp" tabindex="0" role="g
 function initTaps() {
   const root = caseView.querySelector(".tp"); if (!root || !tapsData) return;
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches, rigs = [...root.querySelectorAll(".tp-rig")];
-  let angle = -28, vel = still ? 0 : .22, drag = null, raf = 0, idle = !still, seen = !("IntersectionObserver" in window);
+  let angle = -28, vel = still ? 0 : .22, drag = null, raf = 0, dir = 1, seen = !("IntersectionObserver" in window);
   const layout = () => {
     const col = root.querySelector(".tp-view").clientWidth, D = Math.min(col * .86, 200), F = D / 3.4, Hb = F * 5.58, t = F * .42;
     root.style.setProperty("--D", D + "px"); root.style.setProperty("--F", F + "px"); root.style.setProperty("--Hb", Hb + "px"); root.style.setProperty("--t", t + "px"); root.style.setProperty("--rw", Math.PI * D / TP_RIM + 1 + "px");
@@ -1923,14 +1924,14 @@ function initTaps() {
       const k = Math.abs(Math.cos(angle * Math.PI / 180)); r.querySelectorAll(".tp-k").forEach(f => shade(f, .3 * (1 - k)));
     });
   };
-  const tick = () => { if (!drag) { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } paint(); raf = root.isConnected && (seen || drag) && (drag || vel) ? requestAnimationFrame(tick) : 0; };
+  const tick = () => { if (!drag) { angle += vel; vel += ((still ? 0 : .22) * dir - vel) * .03; if (still && Math.abs(vel) < .02) vel = 0; } paint(); raf = root.isConnected && (seen || drag) && (drag || vel) ? requestAnimationFrame(tick) : 0; };
   const go = () => { if (!raf) raf = requestAnimationFrame(tick); };
   root.querySelectorAll(".tp-view").forEach(v => {
-    v.addEventListener("pointerdown", e => { idle = false; v.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; root.classList.add("drag"); go(); });
+    v.addEventListener("pointerdown", e => { v.setPointerCapture(e.pointerId); drag = {x: e.clientX, a: angle, t: performance.now(), lx: e.clientX}; root.classList.add("drag"); go(); });
     v.addEventListener("pointermove", e => { if (!drag) return; const now = performance.now(); vel = (e.clientX - drag.lx) * .6 / Math.max(16, now - drag.t) * 16; drag.lx = e.clientX; drag.t = now; angle = drag.a + (e.clientX - drag.x) * .6; });
-    ["pointerup", "pointercancel"].forEach(ty => v.addEventListener(ty, () => { drag = null; root.classList.remove("drag"); go(); }));
+    ["pointerup", "pointercancel"].forEach(ty => v.addEventListener(ty, () => { if (Math.abs(vel) > .05) dir = Math.sign(vel); drag = null; root.classList.remove("drag"); go(); }));
   });
-  root.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; angle += e.key === "ArrowRight" ? 22 : -22; paint(); } });
+  root.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); angle += e.key === "ArrowRight" ? 22 : -22; paint(); } });
   root.addEventListener("click", e => {
     const b = e.target.closest("[data-way]"); if (!b) return;
     const fig = b.closest(".tp-one"), t = tapsData[+fig.dataset.n], w = t.ways[+b.dataset.way][1];
