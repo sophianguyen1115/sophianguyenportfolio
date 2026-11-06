@@ -2556,9 +2556,15 @@ document.querySelectorAll("[data-tilt]").forEach(el => {
   const p = slug && [...projects, ...otherProjects].find(x => slugOf(x) === slug);
   if (p) openProject(p); else if (page && page !== "case" && VIEWS[page]) setView(page);
   else if (slug || page) try { history.replaceState(null, "", location.pathname); } catch (e) {}
-  if (!p && !(page && VIEWS[page])) return;
+  const show = () => document.documentElement.classList.remove("restoring");
+  if (!p && !(page && VIEWS[page])) return show();
   try { history.scrollRestoration = "manual"; } catch (e) {}
   let saved = null; try { saved = JSON.parse(sessionStorage.getItem("scroll") || "null"); } catch (e) {}
-  if (saved && saved.url === location.search) requestAnimationFrame(() => scrollTo({top: saved.y, behavior: "instant"}));
+  // reveal once the site font is in, so the side navigation never redraws in a fallback font
+  const fonts = document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve();
+  fonts.then(() => requestAnimationFrame(() => {
+    if (saved && saved.url === location.search) scrollTo({top: saved.y, behavior: "instant"});
+    show();
+  }));
 })();
 addEventListener("pagehide", () => { try { sessionStorage.setItem("scroll", JSON.stringify({url: location.search, y: scrollY})); } catch (e) {} });
