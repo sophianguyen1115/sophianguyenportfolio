@@ -1788,8 +1788,8 @@ const LL_OPTS = [["eclipse", "Eclipse reveal"], ["squeegee", "Squeegee wipe"], [
 // Drag (or arrow keys) to spin one; they drift on their own until touched, and only while on screen ----
 let can3dList = [];
 // the silver ends, top down, in units of the can's radius: [height, radius at top, radius at bottom, light, dark]
-const CN_TOP = [[.06, .84, .84, "#e4e4e4", "#7a7a7a"], [.07, .8, .8, "#c2c2c2", "#9c9c9c"], [.18, .8, .92, "#cdcdcd", "#a9a9a9"], [.2, .92, 1, "#dadada", "#b4b4b4"], [.05, 1, 1, "#d6d6d6", "#b9b9b9"]];
-const CN_BOT = [[.06, 1, 1, "#d6d6d6", "#b9b9b9"], [.16, 1, .9, "#c9c9c9", "#959595"], [.12, .9, .78, "#8c8c8c", "#666"]];
+const CN_TOP = [[.06, .84, .84, "#e2e3e5", "#8d8f92"], [.07, .8, .8, "#c4c6c9", "#929498"], [.18, .8, .92, "#d3d5d8", "#a2a4a8"], [.2, .92, 1, "#dcdee1", "#b0b2b6"], [.05, 1, 1, "#d2d4d7", "#aeb0b4"]];
+const CN_BOT = [[.06, 1, 1, "#d2d4d7", "#aeb0b4"], [.16, 1, .9, "#c9cbce", "#919397"], [.12, .9, .78, "#9a9ca0", "#676a6e"]];
 const cn3View = c => { can3dList.push(c); return `<div class="cn3-view" tabindex="0" role="img" aria-label="A 3D ${esc(c.title)} can you can spin. ${esc(c.alt)}"><canvas class="cn3-cv"></canvas></div>`; };
 const can3dHtml = c => `<div class="cn3">
   <figure class="cn3-stage">${cn3View(c)}
@@ -1801,35 +1801,68 @@ const cans3dHtml = list => `<div class="cn3 cn3-row"><figure class="cn3-stage">
   <div class="cn3-line" style="--n:${list.length}">${list.map(c => `<div class="cn3-one">${cn3View(c)}<b>${esc(c.size)}</b></div>`).join("")}</div>
   <figcaption><span>Drag any can to spin it</span><button type="button" class="cn3-flat">See the flat labels</button></figcaption>
 </figure></div>`;
-// lays out one can for its current size; returns draw(angle) that paints it
+// lays out one can for its current size; returns draw(angle) that paints it. Seen from slightly above, so the lid is an oval and
+// every edge curves round the can; condensation droplets sit on the label and turn with it
 function canPainter(view, c, img) {
   const cv = view.querySelector("canvas"), ctx = cv.getContext("2d"), row = view.closest(".cn3-row");
-  const r = row ? Math.min(66, view.clientWidth * .4) : Math.min(110, view.clientWidth * .3), C = 2 * Math.PI * r, lh = C * c.h / c.w;
-  const top = CN_TOP.reduce((t, x) => t + x[0] * r, 0), H = top + lh + CN_BOT.reduce((t, x) => t + x[0] * r, 0);
-  const k = Math.min(2, devicePixelRatio || 1), W = Math.round(2 * r * k), Hp = Math.round(H * k);
-  view.style.height = H + (row ? 24 : 50) + "px"; cv.width = W; cv.height = Hp; cv.style.width = 2 * r + "px"; cv.style.height = H + "px";
-  const mk = () => { const o = document.createElement("canvas"); o.width = W; o.height = Hp; return o; };
-  // silhouette, silver parts and the round shading are drawn once; only the label is redrawn as it turns
-  const outline = g => { const pts = []; let y = 0; [...CN_TOP.map(x => [x[0] * r, x[1] * r, x[2] * r]), [lh, r, r], ...CN_BOT.map(x => [x[0] * r, x[1] * r, x[2] * r])].forEach(([h, a, b]) => { pts.push([a, y], [b, y + h]); y += h; });
-    g.beginPath(); pts.forEach(([x, py], i) => g[i ? "lineTo" : "moveTo"]((r - x) * k, py * k)); pts.slice().reverse().forEach(([x, py]) => g.lineTo((r + x) * k, py * k)); g.closePath(); };
-  const metal = mk(), mg = metal.getContext("2d"); let y = 0;
-  const part = ([h, a, b, lo, hi]) => { const g = mg.createLinearGradient(0, y * k, 0, (y + h * r) * k); g.addColorStop(0, hi); g.addColorStop(.5, lo); g.addColorStop(1, hi); mg.fillStyle = g;
-    mg.beginPath(); mg.moveTo((r - a * r) * k, y * k); mg.lineTo((r + a * r) * k, y * k); mg.lineTo((r + b * r) * k, (y + h * r) * k + .5); mg.lineTo((r - b * r) * k, (y + h * r) * k + .5); mg.fill(); y += h * r; };
-  CN_TOP.forEach(part); y += lh; CN_BOT.forEach(part);
-  const shade = mk(), sg = shade.getContext("2d"), gr = sg.createLinearGradient(0, 0, W, 0);
-  [[0, "rgba(10,8,5,.6)"], [.12, "rgba(10,8,5,.18)"], [.24, "rgba(255,255,255,.04)"], [.32, "rgba(255,255,255,.34)"], [.4, "rgba(255,255,255,.06)"], [.58, "rgba(10,8,5,0)"], [.76, "rgba(10,8,5,.14)"], [1, "rgba(10,8,5,.58)"]].forEach(([o, col]) => gr.addColorStop(o, col));
-  outline(sg); sg.fillStyle = gr; sg.fill();
-  // the label at the size it's drawn, and for each pixel column across the can, where on the label it looks
-  let tex = null; const ly = Math.round(top * k), lH = Math.round(lh * k), TW = Math.round(C * k), cols = [];
-  for (let x = 0; x < W; x++) { const a0 = Math.asin(Math.max(-1, x / W * 2 - 1)), a1 = Math.asin(Math.min(1, (x + 1) / W * 2 - 1)); cols.push([a0, Math.max(1, (a1 - a0) / (2 * Math.PI) * TW)]); }
-  const makeTex = () => { if (!img.complete || !img.naturalWidth) return; tex = document.createElement("canvas"); tex.width = TW; tex.height = lH; tex.getContext("2d").drawImage(img, 0, 0, TW, lH); };
+  const r = row ? Math.min(66, view.clientWidth * .4) : Math.min(110, view.clientWidth * .3), C = 2 * Math.PI * r, lh = C * c.h / c.w, E = .11;
+  const k = Math.min(2, devicePixelRatio || 1), px = r * .25, pt = E * r * .9 + 2;
+  const top = CN_TOP.reduce((t, x) => t + x[0] * r, 0), H = top + lh + CN_BOT.reduce((t, x) => t + x[0] * r, 0), pb = E * r + 14;
+  const Wc = 2 * r + 2 * px, Hc = pt + H + pb, W = Math.round(Wc * k), Hp = Math.round(Hc * k), cx = Wc / 2;
+  view.style.height = Hc + (row ? 10 : 36) + "px"; cv.width = W; cv.height = Hp; cv.style.width = Wc + "px"; cv.style.height = Hc + "px";
+  let seed = c.label.length * 7919 + 17; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const drops = (g, x0, y0, w, h, n, s) => { for (let i = 0; i < n; i++) { const x = x0 + rnd() * w, y = y0 + rnd() * h, d = (.5 + rnd() * rnd() * 2.6) * s;
+    g.fillStyle = "rgba(255,255,255,.2)"; g.beginPath(); g.arc(x, y, d, 0, 7); g.fill();
+    g.strokeStyle = "rgba(0,0,0,.26)"; g.lineWidth = d * .38; g.beginPath(); g.arc(x, y + d * .1, d * .8, .3, Math.PI - .3); g.stroke();
+    g.fillStyle = "rgba(255,255,255,.75)"; g.beginPath(); g.arc(x - d * .35, y - d * .35, d * .28, 0, 7); g.fill(); } };
+  const grain = (g, amt) => { const c2 = g.canvas, d = g.getImageData(0, 0, c2.width, c2.height), a = d.data;
+    for (let i = 0; i < a.length; i += 4) { if (!a[i + 3]) continue; const n = (rnd() - .5) * amt; a[i] += n; a[i + 1] += n; a[i + 2] += n; } g.putImageData(d, 0, 0); };
+  const mk = () => { const o = document.createElement("canvas"); o.width = W; o.height = Hp; const g = o.getContext("2d"); g.scale(k, k); return [o, g]; };
+  // silver body: each band runs between the front halves of two ovals
+  const [metal, mg] = mk(); let y = pt;
+  const band = ([h, a, b, lo, hi], y0) => { const ra = a * r, rb = b * r, y1 = y0 + h * r, g = mg.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, hi); g.addColorStop(.5, lo); g.addColorStop(1, hi);
+    mg.fillStyle = g; mg.beginPath(); mg.ellipse(cx, y0, ra, E * ra, 0, Math.PI, 0, true); mg.lineTo(cx + rb, y1); mg.ellipse(cx, y1 + .4, rb, E * rb, 0, 0, Math.PI, false); mg.closePath(); mg.fill(); };
+  CN_TOP.forEach(b => { band(b, y); y += b[0] * r; }); const ly = y; y += lh; CN_BOT.forEach(b => { band(b, y); y += b[0] * r; });
+  // the lid: a pale oval with a shadowed recess and a rolled rim
+  const la = CN_TOP[0][1] * r, lg = mg.createLinearGradient(cx - la, 0, cx + la, 0); lg.addColorStop(0, "#9a9a9a"); lg.addColorStop(.35, "#f2f2f2"); lg.addColorStop(1, "#a6a6a6");
+  mg.fillStyle = lg; mg.beginPath(); mg.ellipse(cx, pt, la, E * la, 0, 0, 7); mg.fill();
+  mg.fillStyle = "rgba(60,60,60,.22)"; mg.beginPath(); mg.ellipse(cx, pt + E * la * .12, la * .86, E * la * .8, 0, 0, 7); mg.fill();
+  mg.strokeStyle = "rgba(255,255,255,.7)"; mg.lineWidth = 1; mg.beginPath(); mg.ellipse(cx, pt, la - .5, E * la - .5, 0, Math.PI, 0, true); mg.stroke();
+  // droplets on the shoulder and base
+  mg.save(); mg.globalCompositeOperation = "source-atop"; drops(mg, cx - r, pt + E * la * 2 + 2, 2 * r, top - E * la * 2 - 5, Math.round(r * .9), 1.1); drops(mg, cx - r, ly + lh + 2, 2 * r, H - top - lh - 4, Math.round(r * .5), 1); mg.restore();
+  // brushed, frosted aluminium: fine grain over the silver, plus a dense layer of tiny droplets
+  mg.save(); mg.globalCompositeOperation = "source-atop"; drops(mg, cx - r, pt + E * la * 2 + 2, 2 * r, top - E * la * 2 - 5, Math.round(r * 2.4), .45); drops(mg, cx - r, ly + lh + 2, 2 * r, H - top - lh - 4, Math.round(r * 1.2), .45); mg.restore();
+  grain(mg, 26);
+  // a soft line where the label meets the metal
+  const edge = (yy, up) => { const g = mg.createLinearGradient(0, yy - (up ? 3 : 0), 0, yy + (up ? 0 : 3)); g.addColorStop(up ? 1 : 0, "rgba(0,0,0,.25)"); g.addColorStop(up ? 0 : 1, "rgba(0,0,0,0)"); return g; };
+  // the round light: dark edges, a sharp highlight left of centre, a softer one on the right and a thin rim light
+  const sh = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
+  // soft studio light like a photo: edges fall away into shadow and a broad, gentle glow sits left of centre (no shiny streak)
+  for (let i = 0; i <= 48; i++) { const x = i / 24 - 1, dark = .58 * Math.pow(1 - Math.sqrt(Math.max(0, 1 - x * x)), .7),
+    lite = .1 * Math.exp(-(((x + .3) / .38) ** 2)) + .04 * Math.exp(-(((x - .5) / .2) ** 2)), v = lite - dark;
+    sh.addColorStop(i / 48, v > 0 ? `rgba(255,255,255,${v.toFixed(3)})` : `rgba(0,0,0,${(-v).toFixed(3)})`); }
+  // the label at the size it's drawn (with its droplets), and for each pixel column across the can, where on the label it looks and how far it dips
+  let tex = null; const TW = Math.round(C * k), lH = Math.round(lh * k), x0 = Math.round((cx - r) * k), cw = Math.round(2 * r * k), cols = [];
+  for (let x = 0; x < cw; x++) { const n0 = Math.max(-1, x / cw * 2 - 1), n1 = Math.min(1, (x + 1) / cw * 2 - 1), a0 = Math.asin(n0), a1 = Math.asin(n1), m = (n0 + n1) / 2;
+    cols.push([a0, Math.max(1, (a1 - a0) / (2 * Math.PI) * TW), Math.round((ly + E * r * Math.sqrt(1 - m * m)) * k)]); }
+  const makeTex = () => { if (!img.complete || !img.naturalWidth) return; tex = document.createElement("canvas"); tex.width = TW; tex.height = lH; const g = tex.getContext("2d");
+    g.drawImage(img, 0, 0, TW, lH); seed = c.label.length * 31 + 5; drops(g, 0, 0, TW, lH, Math.round(TW * lH / (k * k * 200)), k * 1.15); drops(g, 0, 0, TW, lH, Math.round(TW * lH / (k * k * 70)), k * .45); grain(g, 14); };
   makeTex();
   return {ready: () => tex || (makeTex(), tex), draw(angle) {
-    ctx.clearRect(0, 0, W, Hp); ctx.drawImage(metal, 0, 0);
-    if (tex) { const base = angle * Math.PI / 180;
-      for (let x = 0; x < W; x++) { const [a, sw] = cols[x]; let u = ((base + a) / (2 * Math.PI) % 1 + 1) % 1 * TW; if (u + sw > TW) u = TW - sw; ctx.drawImage(tex, u, 0, sw, lH, x, ly, 1, lH); } }
-    else { ctx.fillStyle = "#cfcfcf"; ctx.fillRect(0, ly, W, lH); }
-    ctx.drawImage(shade, 0, 0);
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, Hp); ctx.drawImage(metal, 0, 0);
+    const base = angle * Math.PI / 180;
+    for (let x = 0; x < cw; x++) { const [a, sw, yy] = cols[x];
+      if (tex) { let u = ((base + a) / (2 * Math.PI) % 1 + 1) % 1 * TW; if (u + sw > TW) u = TW - sw; ctx.drawImage(tex, u, 0, sw, lH, x0 + x, yy, 1, lH); }
+      else { ctx.fillStyle = "#cfcfcf"; ctx.fillRect(x0 + x, yy, 1, lH); } }
+    ctx.scale(k, k);
+    ctx.globalCompositeOperation = "source-atop";
+    ctx.fillStyle = sh; ctx.fillRect(0, 0, Wc, Hc);
+    ctx.fillStyle = edge(ly, false); ctx.fillRect(0, ly - 1, Wc, E * r * 2 + 5); 
+    // ground shadow, behind the can
+    ctx.globalCompositeOperation = "destination-over";
+    const gy = pt + H + 2, sg = ctx.createRadialGradient(cx, gy, 0, cx, gy, r * 1.05); sg.addColorStop(0, "rgba(40,30,20,.32)"); sg.addColorStop(1, "rgba(40,30,20,0)");
+    ctx.save(); ctx.translate(cx, gy); ctx.scale(1, E * 1.6 + .08); ctx.translate(-cx, -gy); ctx.fillStyle = sg; ctx.fillRect(cx - r * 1.1, gy - r * 1.1, r * 2.2, r * 2.2); ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
   }};
 }
 function initCan3d() {
@@ -1838,7 +1871,7 @@ function initCan3d() {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   views.forEach((view, n) => {
     const c = list[n], img = new Image();
-    let angle = n * -25, vel = still ? 0 : .18, drag = null, raf = 0, idle = !still, tgt = null, seen = false, pt = null, lastW = 0;
+    let angle = (c.front ?? .45) * 360 - 12 + (n % 3) * 8, vel = still ? 0 : .18, drag = null, raf = 0, idle = !still, tgt = null, seen = false, pt = null, lastW = 0;
     const paint = () => { if (pt) pt.draw(angle); };
     const tick = () => {
       if (!drag) { if (tgt !== null) { angle += (tgt - angle) * .22; if (Math.abs(tgt - angle) < .05) { angle = tgt; tgt = null; } } else { angle += vel; if (!idle) vel *= .95; if (!idle && Math.abs(vel) < .02) vel = 0; } }
