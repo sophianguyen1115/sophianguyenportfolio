@@ -562,7 +562,12 @@ function setView(name) {
   for (const [k, el] of Object.entries(VIEWS)) el.hidden = k !== name;
   siteNav.hidden = name === "case";   // case studies use their own side navigation
   scrollTo({top: 0, behavior: "instant"}); syncNav();
+  // keep the page in the address bar so a reload (or a shared link) opens the same page
+  const q = name === "home" ? "" : name === "case" ? (caseProject ? "?p=" + slugOf(caseProject) : location.search) : "?page=" + name;
+  try { history.replaceState(null, "", location.pathname + q); } catch (e) {}
 }
+let caseProject = null;
+const slugOf = p => p.name.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 let demo = null, tocObserver = null;
 
 // ---- Slide deck: a clickable presentation (arrows, dots, keyboard, swipe, full screen) ----
@@ -2151,6 +2156,7 @@ function animateCase() {
 
 
 function openProject(p) {
+  caseProject = p;
   renderCase(p);
   setView("case");
   if (!demo) return;
@@ -2543,3 +2549,16 @@ document.querySelectorAll("[data-tilt]").forEach(el => {
   el.addEventListener("pointerleave", settle);
   el.addEventListener("pointercancel", settle);
 });
+
+// ---- Reload: reopen the page named in the address bar and return to where the reader was ----
+(() => {
+  const q = new URLSearchParams(location.search), slug = q.get("p"), page = q.get("page");
+  const p = slug && [...projects, ...otherProjects].find(x => slugOf(x) === slug);
+  if (p) openProject(p); else if (page && page !== "case" && VIEWS[page]) setView(page);
+  else if (slug || page) try { history.replaceState(null, "", location.pathname); } catch (e) {}
+  if (!p && !(page && VIEWS[page])) return;
+  try { history.scrollRestoration = "manual"; } catch (e) {}
+  let saved = null; try { saved = JSON.parse(sessionStorage.getItem("scroll") || "null"); } catch (e) {}
+  if (saved && saved.url === location.search) requestAnimationFrame(() => scrollTo({top: saved.y, behavior: "instant"}));
+})();
+addEventListener("pagehide", () => { try { sessionStorage.setItem("scroll", JSON.stringify({url: location.search, y: scrollY})); } catch (e) {} });
