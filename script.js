@@ -413,9 +413,9 @@ projects.forEach((p, i) => grid.appendChild(makeRow(p, i)));
 const IH = "https://sophiacnguyen.framer.website/in-house-work/", AI = "https://sophiacnguyen.framer.website/design-and-ai/";
 const TBD = "[Add a one-line summary of this project.]";
 const otherProjects = [
-  {name:"Michael Waltrip Brewing", image:"assets/f3f9b3c7a136.webp", tags:["Packaging","Social Media"], desc:"Tap handles, cans and social for a brewery", back:"graphic", caseStudy:{
+  {name:"Michael Waltrip Brewing", image:"assets/cd007ea5a8ed.webp", tags:["Packaging","Social Media"], desc:"Tap handles, cans and social for a brewery", back:"graphic", caseStudy:{
     lede:"Design for the brewery of two-time Daytona 500 champion Michael Waltrip, from the taproom to retail shelves.",
-    heroImage:"assets/f3f9b3c7a136.webp", heroFit:true, heroBg:"#f3f0e8", heroAlt:"The Michael Waltrip Brewing Co. badge logo beside cans of Bristol Sunshine Tangerine Ale and Talladega Light.",
+    heroImage:"assets/cd007ea5a8ed.webp", heroFit:true, heroBg:"#f3f0e8", heroAlt:"The Michael Waltrip Brewing Co. badge logo beside cans of Bristol Sunshine Tangerine Ale and Talladega Light.",
     facts:[["Category","Packaging / Social media / Brand design"],["Role","Design Intern"],["Industry","Craft beer / Motorsports"],["Year","2026"]],
     sections:[
      {label:"Overview", title:"From the taproom to retail shelves", paras:["As a design intern at Michael Waltrip Brewing, I work across the brand: redesigning the brewery's beer tap handles and product packaging, creating digital promotions and apparel mockups for Michael Waltrip Brewing and its sister brand, Waltrip Burger, and designing large-scale murals that tell the story of Michael Waltrip, on and off the track.","I also produce social content for Instagram, YouTube Shorts and more that has helped grow the brand's following. Some of these designs were AI assisted, but not all."]},
