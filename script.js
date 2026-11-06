@@ -1787,9 +1787,6 @@ const LL_OPTS = [["eclipse", "Eclipse reveal"], ["squeegee", "Squeegee wipe"], [
 // shaped like a real can. A flat canvas keeps scrolling smooth (thousands of 3D pieces made it lag) and draws the same in every browser.
 // Drag (or arrow keys) to spin one; they drift on their own until touched, and only while on screen ----
 let can3dList = [];
-// the silver ends, top down, in units of the can's radius: [height, radius at top, radius at bottom, light, dark]
-const CN_TOP = [[.06, .84, .84, "#e2e3e5", "#8d8f92"], [.07, .8, .8, "#c4c6c9", "#929498"], [.18, .8, .92, "#d3d5d8", "#a2a4a8"], [.2, .92, 1, "#dcdee1", "#b0b2b6"], [.05, 1, 1, "#d2d4d7", "#aeb0b4"]];
-const CN_BOT = [[.06, 1, 1, "#d2d4d7", "#aeb0b4"], [.16, 1, .9, "#c9cbce", "#919397"], [.12, .9, .78, "#9a9ca0", "#676a6e"]];
 const cn3View = c => { can3dList.push(c); return `<div class="cn3-view" tabindex="0" role="img" aria-label="A 3D ${esc(c.title)} can you can spin. ${esc(c.alt)}"><canvas class="cn3-cv"></canvas></div>`; };
 const can3dHtml = c => `<div class="cn3">
   <figure class="cn3-stage">${cn3View(c)}
@@ -1801,67 +1798,73 @@ const cans3dHtml = list => `<div class="cn3 cn3-row"><figure class="cn3-stage">
   <div class="cn3-line" style="--n:${list.length}">${list.map(c => `<div class="cn3-one">${cn3View(c)}<b>${esc(c.size)}</b></div>`).join("")}</div>
   <figcaption><span>Drag any can to spin it</span><button type="button" class="cn3-flat">See the flat labels</button></figcaption>
 </figure></div>`;
-// lays out one can for its current size; returns draw(angle) that paints it. Seen from slightly above, so the lid is an oval and
-// every edge curves round the can; condensation droplets sit on the label and turn with it
+// lays out one can for its current size; returns draw(angle) that paints it. Seen from a little above, like a product mockup:
+// smooth satin aluminium with curved shoulders, a lid whose pull tab turns with the can, and a soft shadow behind it
+const CN_E = .17;
+// the silver ends as [height from the previous point, radius, tone], in units of the can's radius; the label sits between them
+const cnEase = (n, f) => Array.from({length: n}, (_, i) => f((i + 1) / n));
+const CN_TOP = [[0, .86, .95], [.05, .86, .9], [.035, .82, .74], [.02, .82, .8], ...cnEase(8, t => [.032, .82 + .18 * (1 - Math.cos(t * Math.PI)) / 2, .84 + .04 * t]), [.03, 1, .87]];
+const CN_BOT = [[0, 1, .86], [.03, 1, .85], ...cnEase(6, t => [.024, 1 - .1 * t * t, .84 - .14 * t]), [.05, .82, .55]];
 function canPainter(view, c, img) {
-  const cv = view.querySelector("canvas"), ctx = cv.getContext("2d"), row = view.closest(".cn3-row");
-  const r = row ? Math.min(66, view.clientWidth * .4) : Math.min(110, view.clientWidth * .3), C = 2 * Math.PI * r, lh = C * c.h / c.w, E = .11;
-  const k = Math.min(2, devicePixelRatio || 1), px = r * .25, pt = E * r * .9 + 2;
-  const top = CN_TOP.reduce((t, x) => t + x[0] * r, 0), H = top + lh + CN_BOT.reduce((t, x) => t + x[0] * r, 0), pb = E * r + 14;
+  const cv = view.querySelector("canvas"), ctx = cv.getContext("2d"), row = view.closest(".cn3-row"), E = CN_E;
+  const r = row ? Math.min(66, view.clientWidth * .4) : Math.min(110, view.clientWidth * .3), C = 2 * Math.PI * r, lh = C * c.h / c.w;
+  const top = CN_TOP.reduce((t, x) => t + x[0] * r, 0), H = top + lh + CN_BOT.reduce((t, x) => t + x[0] * r, 0);
+  const k = Math.min(2, devicePixelRatio || 1), px = r * .45, pt = E * r * .9 + 3, pb = E * r + 18;
   const Wc = 2 * r + 2 * px, Hc = pt + H + pb, W = Math.round(Wc * k), Hp = Math.round(Hc * k), cx = Wc / 2;
-  view.style.height = Hc + (row ? 10 : 36) + "px"; cv.width = W; cv.height = Hp; cv.style.width = Wc + "px"; cv.style.height = Hc + "px";
-  let seed = c.label.length * 7919 + 17; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const drops = (g, x0, y0, w, h, n, s) => { for (let i = 0; i < n; i++) { const x = x0 + rnd() * w, y = y0 + rnd() * h, d = (.5 + rnd() * rnd() * 2.6) * s;
-    g.fillStyle = "rgba(255,255,255,.2)"; g.beginPath(); g.arc(x, y, d, 0, 7); g.fill();
-    g.strokeStyle = "rgba(0,0,0,.26)"; g.lineWidth = d * .38; g.beginPath(); g.arc(x, y + d * .1, d * .8, .3, Math.PI - .3); g.stroke();
-    g.fillStyle = "rgba(255,255,255,.75)"; g.beginPath(); g.arc(x - d * .35, y - d * .35, d * .28, 0, 7); g.fill(); } };
-  const grain = (g, amt) => { const c2 = g.canvas, d = g.getImageData(0, 0, c2.width, c2.height), a = d.data;
-    for (let i = 0; i < a.length; i += 4) { if (!a[i + 3]) continue; const n = (rnd() - .5) * amt; a[i] += n; a[i + 1] += n; a[i + 2] += n; } g.putImageData(d, 0, 0); };
-  const mk = () => { const o = document.createElement("canvas"); o.width = W; o.height = Hp; const g = o.getContext("2d"); g.scale(k, k); return [o, g]; };
-  // silver body: each band runs between the front halves of two ovals
-  const [metal, mg] = mk(); let y = pt;
-  const band = ([h, a, b, lo, hi], y0) => { const ra = a * r, rb = b * r, y1 = y0 + h * r, g = mg.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, hi); g.addColorStop(.5, lo); g.addColorStop(1, hi);
-    mg.fillStyle = g; mg.beginPath(); mg.ellipse(cx, y0, ra, E * ra, 0, Math.PI, 0, true); mg.lineTo(cx + rb, y1); mg.ellipse(cx, y1 + .4, rb, E * rb, 0, 0, Math.PI, false); mg.closePath(); mg.fill(); };
-  CN_TOP.forEach(b => { band(b, y); y += b[0] * r; }); const ly = y; y += lh; CN_BOT.forEach(b => { band(b, y); y += b[0] * r; });
-  // the lid: a pale oval with a shadowed recess and a rolled rim
-  const la = CN_TOP[0][1] * r, lg = mg.createLinearGradient(cx - la, 0, cx + la, 0); lg.addColorStop(0, "#9a9a9a"); lg.addColorStop(.35, "#f2f2f2"); lg.addColorStop(1, "#a6a6a6");
-  mg.fillStyle = lg; mg.beginPath(); mg.ellipse(cx, pt, la, E * la, 0, 0, 7); mg.fill();
-  mg.fillStyle = "rgba(60,60,60,.22)"; mg.beginPath(); mg.ellipse(cx, pt + E * la * .12, la * .86, E * la * .8, 0, 0, 7); mg.fill();
-  mg.strokeStyle = "rgba(255,255,255,.7)"; mg.lineWidth = 1; mg.beginPath(); mg.ellipse(cx, pt, la - .5, E * la - .5, 0, Math.PI, 0, true); mg.stroke();
-  // droplets on the shoulder and base
-  mg.save(); mg.globalCompositeOperation = "source-atop"; drops(mg, cx - r, pt + E * la * 2 + 2, 2 * r, top - E * la * 2 - 5, Math.round(r * .9), 1.1); drops(mg, cx - r, ly + lh + 2, 2 * r, H - top - lh - 4, Math.round(r * .5), 1); mg.restore();
-  // brushed, frosted aluminium: fine grain over the silver, plus a dense layer of tiny droplets
-  mg.save(); mg.globalCompositeOperation = "source-atop"; drops(mg, cx - r, pt + E * la * 2 + 2, 2 * r, top - E * la * 2 - 5, Math.round(r * 2.4), .45); drops(mg, cx - r, ly + lh + 2, 2 * r, H - top - lh - 4, Math.round(r * 1.2), .45); mg.restore();
-  grain(mg, 26);
-  // a soft line where the label meets the metal
-  const edge = (yy, up) => { const g = mg.createLinearGradient(0, yy - (up ? 3 : 0), 0, yy + (up ? 0 : 3)); g.addColorStop(up ? 1 : 0, "rgba(0,0,0,.25)"); g.addColorStop(up ? 0 : 1, "rgba(0,0,0,0)"); return g; };
-  // the round light: dark edges, a sharp highlight left of centre, a softer one on the right and a thin rim light
+  view.style.height = Hc + (row ? 6 : 30) + "px"; cv.width = W; cv.height = Hp; cv.style.width = Wc + "px"; cv.style.height = Hc + "px";
+  const grey = t => { const v = Math.round(255 * t); return `rgb(${v - 3},${v - 1},${Math.min(255, v + 3)})`; };
+  const metal = document.createElement("canvas"); metal.width = W; metal.height = Hp; const mg = metal.getContext("2d"); mg.scale(k, k);
+  // each band runs between the front halves of two ovals, shaded from one tone to the next
+  const bands = (pts, y0) => { let y = y0; for (let i = 1; i < pts.length; i++) { const [h, rb, tb] = pts[i], [, ra, ta] = pts[i - 1], y1 = y + h * r;
+    const g = mg.createLinearGradient(0, y, 0, y1 + E * rb * r); g.addColorStop(0, grey(ta)); g.addColorStop(1, grey(tb)); mg.fillStyle = g;
+    mg.beginPath(); mg.ellipse(cx, y, ra * r, E * ra * r, 0, Math.PI, 0, true); mg.lineTo(cx + rb * r, y1); mg.ellipse(cx, y1 + .5, rb * r, E * rb * r, 0, 0, Math.PI, false); mg.closePath(); mg.fill(); y = y1; } return y; };
+  const ly = bands(CN_TOP, pt); bands(CN_BOT, ly + lh);
+  // soft studio light across the whole can: shadowed edges, a broad satin sheen left of centre and a faint glow on the right
   const sh = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
-  // soft studio light like a photo: edges fall away into shadow and a broad, gentle glow sits left of centre (no shiny streak)
-  for (let i = 0; i <= 48; i++) { const x = i / 24 - 1, dark = .58 * Math.pow(1 - Math.sqrt(Math.max(0, 1 - x * x)), .7),
-    lite = .1 * Math.exp(-(((x + .3) / .38) ** 2)) + .04 * Math.exp(-(((x - .5) / .2) ** 2)), v = lite - dark;
+  for (let i = 0; i <= 48; i++) { const x = i / 24 - 1, dark = .5 * Math.pow(1 - Math.sqrt(Math.max(0, 1 - x * x)), .7) + .1 * Math.max(0, x),
+    lite = .2 * Math.exp(-(((x + .4) / .17) ** 2)) + .08 * Math.exp(-(((x + .4) / .45) ** 2)) + .05 * Math.exp(-(((x - .62) / .1) ** 2)), v = lite - dark;
     sh.addColorStop(i / 48, v > 0 ? `rgba(255,255,255,${v.toFixed(3)})` : `rgba(0,0,0,${(-v).toFixed(3)})`); }
-  // the label at the size it's drawn (with its droplets), and for each pixel column across the can, where on the label it looks and how far it dips
+  const la = CN_TOP[0][1] * r;
+  // the label at the size it's drawn, and for each pixel column across the can, where on the label it looks and how far it dips
   let tex = null; const TW = Math.round(C * k), lH = Math.round(lh * k), x0 = Math.round((cx - r) * k), cw = Math.round(2 * r * k), cols = [];
   for (let x = 0; x < cw; x++) { const n0 = Math.max(-1, x / cw * 2 - 1), n1 = Math.min(1, (x + 1) / cw * 2 - 1), a0 = Math.asin(n0), a1 = Math.asin(n1), m = (n0 + n1) / 2;
     cols.push([a0, Math.max(1, (a1 - a0) / (2 * Math.PI) * TW), Math.round((ly + E * r * Math.sqrt(1 - m * m)) * k)]); }
-  const makeTex = () => { if (!img.complete || !img.naturalWidth) return; tex = document.createElement("canvas"); tex.width = TW; tex.height = lH; const g = tex.getContext("2d");
-    g.drawImage(img, 0, 0, TW, lH); seed = c.label.length * 31 + 5; drops(g, 0, 0, TW, lH, Math.round(TW * lH / (k * k * 200)), k * 1.15); drops(g, 0, 0, TW, lH, Math.round(TW * lH / (k * k * 70)), k * .45); grain(g, 14); };
+  const makeTex = () => { if (!img.complete || !img.naturalWidth) return; tex = document.createElement("canvas"); tex.width = TW; tex.height = lH; tex.getContext("2d").drawImage(img, 0, 0, TW, lH); };
   makeTex();
+  // a point on the lid at angle a (0 = facing you) and distance d from the middle
+  const lid = (a, d) => [cx + Math.sin(a) * d, pt + Math.cos(a) * d * E];
+  const drawLid = base => {
+    const g = ctx.createLinearGradient(cx - la, 0, cx + la, 0); g.addColorStop(0, "#a9abae"); g.addColorStop(.3, "#f4f5f6"); g.addColorStop(.7, "#d3d5d8"); g.addColorStop(1, "#9c9ea2");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(cx, pt, la, E * la, 0, 0, 7); ctx.fill();
+    // recessed panel inside the rolled rim
+    ctx.fillStyle = "rgba(60,62,66,.45)"; ctx.beginPath(); ctx.ellipse(cx, pt + .6, la * .9, E * la * .9, 0, 0, 7); ctx.fill();
+    const ir = la * .86, g2 = ctx.createLinearGradient(cx - ir, pt - E * ir, cx + ir, pt + E * ir); g2.addColorStop(0, "#9fa1a5"); g2.addColorStop(.45, "#d6d8db"); g2.addColorStop(1, "#b4b6ba");
+    ctx.fillStyle = g2; ctx.beginPath(); ctx.ellipse(cx, pt + 1.4, ir, E * ir, 0, 0, 7); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(cx, pt, la - .6, E * la - .4, 0, Math.PI * .95, Math.PI * .05, true); ctx.stroke();
+    // the pull tab and its rivet turn with the can
+    const ta = -base, ring = [];
+    for (let i = 0; i < 28; i++) { const t = i / 28 * 2 * Math.PI, u = Math.cos(t) * .2 * la, v = .1 * la + Math.sin(t) * .34 * la, d = Math.hypot(u, v), a = ta + Math.atan2(u, v); ring.push(lid(a, d)); }
+    ctx.fillStyle = "#d9dbde"; ctx.strokeStyle = "rgba(70,72,76,.55)"; ctx.lineWidth = .8; ctx.beginPath(); ring.forEach(([x, y], i) => ctx[i ? "lineTo" : "moveTo"](x, y)); ctx.closePath(); ctx.fill(); ctx.stroke();
+    const hole = []; for (let i = 0; i < 20; i++) { const t = i / 20 * 2 * Math.PI, u = Math.cos(t) * .1 * la, v = .3 * la + Math.sin(t) * .1 * la; hole.push(lid(ta + Math.atan2(u, v), Math.hypot(u, v))); }
+    ctx.fillStyle = "#9a9ca0"; ctx.beginPath(); hole.forEach(([x, y], i) => ctx[i ? "lineTo" : "moveTo"](x, y)); ctx.closePath(); ctx.fill();
+    const [rx, ry] = lid(ta, .02 * la); ctx.fillStyle = "#b9bbbe"; ctx.beginPath(); ctx.ellipse(rx, ry, .07 * la, .07 * la * E, 0, 0, 7); ctx.fill();
+    // the opening score, opposite the ring
+    const sc = []; for (let i = 0; i <= 16; i++) { const t = i / 16 * Math.PI, u = Math.cos(t) * .22 * la, v = -.2 * la - Math.sin(t) * .3 * la; sc.push(lid(ta + Math.atan2(u, v), Math.hypot(u, v))); }
+    ctx.strokeStyle = "rgba(90,92,96,.5)"; ctx.beginPath(); sc.forEach(([x, y], i) => ctx[i ? "lineTo" : "moveTo"](x, y)); ctx.stroke();
+  };
   return {ready: () => tex || (makeTex(), tex), draw(angle) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, Hp); ctx.drawImage(metal, 0, 0);
     const base = angle * Math.PI / 180;
     for (let x = 0; x < cw; x++) { const [a, sw, yy] = cols[x];
       if (tex) { let u = ((base + a) / (2 * Math.PI) % 1 + 1) % 1 * TW; if (u + sw > TW) u = TW - sw; ctx.drawImage(tex, u, 0, sw, lH, x0 + x, yy, 1, lH); }
-      else { ctx.fillStyle = "#cfcfcf"; ctx.fillRect(x0 + x, yy, 1, lH); } }
+      else { ctx.fillStyle = "#d5d5d5"; ctx.fillRect(x0 + x, yy, 1, lH); } }
     ctx.scale(k, k);
-    ctx.globalCompositeOperation = "source-atop";
-    ctx.fillStyle = sh; ctx.fillRect(0, 0, Wc, Hc);
-    ctx.fillStyle = edge(ly, false); ctx.fillRect(0, ly - 1, Wc, E * r * 2 + 5); 
-    // ground shadow, behind the can
+    ctx.globalCompositeOperation = "source-atop"; ctx.fillStyle = sh; ctx.fillRect(0, 0, Wc, Hc);
+    ctx.globalCompositeOperation = "source-over"; drawLid(base);
+    // a soft shadow cast behind and to the right, under the can
     ctx.globalCompositeOperation = "destination-over";
-    const gy = pt + H + 2, sg = ctx.createRadialGradient(cx, gy, 0, cx, gy, r * 1.05); sg.addColorStop(0, "rgba(40,30,20,.32)"); sg.addColorStop(1, "rgba(40,30,20,0)");
-    ctx.save(); ctx.translate(cx, gy); ctx.scale(1, E * 1.6 + .08); ctx.translate(-cx, -gy); ctx.fillStyle = sg; ctx.fillRect(cx - r * 1.1, gy - r * 1.1, r * 2.2, r * 2.2); ctx.restore();
+    const gy = pt + H - E * r * .2, sx = cx + r * .35, sg = ctx.createRadialGradient(sx, gy, 0, sx, gy, r * 1.15); sg.addColorStop(0, "rgba(60,45,35,.28)"); sg.addColorStop(.6, "rgba(60,45,35,.1)"); sg.addColorStop(1, "rgba(60,45,35,0)");
+    ctx.save(); ctx.translate(sx, gy); ctx.scale(1, .3); ctx.translate(-sx, -gy); ctx.fillStyle = sg; ctx.fillRect(sx - r * 1.2, gy - r * 1.2, r * 2.4, r * 2.4); ctx.restore();
     ctx.globalCompositeOperation = "source-over";
   }};
 }
@@ -1883,7 +1886,7 @@ function initCan3d() {
     ["pointerup", "pointercancel"].forEach(t => view.addEventListener(t, () => { drag = null; view.classList.remove("drag"); go(); }));
     view.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); idle = false; vel = 0; tgt = (tgt ?? angle) + (e.key === "ArrowRight" ? 20 : -20); go(); } });
     const layout = () => { if (view.isConnected && view.clientWidth && view.clientWidth !== lastW) { lastW = view.clientWidth; pt = canPainter(view, c, img); paint(); } };
-    img.onload = () => { if (pt) { pt.ready(); paint(); } }; img.src = c.label;
+    img.onload = () => { if (pt) { pt.ready(); paint(); } }; img.onerror = () => { if (!img.dataset.retry) { img.dataset.retry = 1; setTimeout(() => { img.src = c.label + "?r=1"; }, 1500); } }; img.src = c.label;
     // spin only while the can is on screen
     if ("IntersectionObserver" in window) new IntersectionObserver(es => { seen = es[0].isIntersecting; if (seen) go(); }, {rootMargin: "100px 0px"}).observe(view); else seen = true;
     layout(); new ResizeObserver(() => requestAnimationFrame(layout)).observe(view); go();
