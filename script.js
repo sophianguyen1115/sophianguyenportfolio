@@ -1085,20 +1085,19 @@ function initScreens() {
     track.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(paint); }, {passive: true});
     addEventListener("resize", () => { if (track.isConnected) paint(); });
     // autoplay
-    const AUTO_MS = 3500, IDLE_MS = 8000, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let visible = false, hover = false, idleUntil = 0, timer = 0;
+    const AUTO_MS = 3500, IDLE_MS = 4000, still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let visible = false, idleUntil = 0, timer = 0;
     const touched = () => { idleUntil = Date.now() + IDLE_MS; };
     const tick = () => {
       if (!track.isConnected) return clearInterval(timer);
-      if (!visible || hover || document.hidden || Date.now() < idleUntil || car.querySelector(":focus-visible")) return;   // keyboard focus pauses; a mouse click doesn't
+      // it keeps looping on its own: a click, drag or arrow press only pauses it for a few seconds
+      if (!visible || down || document.hidden || Date.now() < idleUntil || document.querySelector("#pieceView[open]")) return;
       scrollTo(cur >= items.length - 1 ? 0 : cur + 1);
     };
     if (!still) {
       timer = setInterval(tick, AUTO_MS);
-      if ("IntersectionObserver" in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, {threshold: .6}).observe(car);
-      car.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") hover = true; });
-      car.addEventListener("pointerleave", () => { hover = false; });
-      ["pointerdown", "touchstart", "wheel", "keydown"].forEach(t => car.addEventListener(t, touched, {passive: true}));
+      if ("IntersectionObserver" in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, {threshold: .35}).observe(car);
+      ["pointerdown", "touchstart", "keydown"].forEach(t => car.addEventListener(t, touched, {passive: true}));
     }
     prev.addEventListener("click", () => { touched(); scrollTo(cur - 1); });
     next.addEventListener("click", () => { touched(); scrollTo(cur + 1); });
