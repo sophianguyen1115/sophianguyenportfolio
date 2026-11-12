@@ -271,6 +271,9 @@ section.work{max-width:1100px}
 .gi{--o:0s;position:relative;display:grid;place-items:center;height:116px;margin:0 0 1rem;background:#fff;border-radius:10px;overflow:hidden}
 .gi::before{content:"";position:absolute;width:100px;height:100px;border-radius:50%;background:radial-gradient(closest-side,var(--card) 50%,rgba(235,229,221,0));opacity:0;animation:gGlow 9s linear infinite;animation-delay:var(--o)}
 .gsvg{position:relative;width:132px;height:99px;color:var(--ink);overflow:visible}
+/* brand-coloured icons: the drawing and the moving glow take the project's colour */
+.gi.tint .gsvg{color:var(--gc)}
+.gi.tint::before{background:radial-gradient(closest-side,color-mix(in srgb,var(--gc) 16%,#fff) 50%,color-mix(in srgb,var(--gc) 0%,#fff))}
 .gsvg .pop,.gsvg .lift,.gsvg .bounce,.gsvg .rg,.gsvg .trav,.gsvg .ml,.gsvg .mr{transform-box:fill-box;transform-origin:center;animation-duration:9s;animation-iteration-count:infinite;animation-delay:calc(var(--o) + var(--e,0s))}
 .gsvg .pop{animation-name:gPop;animation-timing-function:ease-in-out}
 .gsvg .beat{animation-name:gBeat}

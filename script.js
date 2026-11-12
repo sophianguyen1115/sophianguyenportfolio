@@ -300,7 +300,7 @@ const projects = [
      {label:"Problem", paras:["Looking after a pet usually means switching between several apps: one for GPS tracking, another for health records, another for social features. That fragmentation is the problem Companio sets out to solve, by combining tracking, health management and community in a single mobile experience."]},
      {label:"Competitor analysis", paras:["An audit of existing products showed that each one does well in a single area, such as location, health or community, and almost none combine all three. That gap pointed to a unified pet care ecosystem that gives owners more confidence, convenience and control."],
       quote:"The team was the first in its class to take on a pet tracking app.", quoteMark:"first in its class", quoteColor:"#ea8484",
-      goals:["Record pet health and log behavior observations","Keep pets safe with GPS tracking","Turn memories into a timeline on each pet's profile"],goalIcons:["health","gps","timeline"]},
+      goals:["Record pet health and log behavior observations","Keep pets safe with GPS tracking","Turn memories into a timeline on each pet's profile"],goalIcons:["health","gps","timeline"],goalColors:["#2a3654","#ea8484","#789042"]},
      {label:"Research", title:"Competitor Analysis and Personas", paras:["Research was shared as a group report and an information architecture and design rationale. Survey results were distilled into personas, each with representative quotes.","Watch the analysis branch out, or tap an app to follow its path and open its audit slides."], comp:COMPANIO_COMP,
       buttons:[{label:"UI/UX Research Group Report",href:"https://www.figma.com/deck/LZXKtb2TqM5sPRZhRvp2uP/Milestone-1-Presentation?node-id=1-42&t=EI2fNBbQSqT7sp6s-1"},{label:"Information Architecture & Design Rationale",href:"https://www.figma.com/deck/DHnB7ZiNIDpx4LBYpMapJF/Milestone-2-Presentation?node-id=1-42&t=ZZXYJonXRF1EpAGq-1"}]},
      {label:"Personas", title:"Two pet owners, two kinds of overwhelmed", paras:["Survey results became two personas: Sean, who carries most of the care for two aging pets, and Elizabeth, who keeps a busy family's dogs healthy on memory and routine. Switch between them, explore what they want and what gets in the way, and tap the empathy map to look closer."], personas:COMPANIO_PERSONAS},
@@ -339,7 +339,7 @@ const projects = [
      {label:"Overview", title:"Uplifting art and artists", paras:["Independent artists worry about AI-generated content, high platform fees and few chances to build lasting relationships with their audience. Existing marketplaces focus on transactions rather than community.","Pocket Atelier is a mobile platform that combines social networking with e-commerce, so artists can showcase, sell and promote their work while connecting with other creators and art lovers."], timeline:PA_TIMELINE},
      {label:"Problem", venn:PA_VENN},
      {label:"Research", title:"Research and personas", paras:["Research pointed to three needs: protecting human-made art, helping independent creators earn from their work, and encouraging appreciation for original art. Those needs shaped three personas."],
-      goals:["Reward positive interactions within the art community","Make a responsive interface that blends smoothly into the experience","Merge the marketplace with artist engagement"],goalIcons:["reward","responsive","merge"]},
+      goals:["Reward positive interactions within the art community","Make a responsive interface that blends smoothly into the experience","Merge the marketplace with artist engagement"],goalIcons:["reward","responsive","merge"],goalColors:["#8f78a8","#8f78a8","#8f78a8"]},
      {label:"Personas", title:"Three artists, one community", paras:["Switch between Himeko, Celia and Robbie, flip through their goals and frustrations, and tap the empathy map to look closer."], personas:PA_PERSONAS, personaTheme:"pa"},
      {label:"Wireframes", title:"Hi-fi wireframes and analysis", paras:["The hi-fi wireframes put the artwork first, with generous whitespace, simple navigation and a mobile-first layout. Users can discover creators, browse products and services, and join in with content in one flow."], story:PA_STORY},
      {label:"Result", title:"Supporting artists beyond the buy", paras:["A minimalist interface keeps the artwork central, and a mobile-first layout makes it easy to find creators and shop. Pairing community with marketplace features helps artists grow their audience and promote their work in one place, with social features, simpler purchasing and transparent interactions."]},
@@ -355,7 +355,7 @@ const projects = [
      {label:"The scenario", duo:VB_DUO},
      {label:"Overview", title:"One app. Every concert.", paras:["VibeBook combines verified ticketing with a social platform, so fans can discover events, trade tickets securely and connect with each other.","I mapped the ticket purchasing journey first, then moved from sketches to hi-fi wireframes and an interactive prototype."]},
      {label:"Problem", paras:["Concertgoers face ticket scalping, inaccurate event information and disconnected experiences across ticketing and social apps. Existing platforms focus on transactions rather than community."],
-      goals:["Build a following of music fans","Offer secure payment options and no last-minute changes","Cater to user needs and preferences"],goalIcons:["fans","ticket","sliders"]},
+      goals:["Build a following of music fans","Offer secure payment options and no last-minute changes","Cater to user needs and preferences"],goalIcons:["fans","ticket","sliders"],goalColors:["#2f7bf5","#2f7bf5","#2f7bf5"]},
      {label:"Research", title:"Research and personas", paras:["Research surfaced three needs: reliable digital ticketing, flexible resale, and a stronger live-music community. Those needs shaped three personas."]},
      {label:"Personas", title:"Three fans, one stage", paras:["Switch between Mika, Dan and Carson, flip through their goals and frustrations, and tap the empathy map to look closer."], personas:VB_PERSONAS, personaTheme:"vb"},
      {label:"Storyboards", title:"Sketches", paras:["Early sketches explored the ticket purchasing journey before anything moved into wireframes. Hover or tap a strip to pause it."], ticker:VB_BOARDS},
@@ -2085,7 +2085,7 @@ const GOAL_ICONS = {
   ticket: `<g class="lift"><path d="M22 30h88v14a6 6 0 0 0 0 12v14H22V56a6 6 0 0 0 0-12z"/><path d="M84 32v8m0 6v8m0 6v8" opacity=".5"/><path d="M36 46h30M36 56h20" opacity=".5"/></g>`,
   sliders: `<path d="M20 30h92M20 50h92M20 70h92"/><circle class="ml" cx="46" cy="30" r="6" fill="#fff"/><circle class="mr" cx="84" cy="50" r="6" fill="#fff"/><circle class="ml" cx="58" cy="70" r="6" fill="#fff" style="--e:.4s"/>`
 };
-const goalIcon = (name, i) => GOAL_ICONS[name] ? `<div class="gi" style="--o:${i * 3}s" aria-hidden="true"><svg class="gsvg" viewBox="0 0 132 99" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${GOAL_ICONS[name]}</svg></div>` : "";
+const goalIcon = (name, i, c) => GOAL_ICONS[name] ? `<div class="gi${c ? " tint" : ""}" style="--o:${i * 3}s${c ? ";--gc:" + c : ""}" aria-hidden="true"><svg class="gsvg" viewBox="0 0 132 99" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${GOAL_ICONS[name]}</svg></div>` : "";
 
 // ---- Annotated screens: tap a screen to light up its notes, tap a note to light up its screens ----
 function annHtml(s) {
@@ -2138,7 +2138,7 @@ function renderCase(p) {
     ${s.title ? `<h3>${esc(s.title)}</h3>` : ""}
     ${(s.paras || []).map(t => `<p>${esc(t)}</p>`).join("")}
     ${s.quote ? `<p class="quote"${s.quoteColor ? ` style="--qm:${s.quoteColor}"` : ""}>${s.quoteMark ? esc(s.quote).replace(esc(s.quoteMark), `<mark>${esc(s.quoteMark)}</mark>`) : esc(s.quote)}</p>` : ""}
-    ${s.goals ? `<ul class="goals">${s.goals.map((g, i) => `<li>${s.goalIcons ? goalIcon(s.goalIcons[i], i) : ""}<span>${esc(g)}</span></li>`).join("")}</ul>` : ""}
+    ${s.goals ? `<ul class="goals">${s.goals.map((g, i) => `<li>${s.goalIcons ? goalIcon(s.goalIcons[i], i, s.goalColors && s.goalColors[i]) : ""}<span>${esc(g)}</span></li>`).join("")}</ul>` : ""}
     ${s.player ? playerHtml(s.player) : ""}
     ${s.banners ? bannersHtml(s.banners) : ""}
     ${s.studio ? studioHtml() : ""}
