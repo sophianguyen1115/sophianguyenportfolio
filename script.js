@@ -242,7 +242,7 @@ const VB_BOARDS = [
     {src:"assets/37ee087b5e3c.webp", w:488, h:445, alt:"Storyboard sketch: Zori gets the event info and an exclusive QR code."}]}];
 // VibeBook personas from the persona slides (empathy maps are drawn from them)
 const VB_PERSONAS = [
-  {name:"Mika Maddeson", title:"Graphic design student", photo:"assets/9b285cab4a84.webp", c:"#2f7bf5", quote:"Love going to my fave idol's meetups.",
+  {name:"Mika Maddeson", title:"Graphic design student", photo:"assets/bd5c298a548e.webp", c:"#2f7bf5", quote:"Love going to my fave idol's meetups.",
    facts:["22","Brooklyn, NY","Graphic design","Parents, two siblings & her cat"],
    bio:"Mika is a 22-year-old graphic design student who freelances on the side of her studies. In her free time she goes to concerts and music events with her friends. She is annoyed with online ticketing: even with an account, nothing is personalized to her tastes, and availability can be wrong by the time she reaches checkout.",
    lists:[["Goals",["A more personalized experience","Streamlined navigation that fits her needs","Only options within her budget","Accurate, secure ticketing with no issues on the day"]],
@@ -251,7 +251,7 @@ const VB_PERSONAS = [
             thinks:["Making an account should mean it knows her taste.","Her budget is tight, so every dollar counts."],
             does:["Goes to concerts with friends","Freelances while studying","Hunts for tickets in her price range"],
             feels:["Annoyed at checkout surprises","Excited for live music","Wary of paying too much"]}},
-  {name:"Dan Fuller", title:"Jazz musician", photo:"assets/5b624115d72b.webp", c:"#1b5fd1", quote:"Let's love! Jazz speaks to me.",
+  {name:"Dan Fuller", title:"Jazz musician", photo:"assets/e1e70253ac22.webp", c:"#1b5fd1", quote:"Let's love! Jazz speaks to me.",
    facts:["42","Brooklyn, NY","Fine arts","Wife, son, daughter & three dogs"],
    bio:"Dan is a jazz musician who performs often on stage. When he can, he loves meeting others at more casual events to broaden his friendships. He would like to discover new artists in his field and join discussion boards, but most sites don't show local events near him.",
    lists:[["Goals",["A more personalized experience","Attend more music events","Make more friends in the music scene"]],
@@ -260,7 +260,7 @@ const VB_PERSONAS = [
             thinks:["There must be great artists nearby he hasn't heard yet.","Music is better with people to share it."],
             does:["Performs on stage often","Goes to casual music events","Looks for new artists in his field"],
             feels:["Disappointed by missing local events","Eager to connect","Passionate about jazz"]}},
-  {name:"Carson Viso", title:"Music instructor", photo:"assets/817dd916d3cf.webp", c:"#0f2a5c", quote:"Music is the gateway to the soul.",
+  {name:"Carson Viso", title:"Music instructor", photo:"assets/0a6569445dc3.webp", c:"#0f2a5c", quote:"Music is the gateway to the soul.",
    facts:["30","Brooklyn, NY","Music theory","Wife, two sons, a cat & a dog"],
    bio:"Carson is a 30-year-old music instructor who teaches people about music theory. When he can, he splurges on concerts and often takes his family along to any artist they like. He's displeased with the benefits he gets despite being a frequent buyer, and would like more perks and special deals.",
    lists:[["Goals",["Buyer and seller relationships for tickets","Streamlined navigation that benefits him","Exclusive events and perks from favorite artists"]],
